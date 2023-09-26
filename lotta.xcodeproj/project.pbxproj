@@ -3,18 +3,43 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2E02686C2AB88F4500C18681 /* lottaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02686B2AB88F4500C18681 /* lottaApp.swift */; };
-		2E02686E2AB88F4500C18681 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02686D2AB88F4500C18681 /* ContentView.swift */; };
-		2E0268702AB88F4500C18681 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02686F2AB88F4500C18681 /* Item.swift */; };
+		2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02686D2AB88F4500C18681 /* MessagingView.swift */; };
 		2E0268722AB88F4600C18681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0268712AB88F4600C18681 /* Assets.xcassets */; };
 		2E0268752AB88F4600C18681 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0268742AB88F4600C18681 /* Preview Assets.xcassets */; };
 		2E02687F2AB88F4600C18681 /* lottaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02687E2AB88F4600C18681 /* lottaTests.swift */; };
 		2E0268892AB88F4600C18681 /* lottaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268882AB88F4600C18681 /* lottaUITests.swift */; };
 		2E02688B2AB88F4600C18681 /* lottaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02688A2AB88F4600C18681 /* lottaUITestsLaunchTests.swift */; };
+		2E02689B2AB8936300C18681 /* CoreApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02689A2AB8936300C18681 /* CoreApi.swift */; };
+		2E02689D2AB8942600C18681 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02689C2AB8942600C18681 /* LoginView.swift */; };
+		2E0268A32AB8988400C18681 /* LottaCoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E0268A22AB8988400C18681 /* LottaCoreAPI */; };
+		2E0268A52AB900DC00C18681 /* Tenant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268A42AB900DC00C18681 /* Tenant.swift */; };
+		2E0268AF2AB90A2400C18681 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268AE2AB90A2400C18681 /* ModelData.swift */; };
+		2E12B3E72ABDA5DB00555B9D /* ConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */; };
+		2E12B3E92ABDDF2100555B9D /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3E82ABDDF2100555B9D /* Conversation.swift */; };
+		2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EA2ABDE05700555B9D /* LottaFile.swift */; };
+		2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EC2ABDE11600555B9D /* Group.swift */; };
+		2E12B3EF2ABDE6A100555B9D /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EE2ABDE6A100555B9D /* Avatar.swift */; };
+		2E12B3F12ABDEBF000555B9D /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F02ABDEBF000555B9D /* MessageListView.swift */; };
+		2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F22ABDEE9B00555B9D /* Message.swift */; };
+		2E12B3F52ABDF4F900555B9D /* MessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F42ABDF4F900555B9D /* MessageRow.swift */; };
+		2E12B3F72ABDF56D00555B9D /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */; };
+		2E12B3F92ABDF74200555B9D /* MessageInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F82ABDF74200555B9D /* MessageInput.swift */; };
+		2E12B3FB2ABE13AC00555B9D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FA2ABE13AC00555B9D /* RootView.swift */; };
+		2E12B3FD2ABE160500555B9D /* SelectTenantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */; };
+		2E12B3FF2ABE519D00555B9D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FE2ABE519D00555B9D /* ProfileView.swift */; };
+		2E12B4012ABE532500555B9D /* LoginSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B4002ABE532500555B9D /* LoginSession.swift */; };
+		2E3952F32AC346810013465C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3952F22AC346810013465C /* MainView.swift */; };
+		2E4C2E8D2ABEC6C800F846E9 /* ConversationListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */; };
+		2E4C2E962AC07B0400F846E9 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E952AC07B0400F846E9 /* Apollo */; };
+		2E4C2E982AC07B0400F846E9 /* ApolloAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E972AC07B0400F846E9 /* ApolloAPI */; };
+		2E4C2E9A2AC07B0400F846E9 /* ApolloWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */; };
+		2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */; };
+		2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7FB2ABCE079000BB6CF /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +62,7 @@
 /* Begin PBXFileReference section */
 		2E0268682AB88F4500C18681 /* lotta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lotta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E02686B2AB88F4500C18681 /* lottaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottaApp.swift; sourceTree = "<group>"; };
-		2E02686D2AB88F4500C18681 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2E02686F2AB88F4500C18681 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		2E02686D2AB88F4500C18681 /* MessagingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingView.swift; sourceTree = "<group>"; };
 		2E0268712AB88F4600C18681 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E0268742AB88F4600C18681 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2E02687A2AB88F4600C18681 /* lottaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lottaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +70,28 @@
 		2E0268842AB88F4600C18681 /* lottaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lottaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E0268882AB88F4600C18681 /* lottaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottaUITests.swift; sourceTree = "<group>"; };
 		2E02688A2AB88F4600C18681 /* lottaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottaUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2E02689A2AB8936300C18681 /* CoreApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreApi.swift; sourceTree = "<group>"; };
+		2E02689C2AB8942600C18681 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		2E0268A42AB900DC00C18681 /* Tenant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tenant.swift; sourceTree = "<group>"; };
+		2E0268AE2AB90A2400C18681 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsList.swift; sourceTree = "<group>"; };
+		2E12B3E82ABDDF2100555B9D /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		2E12B3EA2ABDE05700555B9D /* LottaFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottaFile.swift; sourceTree = "<group>"; };
+		2E12B3EC2ABDE11600555B9D /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		2E12B3EE2ABDE6A100555B9D /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
+		2E12B3F02ABDEBF000555B9D /* MessageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListView.swift; sourceTree = "<group>"; };
+		2E12B3F22ABDEE9B00555B9D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		2E12B3F42ABDF4F900555B9D /* MessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRow.swift; sourceTree = "<group>"; };
+		2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
+		2E12B3F82ABDF74200555B9D /* MessageInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInput.swift; sourceTree = "<group>"; };
+		2E12B3FA2ABE13AC00555B9D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTenantView.swift; sourceTree = "<group>"; };
+		2E12B3FE2ABE519D00555B9D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		2E12B4002ABE532500555B9D /* LoginSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSession.swift; sourceTree = "<group>"; };
+		2E3952F22AC346810013465C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
+		2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatar.swift; sourceTree = "<group>"; };
+		2E98A7FB2ABCE079000BB6CF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +99,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E4C2E9A2AC07B0400F846E9 /* ApolloWebSocket in Frameworks */,
+				2E4C2E962AC07B0400F846E9 /* Apollo in Frameworks */,
+				2E0268A32AB8988400C18681 /* LottaCoreAPI in Frameworks */,
+				2E4C2E982AC07B0400F846E9 /* ApolloAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,11 +146,15 @@
 		2E02686A2AB88F4500C18681 /* lotta */ = {
 			isa = PBXGroup;
 			children = (
+				2E0268A62AB900E400C18681 /* model */,
+				2E98A7FA2ABCD501000BB6CF /* component */,
+				2E0268AB2AB903AE00C18681 /* view */,
 				2E02686B2AB88F4500C18681 /* lottaApp.swift */,
-				2E02686D2AB88F4500C18681 /* ContentView.swift */,
-				2E02686F2AB88F4500C18681 /* Item.swift */,
 				2E0268712AB88F4600C18681 /* Assets.xcassets */,
 				2E0268732AB88F4600C18681 /* Preview Content */,
+				2E02689A2AB8936300C18681 /* CoreApi.swift */,
+				2E12B4002ABE532500555B9D /* LoginSession.swift */,
+				2E0268AE2AB90A2400C18681 /* ModelData.swift */,
 			);
 			path = lotta;
 			sourceTree = "<group>";
@@ -130,6 +184,63 @@
 			path = lottaUITests;
 			sourceTree = "<group>";
 		};
+		2E0268A62AB900E400C18681 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				2E12B3E82ABDDF2100555B9D /* Conversation.swift */,
+				2E12B3EC2ABDE11600555B9D /* Group.swift */,
+				2E12B3EA2ABDE05700555B9D /* LottaFile.swift */,
+				2E12B3F22ABDEE9B00555B9D /* Message.swift */,
+				2E0268A42AB900DC00C18681 /* Tenant.swift */,
+				2E98A7FB2ABCE079000BB6CF /* User.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		2E0268AB2AB903AE00C18681 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				2E3952F12AC3465D0013465C /* Profile */,
+				2E3952F02AC3464E0013465C /* Messaging */,
+				2E12B3FA2ABE13AC00555B9D /* RootView.swift */,
+				2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */,
+				2E02689C2AB8942600C18681 /* LoginView.swift */,
+				2E3952F22AC346810013465C /* MainView.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		2E3952F02AC3464E0013465C /* Messaging */ = {
+			isa = PBXGroup;
+			children = (
+				2E02686D2AB88F4500C18681 /* MessagingView.swift */,
+				2E12B3F02ABDEBF000555B9D /* MessageListView.swift */,
+			);
+			path = Messaging;
+			sourceTree = "<group>";
+		};
+		2E3952F12AC3465D0013465C /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				2E12B3FE2ABE519D00555B9D /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		2E98A7FA2ABCD501000BB6CF /* component */ = {
+			isa = PBXGroup;
+			children = (
+				2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */,
+				2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */,
+				2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */,
+				2E12B3EE2ABDE6A100555B9D /* Avatar.swift */,
+				2E12B3F42ABDF4F900555B9D /* MessageRow.swift */,
+				2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */,
+				2E12B3F82ABDF74200555B9D /* MessageInput.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -146,6 +257,12 @@
 			dependencies = (
 			);
 			name = lotta;
+			packageProductDependencies = (
+				2E0268A22AB8988400C18681 /* LottaCoreAPI */,
+				2E4C2E952AC07B0400F846E9 /* Apollo */,
+				2E4C2E972AC07B0400F846E9 /* ApolloAPI */,
+				2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */,
+			);
 			productName = lotta;
 			productReference = 2E0268682AB88F4500C18681 /* lotta.app */;
 			productType = "com.apple.product-type.application";
@@ -218,6 +335,10 @@
 				Base,
 			);
 			mainGroup = 2E02685F2AB88F4500C18681;
+			packageReferences = (
+				2E0268A12AB8988400C18681 /* XCLocalSwiftPackageReference "lottaCoreAPI" */,
+				2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */,
+			);
 			productRefGroup = 2E0268692AB88F4500C18681 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -260,9 +381,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E02686E2AB88F4500C18681 /* ContentView.swift in Sources */,
-				2E0268702AB88F4500C18681 /* Item.swift in Sources */,
+				2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */,
+				2E3952F32AC346810013465C /* MainView.swift in Sources */,
+				2E12B3E72ABDA5DB00555B9D /* ConversationsList.swift in Sources */,
+				2E4C2E8D2ABEC6C800F846E9 /* ConversationListItem.swift in Sources */,
+				2E12B4012ABE532500555B9D /* LoginSession.swift in Sources */,
+				2E12B3FD2ABE160500555B9D /* SelectTenantView.swift in Sources */,
+				2E0268AF2AB90A2400C18681 /* ModelData.swift in Sources */,
+				2E12B3EF2ABDE6A100555B9D /* Avatar.swift in Sources */,
+				2E12B3F52ABDF4F900555B9D /* MessageRow.swift in Sources */,
 				2E02686C2AB88F4500C18681 /* lottaApp.swift in Sources */,
+				2E12B3E92ABDDF2100555B9D /* Conversation.swift in Sources */,
+				2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */,
+				2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */,
+				2E12B3F92ABDF74200555B9D /* MessageInput.swift in Sources */,
+				2E0268A52AB900DC00C18681 /* Tenant.swift in Sources */,
+				2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */,
+				2E12B3FB2ABE13AC00555B9D /* RootView.swift in Sources */,
+				2E02689D2AB8942600C18681 /* LoginView.swift in Sources */,
+				2E12B3F72ABDF56D00555B9D /* MessageBubble.swift in Sources */,
+				2E02689B2AB8936300C18681 /* CoreApi.swift in Sources */,
+				2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */,
+				2E12B3F12ABDEBF000555B9D /* MessageListView.swift in Sources */,
+				2E12B3FF2ABE519D00555B9D /* ProfileView.swift in Sources */,
+				2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,8 +574,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -461,8 +604,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -592,6 +736,46 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		2E0268A12AB8988400C18681 /* XCLocalSwiftPackageReference "lottaCoreAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = lottaCoreAPI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apollographql/apollo-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2E0268A22AB8988400C18681 /* LottaCoreAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LottaCoreAPI;
+		};
+		2E4C2E952AC07B0400F846E9 /* Apollo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			productName = Apollo;
+		};
+		2E4C2E972AC07B0400F846E9 /* ApolloAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			productName = ApolloAPI;
+		};
+		2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			productName = ApolloWebSocket;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2E0268602AB88F4500C18681 /* Project object */;
 }

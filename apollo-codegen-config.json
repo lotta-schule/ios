@@ -1,0 +1,29 @@
+{
+  "schemaNamespace" : "lottaCoreAPI",
+  "input" : {
+    "operationSearchPaths" : [
+      "**/*.graphql"
+    ],
+    "schemaSearchPaths" : [
+      "**/*.graphqls"
+    ]
+  },
+  "output" : {
+    "testMocks" : {
+      "none" : {
+      }
+    },
+    "schemaTypes" : {
+      "path" : "./lottaCoreAPI",
+      "moduleType" : {
+        "swiftPackageManager" : {
+          "name" : "lotta"
+        }
+      }
+    },
+    "operations" : {
+      "inSchemaModule" : {
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@
 
 import LottaCoreAPI
 
-class Group: Identifiable {
+class Group {
     var id: ID
     
     var name: String
@@ -30,4 +30,13 @@ class Group: Identifiable {
             name: graphqlGroupResult.name!
         )
     }
+    
+    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation.Group) {
+        self.init(
+            id: graphQLResult.id!,
+            name: graphQLResult.name!
+        )
+    }
 }
+
+extension Group: Identifiable {}

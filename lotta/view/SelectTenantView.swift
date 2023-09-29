@@ -11,6 +11,7 @@ struct SelectTenantView: View {
     var onSelect: (Tenant) -> Void
     @State var tenants = [
         Tenant(id: "1", title: "Lotta Infos & Hilfe", slug: "info"),
+        Tenant(id: "2", title: "Christian-Gottfried-Ehrenberg-Gymnasium", slug: "ehrenberg")
     ]
     var body: some View {
         VStack {
@@ -23,7 +24,7 @@ struct SelectTenantView: View {
             Text("Wähle deine Schule.")
             
             List {
-                ForEach(self.tenants) { tenant in
+                ForEach(self.tenants, id: \.id) { tenant in
                     Text(tenant.title)
                         .onTapGesture {
                             withAnimation {

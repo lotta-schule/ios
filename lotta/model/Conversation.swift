@@ -8,7 +8,7 @@
 import Foundation
 import LottaCoreAPI
 
-class Conversation: Identifiable {
+@Observable final class Conversation {
     var id: ID
     
     var users: [User]
@@ -17,34 +17,50 @@ class Conversation: Identifiable {
     
     var unreadMessages = 0
     
-    var messages: [Message]
+    var messages = [Message]()
     
-    init(id: ID, users: [User], groups: [Group], messages: [Message]? = []) {
+    var updatedAt: Date
+    
+    init(id: ID, users: [User], groups: [Group], messages: [Message], updatedAt: Date) {
         self.id = id
         self.users = users
         self.groups = groups
-        self.messages = (messages ?? []).sorted(by: { msg1, msg2 in
+        self.messages = messages.sorted(by: { msg1, msg2 in
             msg1.insertedAt.compare(msg2.insertedAt) == .orderedAscending
         })
+        self.updatedAt = updatedAt
     }
     
-    convenience init(from graphQLResult: GetConversationsQuery.Data.Conversation, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetConversationsQuery.Data.Conversation) {
         self.init(
             id: graphQLResult.id!,
-            users: graphQLResult.users?.map { User(from: $0, for: tenant) } ?? [],
-            groups: graphQLResult.groups?.map { Group(from: $0) } ?? []
+            users: graphQLResult.users?.map { User(from: $0) } ?? [],
+            groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
+            messages: [],
+            updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
         )
         if let unreadMessages = graphQLResult.unreadMessages {
             self.unreadMessages = unreadMessages
         }
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation) {
         self.init(
             id: graphQLResult.id!,
-            users: graphQLResult.users?.map { User(from: $0, for: tenant) } ?? [],
+            users: graphQLResult.users?.map { User(from: $0) } ?? [],
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
-            messages: graphQLResult.messages?.map { Message(from: $0, for: tenant) }
+            messages: graphQLResult.messages?.map { Message(from: $0) } ?? [],
+            updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
+        )
+    }
+    
+    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation) {
+        self.init(
+            id: graphQLResult.id!,
+            users: graphQLResult.users?.map { User(from: $0) } ?? [],
+            groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
+            messages: [],
+            updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
         )
     }
     

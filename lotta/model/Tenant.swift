@@ -5,12 +5,11 @@
 //  Created by Alexis Rinaldoni on 19/09/2023.
 //
 import Foundation
-import SwiftData
+import SwiftUI
 import LottaCoreAPI
 
-@Model
 final class Tenant {
-    @Attribute(.unique) var id: ID
+    var id: ID
     
     var title: String
     
@@ -18,9 +17,9 @@ final class Tenant {
     
     var customTheme = [String: String]()
     
-    @Relationship(deleteRule: .cascade, inverse: \LottaFile.tenant) var files = [LottaFile]()
+    var files = [LottaFile]()
     
-    @Relationship(deleteRule: .cascade, inverse: \User.tenant) var users = [User]()
+    var users = [User]()
     
     var backgroundImageFileId: String?
     
@@ -55,6 +54,35 @@ final class Tenant {
             backgroundImageFileId: graphqlResult.configuration?.backgroundImageFile?.id,
             logoImageFileId: graphqlResult.configuration?.logoImageFile?.id
         )
+    }
+    
+    func getThemeColor(forKey key: String) -> Color? {
+        guard let value = self.customTheme[key] else {
+            return nil
+        }
+        let fullHexColorRegex = /#([\dA-Za-z]{2})([\dA-Za-z]{2})([\dA-Za-z]{2})([\dA-Za-z]{2})?/
+        let simpleHexColorRegex = /#([\dA-Za-z])([\dA-Za-z])([\dA-Za-z])([\dA-Za-z])?/
+        if let match = (value.firstMatch(of: fullHexColorRegex) ?? value.firstMatch(of: simpleHexColorRegex)) {
+            guard let red = Int(match.1, radix: 16), let green = Int(match.2, radix: 16), let blue = Int(match.3, radix: 16) else {
+                return nil
+            }
+            let opacity: Double? = if let opacityString = match.4 { Double(opacityString) } else { nil }
+            if let opacity = opacity {
+                return Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255, opacity: opacity / 255)
+            } else {
+                let color = Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255)
+                print("\(key): \(String(describing: color))")
+                return color
+            }
+        }
         
+        return nil
+    }
+    
+}
+
+extension Tenant: Equatable {
+    static func == (lhs: Tenant, rhs: Tenant) -> Bool {
+        return lhs.slug == rhs.slug && lhs.id == rhs.id
     }
 }

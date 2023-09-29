@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ProfileView : View {
-    var onLogout: () -> ()
+    @Environment(ModelData.self) var modelData
     
     var body: some View {
         VStack {
             Button("Abmelden") {
-                onLogout()
+                modelData.setSession(nil)
             }
         }
     }

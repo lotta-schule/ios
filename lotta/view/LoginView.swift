@@ -9,17 +9,17 @@ import SwiftUI
 import LottaCoreAPI
 
 struct LoginView: View {
-    var api: CoreApi
-    var onResetTenant:  () -> ()
-    var onLogin: ((User, String)) -> ()
+    @Environment(ModelData.self) var modelData: ModelData
+    @AppStorage("lotta-tenant-slug") var currentTenantSlug = ""
     
     @State var email = ""
     @State var password = ""
     @State var isLoading = false
     
+    
     var body: some View {
         VStack {
-            if let url = api.tenant?.logoImageFileId?.getUrl() {
+            if let url = modelData.currentTenant?.logoImageFileId?.getUrl() {
                 AsyncImage(url: url)
                     .frame(width: 100, height: 100)
                     .padding(.top, 50)
@@ -35,67 +35,64 @@ struct LoginView: View {
             
             TextField("Email", text: $email)
                 .textInputAutocapitalization(.never)
+                .textFieldStyle(.roundedBorder)
+                .textContentType(.emailAddress)
                 .autocorrectionDisabled()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
                 .disabled(isLoading)
                 .frame(maxWidth: 400)
             
             SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .textContentType(.emailAddress)
+                .textFieldStyle(.roundedBorder)
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
                 .disabled(isLoading)
                 .frame(maxWidth: 400)
-                .onSubmit {
-                    Task {
-                        do {
-                            let (user, token) = try await loginAsync()
-                            onLogin((user, token))
-                        } catch {
-                            print("error \(error)")
-                        }
-                    }
-                }
+                .onSubmit(onSubmit)
                 
-            Button(action: {
-                Task {
-                    do {
-                        let (user, token) = try await loginAsync()
-                        onLogin((user, token))
-                    } catch {
-                        print("error \(error)")
-                    }
-                }
-            }) {
+            Button(action: onSubmit) {
                 Text("Login")
+                    .foregroundStyle(
+                        modelData.currentTenant?.getThemeColor(forKey: "primaryColor") ?? .primary
+                    )
                     .frame(width: 200, height: 40) // Adjust the button size as needed
-                    .background(isDisabled() ? .gray : .red)
-                    .foregroundColor(isDisabled() ? .black : .white)
+                    .background(isDisabled() ? .white : modelData.currentTenant?.getThemeColor(forKey: "primaryColor"))
+                    .foregroundColor(
+                        isDisabled() ?
+                            modelData.currentTenant?.getThemeColor(forKey: "disabledColor") :
+                            modelData.currentTenant?.getThemeColor(forKey: "textContrastColor")
+                        )
                     .cornerRadius(8)
                     .padding(.top, 20)
             }
             .disabled(isDisabled())
             
-            
             Spacer()
             
             HStack(alignment: .bottom) {
                 Button("Schule wechseln", systemImage: "chevron.backward") {
-                    onResetTenant()
+                    modelData.reset()
                 }
                 .padding(.leading, 16)
                 Spacer()
             }
         }
-        .background {
-            if let url = api.tenant?.backgroundImageFileId?.getUrl() {
-                AsyncImage(url: url)
-                    .scaledToFill()
-                    .opacity(0.25)
-            } else {
-                EmptyView()
+        .onAppear(perform: {
+            let color = modelData.currentTenant?.getThemeColor(forKey: "disabledColor")
+            print("primary: \(String(describing: color))")
+        })
+    }
+    
+    func onSubmit() -> Void {
+        Task {
+            do {
+                let (user, token) = try await loginAsync()
+                let session = LoginSession(user: user, token: token)
+                modelData.setSession(session)
+            } catch {
+                print("error \(error)")
             }
         }
     }
@@ -107,14 +104,14 @@ struct LoginView: View {
     func loginAsync() async throws -> (User, String) {
         isLoading = true
         do {
-            let tokenGraphqlResult = try await api.apollo.performAsync(
+            let tokenGraphqlResult = try await modelData.api.apollo.performAsync(
                 mutation: LoginMutation(username: email, password: password)
             )
             guard let token = tokenGraphqlResult.data?.login?.accessToken else {
                 print("No token in response! \(tokenGraphqlResult)")
                 throw NSError() //  TODO: Change this to error type when it's moved
             }
-            let authenticatedApi = CoreApi(userToken: token, tenant: api.tenant)
+            let authenticatedApi = CoreApi(withTenantSlug: modelData.currentTenant!.slug, authToken: token)
             let userGraphqlResult = try await authenticatedApi.apollo.fetchAsync(
                 query: GetCurrentUserQuery(),
                 cachePolicy: .fetchIgnoringCacheCompletely
@@ -123,7 +120,7 @@ struct LoginView: View {
                 print("No user in response! \(userGraphqlResult)")
                 throw NSError() //  TODO: Change this to error type when it's moved
             }
-            return (User(from: userResult, for: api.tenant!), token)
+            return (User(from: userResult), token)
         } catch {
             print("Failure! Error: \(error)")
             self.isLoading = false
@@ -134,14 +131,7 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(
-            api: CoreApi(
-                userToken: nil,
-                tenant: Tenant(id: "1", title: "Titel", slug: "test")
-            ),
-            onResetTenant: {},
-            onLogin: { (_, _) in }
-        )
-        .environmentObject(ModelData(tenant: Tenant(id: "1", title: "Titel", slug: "test")))
+        LoginView()
+        .environment(ModelData())
     }
 }

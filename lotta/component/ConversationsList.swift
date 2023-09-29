@@ -13,7 +13,7 @@ struct ConversationsList : View {
     var currentUser: User?
     var body: some View {
         List {
-            ForEach(conversations) { conversation in
+            ForEach(conversations, id: \.id) { conversation in
                 NavigationLink {
                     MessageListView(conversation: conversation)
                 } label: {

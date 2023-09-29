@@ -9,7 +9,7 @@ import LottaCoreAPI
 import SwiftUI
 
 struct MessageInput : View {
-    @EnvironmentObject var modelData: ModelData
+    @Environment(ModelData.self) var modelData: ModelData
     var user: User?
     var group: Group?
     var onSent: (Message) -> ()
@@ -33,7 +33,7 @@ struct MessageInput : View {
                 }
             }, label: {
                 Image(systemName: "paperplane")
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
             })
         }
         .padding(4)
@@ -59,7 +59,7 @@ struct MessageInput : View {
                 )
             )
             if let message = graphqlResult.data?.message {
-                onSent(Message(from: message, for: modelData.api.tenant!))
+                onSent(Message(from: message))
                 content = ""
             }
             print(graphqlResult)
@@ -73,4 +73,5 @@ struct MessageInput : View {
     MessageInput { message in
         print(message)
     }
+    .environment(ModelData())
 }

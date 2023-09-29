@@ -10,65 +10,71 @@ import Apollo
 import ApolloAPI
 import ApolloWebSocket
 import Combine
+import LottaCoreAPI
+import SwiftData
 
-let BASE_HOST = "core.staging.lotta.schule"
-let HTTP_URL = URL(string: "https://\(BASE_HOST)/api")!
-let WEBSOCKET_URL = URL(string: "wss://\(BASE_HOST)/api/graphql-socket/websocket")!
+fileprivate let BASE_HOST = "core.staging.lotta.schule"
+fileprivate let HTTP_URL = URL(string: "https://\(BASE_HOST)/api")!
+fileprivate let WEBSOCKET_URL = URL(string: "wss://\(BASE_HOST)/api/graphql-socket/websocket")!
 
-class CoreApi: ObservableObject {
-    let apollo: ApolloClient
+fileprivate func getHttpTransport(authToken: String? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
+    var additionalHeaders: [String:String] = [:]
+    if let token = authToken {
+        additionalHeaders["Authorization"] = "Bearer \(token)"
+    }
+    if let slug = slug {
+        additionalHeaders["Tenant"] = "slug:\(slug)"
+    }
+    /// An HTTP transport to use for queries and mutations
+    return RequestChainNetworkTransport(
+        interceptorProvider: DefaultInterceptorProvider(store: store),
+        endpointURL: HTTP_URL,
+        additionalHeaders: additionalHeaders
+    )
+}
+
+fileprivate func getWSTransport(authToken: String, tenantId tid: String, store: ApolloStore) -> WebSocketTransport {
+    return WebSocketTransport(
+        websocket: WebSocket(
+            url: WEBSOCKET_URL,
+            protocol: .graphql_transport_ws
+        ),
+        config: WebSocketTransport.Configuration(
+        connectingPayload: [
+            "tid": tid,
+            "token": authToken
+        ]
+    ))
+}
+
+class CoreApi {
+    private(set) var apollo: ApolloClient
     
-    let tenant: Tenant?
-    
-    init(userToken: String?, tenant: Tenant?) {
-        self.tenant = tenant
+    init() {
         let store = ApolloStore(cache: InMemoryNormalizedCache())
+        let transport = getHttpTransport(store: store)
+        let client  = ApolloClient(networkTransport: transport, store: store)
         
-        /// A web socket transport to use for subscriptions
-        let webSocketTransport: WebSocketTransport? = if let token = userToken, let tid = tenant?.id {
-            WebSocketTransport(
-                websocket: WebSocket(
-                    url: WEBSOCKET_URL,
-                    protocol: .graphql_transport_ws
-                ),
-                config: WebSocketTransport.Configuration(
-                connectingPayload: [
-                    "tid": tid,
-                    "token": token
-                ]
-            ))
-        } else {
-            nil
-        }
-
-        var additionalHeaders: [String:String] = [:]
-        if let token = userToken {
-            additionalHeaders["Authorization"] = "Bearer \(token)"
-        }
-        if let slug = tenant?.slug {
-            additionalHeaders["Tenant"] = "slug:\(slug)"
-        }
-        /// An HTTP transport to use for queries and mutations
-        let httpTransport = RequestChainNetworkTransport(
-            interceptorProvider: DefaultInterceptorProvider(store: store),
-            endpointURL: HTTP_URL,
-            additionalHeaders: additionalHeaders
-        )
+        self.apollo = client
+    }
+    init(withTenantSlug slug: String, authToken: String? = nil) {
+        let store = ApolloStore(cache: InMemoryNormalizedCache())
+        let transport = getHttpTransport(authToken: authToken, tenantSlug: slug, store: store)
+        self.apollo = ApolloClient(networkTransport: transport, store: store)
+    }
+    init(withTenantSlug slug: String, tenantId: String, andAuthToken authToken: String) {
+        let store = ApolloStore(cache: InMemoryNormalizedCache())
+        let httpTransport = getHttpTransport(authToken: authToken, tenantSlug: slug, store: store)
+        let wsTransport = getWSTransport(authToken: authToken, tenantId: tenantId, store: store)
         
-        /// A split network transport to allow the use of both of the above
-        /// transports through a single `NetworkTransport` instance.
-        let splitNetworkTransport: SplitNetworkTransport? = if let webSocketTransport = webSocketTransport {
+        let transport =
             SplitNetworkTransport(
                 uploadingNetworkTransport: httpTransport,
-                webSocketNetworkTransport: webSocketTransport
+                webSocketNetworkTransport: wsTransport
             )
-        } else {
-            nil
-        }
         
-        apollo = ApolloClient(networkTransport: splitNetworkTransport ?? httpTransport, store: store)
+        self.apollo = ApolloClient(networkTransport: transport, store: store)
     }
-    
 }
 
 extension ApolloClient {

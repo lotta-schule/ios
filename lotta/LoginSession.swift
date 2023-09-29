@@ -10,3 +10,9 @@ struct LoginSession {
     var user: User?
     var token: String?
 }
+
+extension LoginSession: Equatable {
+    static func == (lhs: LoginSession, rhs: LoginSession) -> Bool {
+        return lhs.token == rhs.token
+    }
+}

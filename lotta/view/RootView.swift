@@ -11,12 +11,11 @@ import LottaCoreAPI
 struct RootView: View {
     @AppStorage("lotta-tenant-slug") var currentTenantSlug = ""
     
-    @State var currentTenant: Tenant? = nil
-    @State var session: LoginSession? = nil
+    @Environment(ModelData.self) var modelData
     
     var body: some View {
         HStack {
-            if currentTenant == nil {
+            if modelData.currentTenant == nil {
                 if currentTenantSlug.isEmpty {
                     SelectTenantView { tenant in
                         currentTenantSlug = tenant.slug
@@ -24,34 +23,36 @@ struct RootView: View {
                 } else {
                     ProgressView()
                 }
-            } else if session == nil {
-                LoginView(
-                    api: CoreApi(userToken: nil, tenant: currentTenant),
-                    onResetTenant: {
-                        currentTenantSlug = ""
-                    }
-                ) { result in
-                    self.session = LoginSession(user: result.0, token: result.1)
-                }
+            } else if modelData.currentSession == nil {
+                LoginView()
             } else {
-                MainView(onLogout: {
-                    session = nil
-                })
-                .environmentObject(
-                    ModelData(tenant: currentTenant!, session: session!)
-                )
+                MainView()
+            }
+        }
+        .preferredColorScheme(.light)
+        .background {
+            ZStack {
+                modelData.currentTenant?.getThemeColor(forKey: "pageBackgroundColor")
+                if let url = modelData.currentTenant?.backgroundImageFileId?.getUrl() {
+                    AsyncImage(url: url)
+                        .scaledToFill()
+                        .opacity(0.25)
+                    
+                } else {
+                    EmptyView()
+                }
             }
         }
         .onChange(of: currentTenantSlug, initial: true) {
             Task {
-                if currentTenant?.slug != currentTenantSlug {
-                    currentTenant = nil
-                    let api = CoreApi(userToken: nil, tenant: Tenant(id: "", title: "", slug: currentTenantSlug))
+                if modelData.currentTenant?.slug != currentTenantSlug {
+                    modelData.reset(keepCurrentTenantSlug: true)
+                    let api = CoreApi(withTenantSlug: currentTenantSlug)
                     do {
                         let graphqlResponse = try await api.apollo.fetchAsync(query: GetTenantQuery(), cachePolicy: .fetchIgnoringCacheData)
                         if let tenant = graphqlResponse.data?.tenant {
                             let tenant = Tenant(from: tenant)
-                            currentTenant = tenant
+                            modelData.setTenant(tenant)
                         } else {
                             currentTenantSlug = ""
                         }

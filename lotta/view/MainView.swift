@@ -8,18 +8,25 @@
 import SwiftUI
 
 struct MainView : View {
-    var onLogout: () -> ()
+    @Environment(ModelData.self) var modelData: ModelData
+    
     var body: some View {
             TabView {
                 MessagingView()
-                    .badge(2)
+                    .badge(modelData.unreadMessageCount)
                     .tabItem {
                         Label("Nachrichten", systemImage: "message")
                     }
-                ProfileView(onLogout: onLogout)
+                ProfileView()
                     .tabItem {
                         Label("Profil", systemImage: "person")
                     }
+            }
+            .onAppear {
+                Task {
+                    try? await modelData.loadConversations()
+                }
+                modelData.subscribeToMessages()
             }
     }
 }

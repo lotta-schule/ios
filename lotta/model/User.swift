@@ -8,11 +8,8 @@
 import LottaCoreAPI
 import SwiftData
 
-@Model
 class User: Identifiable {
-    @Attribute(.unique) var id: ID
-    
-    var tenant: Tenant
+    var id: ID
     
     var name: String?
     
@@ -20,71 +17,73 @@ class User: Identifiable {
     
     var avatarImageFileId: LottaFileID?
     
-    init(id: ID, name: String?, nickname: String?, avatarImageFileId: LottaFileID? = nil, tenant: Tenant) {
+    init(id: ID, name: String?, nickname: String?, avatarImageFileId: LottaFileID? = nil) {
         self.id = id
         self.name = name
         self.nickname = nickname
         self.avatarImageFileId = avatarImageFileId
-        self.tenant = tenant
     }
     
-    convenience init(from graphQLResult: GetCurrentUserQuery.Data.CurrentUser, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetCurrentUserQuery.Data.CurrentUser) {
         self.init(
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
-            avatarImageFileId: graphQLResult.avatarImageFile?.id,
-            tenant: tenant
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
     
-    convenience init(from graphQLResult: GetConversationsQuery.Data.Conversation.User, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetConversationsQuery.Data.Conversation.User) {
         self.init(
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
-            avatarImageFileId: graphQLResult.avatarImageFile?.id,
-            tenant: tenant
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.User, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.User) {
         self.init(
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
-            avatarImageFileId: graphQLResult.avatarImageFile?.id,
-            tenant: tenant
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.Message.User, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.Message.User) {
         self.init(
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
-            avatarImageFileId: graphQLResult.avatarImageFile?.id,
-            tenant: tenant
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
     
-    convenience init(from graphQLResult: SendMessageMutation.Data.Message.User, for tenant: Tenant) {
+    convenience init(from graphQLResult: SendMessageMutation.Data.Message.User) {
         self.init(
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
-            avatarImageFileId: graphQLResult.avatarImageFile?.id,
-            tenant: tenant
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
     
-    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.User, for tenant: Tenant) {
+    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.User) {
         self.init(
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
-            avatarImageFileId: graphQLResult.avatarImageFile?.id,
-            tenant: tenant
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
+        )
+    }
+    
+    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation.User) {
+        self.init(
+            id: graphQLResult.id!,
+            name: graphQLResult.name,
+            nickname: graphQLResult.nickname,
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
     

@@ -8,7 +8,7 @@
 import Foundation
 import LottaCoreAPI
 
-class Message: Identifiable {
+final class Message {
     var id: ID
     
     var user: User
@@ -24,28 +24,28 @@ class Message: Identifiable {
         self.insertedAt = createdAt
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.Message, for tenant: Tenant) {
+    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.Message) {
         self.init(
             id: graphQLResult.id!,
-            user: User(from: graphQLResult.user!, for: tenant),
+            user: User(from: graphQLResult.user!),
             content: graphQLResult.content,
             createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now
         )
     }
     
-    convenience init(from graphQLResult: SendMessageMutation.Data.Message, for tenant: Tenant) {
+    convenience init(from graphQLResult: SendMessageMutation.Data.Message) {
         self.init(
             id: graphQLResult.id!,
-            user: User(from: graphQLResult.user!, for: tenant),
+            user: User(from: graphQLResult.user!),
             content: graphQLResult.content,
             createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now
         )
     }
     
-    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message, for tenant: Tenant) {
+    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message) {
         self.init(
             id: graphQLResult.id!,
-            user: User(from: graphQLResult.user!, for: tenant),
+            user: User(from: graphQLResult.user!),
             content: graphQLResult.content,
             createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now
         )

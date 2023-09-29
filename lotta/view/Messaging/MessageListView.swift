@@ -9,70 +9,41 @@ import SwiftUI
 import LottaCoreAPI
 
 struct MessageListView : View {
+    @Environment(ModelData.self) private var modelData: ModelData
+    
     var conversation: Conversation
-    
-    @EnvironmentObject var modelData: ModelData
-    
-    @State var messages = [Message]()
     
     var body: some View {
         ScrollViewReader { scrollViewReader in
             ScrollView {
-                ForEach(messages) { message in
-                    MessageRow(message: message, fromCurrentUser: message.user.id == modelData.currentUser.id)
+                ForEach(conversation.messages, id: \.id) { message in
+                    MessageRow(message: message, fromCurrentUser: message.user.id == modelData.currentSession?.user?.id)
                         .id(message.id)
                 }
             }
-            .navigationTitle(conversation.getName(excluding: modelData.currentUser))
+            .navigationTitle(conversation.getName(excluding: modelData.currentSession?.user))
             .task {
-                await loadConversation()
+                do {
+                    try await modelData.loadConversation(conversation)
+                } catch {
+                    print("Error: \(error)")
+                }
             }
-            .onChange(of: messages.count, initial: true) { _, _  in
-                scrollViewReader.scrollTo(messages.last?.id)
+            .onChange(of: conversation.messages.count, initial: true) { _, _  in
+                scrollViewReader.scrollTo(conversation.messages.last?.id)
             }
                 
         }
             
         MessageInput(
-            user: conversation.users.first(where: { $0.id != modelData.currentUser.id }),
+            user: conversation.users.first(where: { $0.id != modelData.currentSession?.user?.id }),
             group: conversation.groups.first
         ) { message in
             withAnimation(.bouncy) {
-                messages.append(message)
+                self.modelData.addMessage(message, toConversation: conversation)
             }
-        }
-        .onAppear {
-            _ = modelData.api.apollo.subscribe(
-                subscription: ReceiveMessageSubscription()) {
-                    switch $0 {
-                        case .success(let graphqlResult):
-                            if let conversationId = graphqlResult.data?.message?.conversation?.id {
-                                if self.conversation.id == conversationId {
-                                    if let messageData = graphqlResult.data?.message {
-                                        self.messages.append(Message(from: messageData, for: modelData.api.tenant!))
-                                    }
-                                }
-                            }
-                        case .failure(let error):
-                            print("Error subscribing: \(error)")
-                    }
-                }
         }
 
     }
     
-    private func loadConversation() async -> Void {
-        do {
-            let result = try await modelData.api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id), cachePolicy: .fetchIgnoringCacheData)
-            if let conversation = result.data?.conversation {
-                let loadedConversation = Conversation(from: conversation, for: modelData.api.tenant!)
-                messages.removeAll()
-                loadedConversation.messages.forEach { message in
-                    messages.append(message)
-                }
-            }
-        } catch  {
-            print(error)
-        }
-    }
 }

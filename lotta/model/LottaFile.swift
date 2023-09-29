@@ -9,9 +9,8 @@ import Foundation
 import LottaCoreAPI
 import SwiftData
 
-@Model
 final class LottaFile: Identifiable {
-    @Attribute(.unique) var id: ID
+    var id: ID
     
     var tenant: Tenant
     

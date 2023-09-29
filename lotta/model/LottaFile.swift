@@ -33,3 +33,7 @@ extension LottaFileID {
             .appending(queryItems: queryItems)
     }
 }
+
+protocol GQLFileData {
+    var id: String? { get }
+}

@@ -22,6 +22,10 @@ import SwiftUI
         }
     }
     
+    var theme: Theme {
+        self.currentTenant?.customTheme ?? Theme.Default
+    }
+    
     func setTenant(_ tenant: Tenant) -> Void {
         let shouldUpdateApi = tenant != currentTenant
         self.currentTenant = tenant

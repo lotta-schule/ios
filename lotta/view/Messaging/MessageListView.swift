@@ -17,8 +17,12 @@ struct MessageListView : View {
         ScrollViewReader { scrollViewReader in
             ScrollView {
                 ForEach(conversation.messages, id: \.id) { message in
-                    MessageRow(message: message, fromCurrentUser: message.user.id == modelData.currentSession?.user?.id)
-                        .id(message.id)
+                    MessageRow(
+                        message: message,
+                        fromCurrentUser: message.user.id == modelData.currentSession?.user?.id
+                    )
+                    .padding(.horizontal, CGFloat(modelData.theme.spacing))
+                    .id(message.id)
                 }
             }
             .navigationTitle(conversation.getName(excluding: modelData.currentSession?.user))

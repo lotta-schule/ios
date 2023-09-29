@@ -35,7 +35,6 @@ struct Avatar: View {
             .clipShape(.circle)
         } else {
             EmptyView()
-                .frame(width: 44, height: 44)
         }
     }
     

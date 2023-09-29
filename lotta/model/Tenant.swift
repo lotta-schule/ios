@@ -15,7 +15,7 @@ final class Tenant {
     
     var slug: String
     
-    var customTheme = [String: String]()
+    var customTheme = Theme()
     
     var files = [LottaFile]()
     
@@ -34,11 +34,13 @@ final class Tenant {
         if let customTheme = customTheme {
             switch customTheme {
             case .dictionary(let themeDict):
+                var themeOverrides: [String:String] = [:]
                 for (key, value) in themeDict {
                     if let value = value as? String {
-                        self.customTheme[key] = value
+                        themeOverrides[key] = value
                     }
                 }
+                self.customTheme = Theme(themeOverrides: themeOverrides)
             default:
                 print("Unexpected theme \(customTheme)")
             }
@@ -54,29 +56,6 @@ final class Tenant {
             backgroundImageFileId: graphqlResult.configuration?.backgroundImageFile?.id,
             logoImageFileId: graphqlResult.configuration?.logoImageFile?.id
         )
-    }
-    
-    func getThemeColor(forKey key: String) -> Color? {
-        guard let value = self.customTheme[key] else {
-            return nil
-        }
-        let fullHexColorRegex = /#([\dA-Za-z]{2})([\dA-Za-z]{2})([\dA-Za-z]{2})([\dA-Za-z]{2})?/
-        let simpleHexColorRegex = /#([\dA-Za-z])([\dA-Za-z])([\dA-Za-z])([\dA-Za-z])?/
-        if let match = (value.firstMatch(of: fullHexColorRegex) ?? value.firstMatch(of: simpleHexColorRegex)) {
-            guard let red = Int(match.1, radix: 16), let green = Int(match.2, radix: 16), let blue = Int(match.3, radix: 16) else {
-                return nil
-            }
-            let opacity: Double? = if let opacityString = match.4 { Double(opacityString) } else { nil }
-            if let opacity = opacity {
-                return Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255, opacity: opacity / 255)
-            } else {
-                let color = Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255)
-                print("\(key): \(String(describing: color))")
-                return color
-            }
-        }
-        
-        return nil
     }
     
 }

@@ -11,6 +11,7 @@ import LottaCoreAPI
 struct ConversationsList : View {
     var conversations: [Conversation]
     var currentUser: User?
+
     var body: some View {
         List {
             ForEach(conversations, id: \.id) { conversation in

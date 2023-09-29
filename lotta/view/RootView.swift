@@ -30,9 +30,10 @@ struct RootView: View {
             }
         }
         .preferredColorScheme(.light)
+        .tint(modelData.theme.primaryColor)
         .background {
             ZStack {
-                modelData.currentTenant?.getThemeColor(forKey: "pageBackgroundColor")
+                modelData.theme.pageBackgroundColor
                 if let url = modelData.currentTenant?.backgroundImageFileId?.getUrl() {
                     AsyncImage(url: url)
                         .scaledToFill()

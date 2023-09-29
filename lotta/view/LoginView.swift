@@ -51,23 +51,9 @@ struct LoginView: View {
                 .disabled(isLoading)
                 .frame(maxWidth: 400)
                 .onSubmit(onSubmit)
-                
-            Button(action: onSubmit) {
-                Text("Login")
-                    .foregroundStyle(
-                        modelData.currentTenant?.getThemeColor(forKey: "primaryColor") ?? .primary
-                    )
-                    .frame(width: 200, height: 40) // Adjust the button size as needed
-                    .background(isDisabled() ? .white : modelData.currentTenant?.getThemeColor(forKey: "primaryColor"))
-                    .foregroundColor(
-                        isDisabled() ?
-                            modelData.currentTenant?.getThemeColor(forKey: "disabledColor") :
-                            modelData.currentTenant?.getThemeColor(forKey: "textContrastColor")
-                        )
-                    .cornerRadius(8)
-                    .padding(.top, 20)
-            }
-            .disabled(isDisabled())
+            
+            LottaButton(action: onSubmit)
+                .disabled(isDisabled())
             
             Spacer()
             
@@ -79,10 +65,6 @@ struct LoginView: View {
                 Spacer()
             }
         }
-        .onAppear(perform: {
-            let color = modelData.currentTenant?.getThemeColor(forKey: "disabledColor")
-            print("primary: \(String(describing: color))")
-        })
     }
     
     func onSubmit() -> Void {
@@ -132,6 +114,6 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
-        .environment(ModelData())
+            .environment(ModelData())
     }
 }

@@ -19,12 +19,9 @@ struct MessagingView: View {
                 currentUser: modelData.currentSession?.user
             )
             .refreshable {
-                await loadConversations()
+                try? await modelData.loadConversations()
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
                 ToolbarItem {
                     Button(action: addItem) {
                         Label("Add Item", systemImage: "plus")
@@ -33,14 +30,6 @@ struct MessagingView: View {
             }
         } detail: {
             Text("Select an item")
-        }
-    }
-    
-    private func loadConversations() async -> Void {
-        do {
-            try await modelData.loadConversations()
-        } catch  {
-            print(error)
         }
     }
     
@@ -62,5 +51,5 @@ struct MessagingView: View {
 
 #Preview {
     MessagingView()
-        // .modelContainer(for: Item.self, inMemory: true)
+        .environment(ModelData())
 }

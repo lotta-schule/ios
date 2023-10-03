@@ -38,6 +38,7 @@ struct RootView: View {
                     AsyncImage(url: url)
                         .scaledToFill()
                         .opacity(0.25)
+                        .ignoresSafeArea(.all)
                     
                 } else {
                     EmptyView()

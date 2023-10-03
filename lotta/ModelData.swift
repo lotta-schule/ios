@@ -42,7 +42,7 @@ let keychain = KeychainSwift()
                 self.currentSession.refreshToken = jwt
             }
         
-            self.setApi()
+            self.recreateApi()
             
             Task {
                 await self.authenticate()
@@ -52,12 +52,14 @@ let keychain = KeychainSwift()
     
     func setUser(_ user: User) -> Void {
         self.currentUser = user
+        self.recreateApi()
     }
     
     func resetUser() -> Void {
         self.currentUser = nil
         self.currentSession.accessToken = nil
         self.currentSession.refreshToken = nil
+        self.recreateApi()
     }
     
     func addMessage(_ message: Message, toConversation conversation: Conversation) -> Void {
@@ -93,6 +95,8 @@ let keychain = KeychainSwift()
                 return false
             }
             currentSession.accessToken = accessToken
+            
+            self.recreateApi()
             
             return await authenticate()
         } catch {
@@ -158,7 +162,7 @@ let keychain = KeychainSwift()
             }
     }
 
-    private func setApi() -> Void {
+    private func recreateApi() -> Void {
         if let currentTenant = currentTenant {
             if currentSession.accessToken != nil {
                 self.api = CoreApi(withTenantSlug: currentTenant.slug, tenantId: currentTenant.id, andLoginSession: currentSession)

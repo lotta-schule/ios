@@ -26,11 +26,13 @@ struct MessageListView : View {
                 }
             }
             .navigationTitle(conversation.getName(excluding: modelData.currentUser))
-            .task {
-                do {
-                    try await modelData.loadConversation(conversation)
-                } catch {
-                    print("Error: \(error)")
+            .onChange(of: conversation.id, initial: true) { _, _ in
+                Task {
+                    do {
+                        try await modelData.loadConversation(conversation)
+                    } catch {
+                        print("Error: \(error)")
+                    }
                 }
             }
             .onChange(of: conversation.messages.count, initial: true) { _, _  in

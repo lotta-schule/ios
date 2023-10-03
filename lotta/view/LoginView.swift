@@ -70,9 +70,7 @@ struct LoginView: View {
     func onSubmit() -> Void {
         Task {
             do {
-                let (user, token) = try await loginAsync()
-                let session = LoginSession(user: user, token: token)
-                modelData.setSession(session)
+                try await loginAsync()
             } catch {
                 print("error \(error)")
             }
@@ -83,26 +81,10 @@ struct LoginView: View {
         email.isEmpty || password.isEmpty || isLoading
     }
     
-    func loginAsync() async throws -> (User, String) {
+    func loginAsync() async throws -> Void {
         isLoading = true
         do {
-            let tokenGraphqlResult = try await modelData.api.apollo.performAsync(
-                mutation: LoginMutation(username: email, password: password)
-            )
-            guard let token = tokenGraphqlResult.data?.login?.accessToken else {
-                print("No token in response! \(tokenGraphqlResult)")
-                throw NSError() //  TODO: Change this to error type when it's moved
-            }
-            let authenticatedApi = CoreApi(withTenantSlug: modelData.currentTenant!.slug, authToken: token)
-            let userGraphqlResult = try await authenticatedApi.apollo.fetchAsync(
-                query: GetCurrentUserQuery(),
-                cachePolicy: .fetchIgnoringCacheCompletely
-            )
-            guard let userResult = userGraphqlResult.data?.currentUser else {
-                print("No user in response! \(userGraphqlResult)")
-                throw NSError() //  TODO: Change this to error type when it's moved
-            }
-            return (User(from: userResult), token)
+            _ = try await modelData.authenticate(username: email, password: password)
         } catch {
             print("Failure! Error: \(error)")
             self.isLoading = false

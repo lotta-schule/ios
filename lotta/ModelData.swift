@@ -5,13 +5,18 @@
 //  Created by Alexis Rinaldoni on 19/09/2023.
 //
 
+import KeychainSwift
 import LottaCoreAPI
-import Apollo
+import JWTDecode
 import SwiftUI
+import Apollo
+
+let keychain = KeychainSwift()
 
 @Observable final class ModelData {
     private(set) var currentTenant: Tenant? = nil
-    private(set) var currentSession: LoginSession? = nil
+    private(set) var currentSession = LoginSession()
+    private(set) var currentUser: User? = nil
     private(set) var api = CoreApi()
     
     private(set) var conversations = [Conversation]()
@@ -29,17 +34,30 @@ import SwiftUI
     func setTenant(_ tenant: Tenant) -> Void {
         let shouldUpdateApi = tenant != currentTenant
         self.currentTenant = tenant
+        
         if shouldUpdateApi {
+            let savedRefreshToken = keychain.get("\(tenant.id)--refresh-token")
+            
+            if let tokenString = savedRefreshToken, let jwt = try? decode(jwt: tokenString) {
+                self.currentSession.refreshToken = jwt
+            }
+        
             self.setApi()
+            
+            Task {
+                await self.authenticate()
+            }
         }
     }
     
-    func setSession(_ session: LoginSession?) -> Void {
-        let shouldUpdateApi = session != currentSession
-        self.currentSession = session
-        if shouldUpdateApi {
-            self.setApi()
-        }
+    func setUser(_ user: User) -> Void {
+        self.currentUser = user
+    }
+    
+    func resetUser() -> Void {
+        self.currentUser = nil
+        self.currentSession.accessToken = nil
+        self.currentSession.refreshToken = nil
     }
     
     func addMessage(_ message: Message, toConversation conversation: Conversation) -> Void {
@@ -60,8 +78,46 @@ import SwiftUI
             UserDefaults.standard.set("", forKey: "lotta-tenant-slug")
         }
         self.currentTenant = nil
-        self.currentSession = nil
+        self.resetUser()
         self.api = CoreApi()
+    }
+    
+    // API Helper Functions
+    
+    func authenticate(username: String, password: String) async -> Bool {
+        do {
+            let tokenGraphqlResult = try await api.apollo.performAsync(
+                mutation: LoginMutation(username: username, password: password)
+            )
+            guard let accessToken = tokenGraphqlResult.data?.login?.accessToken, let accessToken = try? decode(jwt: accessToken) else {
+                return false
+            }
+            currentSession.accessToken = accessToken
+            
+            return await authenticate()
+        } catch {
+            print("Error: \(error)")
+            return false
+        }
+    }
+    
+    func authenticate() async -> Bool {
+        do {
+            let userGraphqlResult = try await api.apollo.fetchAsync(
+                query: GetCurrentUserQuery(),
+                cachePolicy: .fetchIgnoringCacheCompletely
+            )
+            guard let userResult = userGraphqlResult.data?.currentUser else {
+                print("No user in response! \(userGraphqlResult)")
+                self.resetUser()
+                return false
+            }
+            self.setUser(User(from: userResult))
+            return true
+        } catch {
+            print("error logging in: \(error)")
+            return false
+        }
     }
     
     func loadConversations() async throws -> Void {
@@ -104,10 +160,10 @@ import SwiftUI
 
     private func setApi() -> Void {
         if let currentTenant = currentTenant {
-            if let currentSession = currentSession, let token = currentSession.token {
-                self.api = CoreApi(withTenantSlug: currentTenant.slug, tenantId: currentTenant.id, andAuthToken: token)
+            if currentSession.accessToken != nil {
+                self.api = CoreApi(withTenantSlug: currentTenant.slug, tenantId: currentTenant.id, andLoginSession: currentSession)
             } else {
-                self.api = CoreApi(withTenantSlug: currentTenant.slug)
+                self.api = CoreApi(withTenantSlug: currentTenant.slug, loginSession: currentSession)
             }
         } else {
             self.api = CoreApi()

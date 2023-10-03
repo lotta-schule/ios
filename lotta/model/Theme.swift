@@ -22,7 +22,6 @@ fileprivate func getColor(forKey key: String, in dict: [String: String]) -> Colo
             return Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255, opacity: opacity / 255)
         } else {
             let color = Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255)
-            print("\(key): \(String(describing: color))")
             return color
         }
     }

@@ -52,5 +52,179 @@
             landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C4625C48-ADEB-441E-B49C-4455AF4F7859"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lotta/CoreApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "refresh(loginSession:forTenant:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C4625C48-ADEB-441E-B49C-4455AF4F7859 - 2fcbd1e6306c8574"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "984">
+               </Location>
+               <Location
+                  uuid = "C4625C48-ADEB-441E-B49C-4455AF4F7859 - c72d686e65484499"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "C4625C48-ADEB-441E-B49C-4455AF4F7859 - bfbc3ed1406a4972"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "C4625C48-ADEB-441E-B49C-4455AF4F7859 - f78b32570866f371"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "104">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "41939058-0731-4F9D-A402-1F223BFE0B1C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lotta/CoreApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "refresh(loginSession:forTenant:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "41939058-0731-4F9D-A402-1F223BFE0B1C - bfbc3ed1406a49a8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "740">
+               </Location>
+               <Location
+                  uuid = "41939058-0731-4F9D-A402-1F223BFE0B1C - f78b32570866f3ab"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "720">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "68B14F40-59A7-4FA2-A76F-72C580AD9370"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lotta/CoreApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "refresh(loginSession:forTenant:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "68B14F40-59A7-4FA2-A76F-72C580AD9370 - bfbc3ed1406a492c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "62"
+                  endingLineNumber = "62"
+                  offsetFromSymbolStart = "1048">
+               </Location>
+               <Location
+                  uuid = "68B14F40-59A7-4FA2-A76F-72C580AD9370 - f78b32570866f32f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for static lotta.CoreApi.refresh(loginSession: lotta.LoginSession, forTenant: Swift.String) async -&gt; Swift.Optional&lt;lotta.LoginSession&gt;"
+                  moduleName = "lotta"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/CoreApi.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "62"
+                  endingLineNumber = "62"
+                  offsetFromSymbolStart = "1032">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

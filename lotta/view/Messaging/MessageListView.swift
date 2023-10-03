@@ -19,13 +19,13 @@ struct MessageListView : View {
                 ForEach(conversation.messages, id: \.id) { message in
                     MessageRow(
                         message: message,
-                        fromCurrentUser: message.user.id == modelData.currentSession?.user?.id
+                        fromCurrentUser: message.user.id == modelData.currentUser?.id
                     )
                     .padding(.horizontal, CGFloat(modelData.theme.spacing))
                     .id(message.id)
                 }
             }
-            .navigationTitle(conversation.getName(excluding: modelData.currentSession?.user))
+            .navigationTitle(conversation.getName(excluding: modelData.currentUser))
             .task {
                 do {
                     try await modelData.loadConversation(conversation)
@@ -40,7 +40,7 @@ struct MessageListView : View {
         }
             
         MessageInput(
-            user: conversation.users.first(where: { $0.id != modelData.currentSession?.user?.id }),
+            user: conversation.users.first(where: { $0.id != modelData.currentUser?.id }),
             group: conversation.groups.first
         ) { message in
             withAnimation(.bouncy) {

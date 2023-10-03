@@ -23,7 +23,7 @@ struct RootView: View {
                 } else {
                     ProgressView()
                 }
-            } else if modelData.currentSession == nil {
+            } else if modelData.currentUser == nil {
                 LoginView()
             } else {
                 MainView()
@@ -62,7 +62,6 @@ struct RootView: View {
                         currentTenantSlug = ""
                     }
                 }
-                print("currentTenantSlug: \(currentTenantSlug)")
             }
         }
     }

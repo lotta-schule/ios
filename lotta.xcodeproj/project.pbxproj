@@ -40,6 +40,11 @@
 		2E4C2E962AC07B0400F846E9 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E952AC07B0400F846E9 /* Apollo */; };
 		2E4C2E982AC07B0400F846E9 /* ApolloAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E972AC07B0400F846E9 /* ApolloAPI */; };
 		2E4C2E9A2AC07B0400F846E9 /* ApolloWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */; };
+		2E6B04BE2ACB357900A10052 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2E6B04BD2ACB357900A10052 /* KeychainSwift */; };
+		2E6B04C12ACB47AE00A10052 /* AuthorizationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */; };
+		2E6B04C32ACB494900A10052 /* NetworkInterceptorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C22ACB494900A10052 /* NetworkInterceptorProvider.swift */; };
+		2E6B04C62ACB4CA900A10052 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 2E6B04C52ACB4CA900A10052 /* JWTDecode */; };
+		2E6B04C82ACB55F300A10052 /* RefreshTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */; };
 		2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */; };
 		2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7FB2ABCE079000BB6CF /* User.swift */; };
 /* End PBXBuildFile section */
@@ -94,6 +99,9 @@
 		2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottaButton.swift; sourceTree = "<group>"; };
 		2E3952F22AC346810013465C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
+		2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationInterceptor.swift; sourceTree = "<group>"; };
+		2E6B04C22ACB494900A10052 /* NetworkInterceptorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterceptorProvider.swift; sourceTree = "<group>"; };
+		2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenInterceptor.swift; sourceTree = "<group>"; };
 		2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatar.swift; sourceTree = "<group>"; };
 		2E98A7FB2ABCE079000BB6CF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,6 +113,8 @@
 			files = (
 				2E4C2E9A2AC07B0400F846E9 /* ApolloWebSocket in Frameworks */,
 				2E4C2E962AC07B0400F846E9 /* Apollo in Frameworks */,
+				2E6B04C62ACB4CA900A10052 /* JWTDecode in Frameworks */,
+				2E6B04BE2ACB357900A10052 /* KeychainSwift in Frameworks */,
 				2E0268A32AB8988400C18681 /* LottaCoreAPI in Frameworks */,
 				2E4C2E982AC07B0400F846E9 /* ApolloAPI in Frameworks */,
 			);
@@ -150,13 +160,13 @@
 		2E02686A2AB88F4500C18681 /* lotta */ = {
 			isa = PBXGroup;
 			children = (
+				2E6B04BF2ACB477E00A10052 /* api */,
 				2E0268A62AB900E400C18681 /* model */,
 				2E98A7FA2ABCD501000BB6CF /* component */,
 				2E0268AB2AB903AE00C18681 /* view */,
 				2E02686B2AB88F4500C18681 /* lottaApp.swift */,
 				2E0268712AB88F4600C18681 /* Assets.xcassets */,
 				2E0268732AB88F4600C18681 /* Preview Content */,
-				2E02689A2AB8936300C18681 /* CoreApi.swift */,
 				2E12B4002ABE532500555B9D /* LoginSession.swift */,
 				2E0268AE2AB90A2400C18681 /* ModelData.swift */,
 			);
@@ -236,6 +246,17 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		2E6B04BF2ACB477E00A10052 /* api */ = {
+			isa = PBXGroup;
+			children = (
+				2E02689A2AB8936300C18681 /* CoreApi.swift */,
+				2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */,
+				2E6B04C22ACB494900A10052 /* NetworkInterceptorProvider.swift */,
+				2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */,
+			);
+			path = api;
+			sourceTree = "<group>";
+		};
 		2E98A7FA2ABCD501000BB6CF /* component */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +289,8 @@
 				2E4C2E952AC07B0400F846E9 /* Apollo */,
 				2E4C2E972AC07B0400F846E9 /* ApolloAPI */,
 				2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */,
+				2E6B04BD2ACB357900A10052 /* KeychainSwift */,
+				2E6B04C52ACB4CA900A10052 /* JWTDecode */,
 			);
 			productName = lotta;
 			productReference = 2E0268682AB88F4500C18681 /* lotta.app */;
@@ -344,6 +367,8 @@
 			packageReferences = (
 				2E0268A12AB8988400C18681 /* XCLocalSwiftPackageReference "lottaCoreAPI" */,
 				2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */,
+				2E6B04BC2ACB357900A10052 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */,
 			);
 			productRefGroup = 2E0268692AB88F4500C18681 /* Products */;
 			projectDirPath = "";
@@ -394,6 +419,7 @@
 				2E12B4012ABE532500555B9D /* LoginSession.swift in Sources */,
 				2E12B3FD2ABE160500555B9D /* SelectTenantView.swift in Sources */,
 				2E0268AF2AB90A2400C18681 /* ModelData.swift in Sources */,
+				2E6B04C32ACB494900A10052 /* NetworkInterceptorProvider.swift in Sources */,
 				2E12B3EF2ABDE6A100555B9D /* Avatar.swift in Sources */,
 				2E12B3F52ABDF4F900555B9D /* MessageRow.swift in Sources */,
 				2E02686C2AB88F4500C18681 /* lottaApp.swift in Sources */,
@@ -411,6 +437,8 @@
 				2E02689B2AB8936300C18681 /* CoreApi.swift in Sources */,
 				2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */,
 				2E12B3F12ABDEBF000555B9D /* MessageListView.swift in Sources */,
+				2E6B04C82ACB55F300A10052 /* RefreshTokenInterceptor.swift in Sources */,
+				2E6B04C12ACB47AE00A10052 /* AuthorizationInterceptor.swift in Sources */,
 				2E12B3FF2ABE519D00555B9D /* ProfileView.swift in Sources */,
 				2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */,
 			);
@@ -761,6 +789,22 @@
 				minimumVersion = 1.5.0;
 			};
 		};
+		2E6B04BC2ACB357900A10052 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
+			};
+		};
+		2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/JWTDecode.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -782,6 +826,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
 			productName = ApolloWebSocket;
+		};
+		2E6B04BD2ACB357900A10052 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E6B04BC2ACB357900A10052 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+		2E6B04C52ACB4CA900A10052 /* JWTDecode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */;
+			productName = JWTDecode;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -16,7 +16,7 @@ struct MessagingView: View {
         NavigationSplitView {
             ConversationsList(
                 conversations: modelData.conversations,
-                currentUser: modelData.currentSession?.user
+                currentUser: modelData.currentUser
             )
             .refreshable {
                 try? await modelData.loadConversations()

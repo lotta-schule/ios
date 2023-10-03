@@ -13,36 +13,33 @@ import Combine
 import LottaCoreAPI
 import SwiftData
 
-fileprivate let BASE_HOST = "core.staging.lotta.schule"
-fileprivate let HTTP_URL = URL(string: "https://\(BASE_HOST)/api")!
-fileprivate let WEBSOCKET_URL = URL(string: "wss://\(BASE_HOST)/api/graphql-socket/websocket")!
+let LOTTA_API_HOST = "core.staging.lotta.schule"
+let LOTTA_API_HTTP_URL = URL(string: "https://\(LOTTA_API_HOST)")!
+let LOTTA_API_WEBSOCKET_URL = URL(string: "wss://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
 
-fileprivate func getHttpTransport(authToken: String? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
+fileprivate func getHttpTransport(loginSession: LoginSession? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
     var additionalHeaders: [String:String] = [:]
-    if let token = authToken {
-        additionalHeaders["Authorization"] = "Bearer \(token)"
-    }
     if let slug = slug {
         additionalHeaders["Tenant"] = "slug:\(slug)"
     }
     /// An HTTP transport to use for queries and mutations
     return RequestChainNetworkTransport(
-        interceptorProvider: DefaultInterceptorProvider(store: store),
-        endpointURL: HTTP_URL,
+        interceptorProvider: NetworkInterceptorProvider(loginSession: loginSession, store: store),
+        endpointURL: LOTTA_API_HTTP_URL.appending(path: "/api"),
         additionalHeaders: additionalHeaders
     )
 }
 
-fileprivate func getWSTransport(authToken: String, tenantId tid: String, store: ApolloStore) -> WebSocketTransport {
+fileprivate func getWSTransport(loginSession: LoginSession, tenantId tid: String, store: ApolloStore) -> WebSocketTransport {
     return WebSocketTransport(
         websocket: WebSocket(
-            url: WEBSOCKET_URL,
+            url: LOTTA_API_WEBSOCKET_URL,
             protocol: .graphql_transport_ws
         ),
         config: WebSocketTransport.Configuration(
         connectingPayload: [
             "tid": tid,
-            "token": authToken
+            "token": loginSession.accessToken?.string
         ]
     ))
 }
@@ -57,15 +54,15 @@ class CoreApi {
         
         self.apollo = client
     }
-    init(withTenantSlug slug: String, authToken: String? = nil) {
+    init(withTenantSlug slug: String, loginSession: LoginSession? = nil) {
         let store = ApolloStore(cache: InMemoryNormalizedCache())
-        let transport = getHttpTransport(authToken: authToken, tenantSlug: slug, store: store)
+        let transport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
         self.apollo = ApolloClient(networkTransport: transport, store: store)
     }
-    init(withTenantSlug slug: String, tenantId: String, andAuthToken authToken: String) {
+    init(withTenantSlug slug: String, tenantId: String, andLoginSession loginSession: LoginSession) {
         let store = ApolloStore(cache: InMemoryNormalizedCache())
-        let httpTransport = getHttpTransport(authToken: authToken, tenantSlug: slug, store: store)
-        let wsTransport = getWSTransport(authToken: authToken, tenantId: tenantId, store: store)
+        let httpTransport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
+        let wsTransport = getWSTransport(loginSession: loginSession, tenantId: tenantId, store: store)
         
         let transport =
             SplitNetworkTransport(

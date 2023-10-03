@@ -13,7 +13,7 @@ struct ProfileView : View {
     var body: some View {
         VStack {
             Button("Abmelden") {
-                modelData.setSession(nil)
+                modelData.resetUser()
             }
         }
     }

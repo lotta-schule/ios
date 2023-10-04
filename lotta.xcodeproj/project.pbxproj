@@ -36,10 +36,14 @@
 		2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D829F2AC743B800CC3E1F /* Theme.swift */; };
 		2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */; };
 		2E3952F32AC346810013465C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3952F22AC346810013465C /* MainView.swift */; };
+		2E4191A32ACC5B5800FD0FDA /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191A22ACC5B5800FD0FDA /* Apollo */; };
+		2E4191A52ACC5B5800FD0FDA /* ApolloAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191A42ACC5B5800FD0FDA /* ApolloAPI */; };
+		2E4191A72ACC5B5800FD0FDA /* ApolloWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191A62ACC5B5800FD0FDA /* ApolloWebSocket */; };
+		2E4191AA2ACC621F00FD0FDA /* Data+hexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4191A92ACC621F00FD0FDA /* Data+hexString.swift */; };
+		2E4191AC2ACC913000FD0FDA /* DeviceIdentificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4191AB2ACC913000FD0FDA /* DeviceIdentificationService.swift */; };
+		2E4191B12ACC946200FD0FDA /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191B02ACC946200FD0FDA /* DeviceKit */; };
 		2E4C2E8D2ABEC6C800F846E9 /* ConversationListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */; };
-		2E4C2E962AC07B0400F846E9 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E952AC07B0400F846E9 /* Apollo */; };
-		2E4C2E982AC07B0400F846E9 /* ApolloAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E972AC07B0400F846E9 /* ApolloAPI */; };
-		2E4C2E9A2AC07B0400F846E9 /* ApolloWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */; };
+		2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6A39D32ACC4EFA0003F447 /* PushNotificationService.swift */; };
 		2E6B04BE2ACB357900A10052 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2E6B04BD2ACB357900A10052 /* KeychainSwift */; };
 		2E6B04C12ACB47AE00A10052 /* AuthorizationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */; };
 		2E6B04C32ACB494900A10052 /* NetworkInterceptorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C22ACB494900A10052 /* NetworkInterceptorProvider.swift */; };
@@ -47,6 +51,7 @@
 		2E6B04C82ACB55F300A10052 /* RefreshTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */; };
 		2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */; };
 		2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7FB2ABCE079000BB6CF /* User.swift */; };
+		2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,12 +103,18 @@
 		2E2D829F2AC743B800CC3E1F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottaButton.swift; sourceTree = "<group>"; };
 		2E3952F22AC346810013465C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2E4191A92ACC621F00FD0FDA /* Data+hexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexString.swift"; sourceTree = "<group>"; };
+		2E4191AB2ACC913000FD0FDA /* DeviceIdentificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIdentificationService.swift; sourceTree = "<group>"; };
 		2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
+		2E6A39D32ACC4EFA0003F447 /* PushNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationService.swift; sourceTree = "<group>"; };
 		2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationInterceptor.swift; sourceTree = "<group>"; };
 		2E6B04C22ACB494900A10052 /* NetworkInterceptorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterceptorProvider.swift; sourceTree = "<group>"; };
 		2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenInterceptor.swift; sourceTree = "<group>"; };
 		2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatar.swift; sourceTree = "<group>"; };
 		2E98A7FB2ABCE079000BB6CF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2EBAC93D2ACC42700062B12B /* lotta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lotta.entitlements; sourceTree = "<group>"; };
+		2EBAC93E2ACC44AF0062B12B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,12 +122,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E4C2E9A2AC07B0400F846E9 /* ApolloWebSocket in Frameworks */,
-				2E4C2E962AC07B0400F846E9 /* Apollo in Frameworks */,
 				2E6B04C62ACB4CA900A10052 /* JWTDecode in Frameworks */,
+				2E4191A72ACC5B5800FD0FDA /* ApolloWebSocket in Frameworks */,
+				2E4191A32ACC5B5800FD0FDA /* Apollo in Frameworks */,
 				2E6B04BE2ACB357900A10052 /* KeychainSwift in Frameworks */,
+				2E4191B12ACC946200FD0FDA /* DeviceKit in Frameworks */,
 				2E0268A32AB8988400C18681 /* LottaCoreAPI in Frameworks */,
-				2E4C2E982AC07B0400F846E9 /* ApolloAPI in Frameworks */,
+				2E4191A52ACC5B5800FD0FDA /* ApolloAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +172,11 @@
 		2E02686A2AB88F4500C18681 /* lotta */ = {
 			isa = PBXGroup;
 			children = (
+				2E4191A82ACC620700FD0FDA /* extension */,
+				2E6A39D22ACC4E830003F447 /* service */,
+				2EBAC93E2ACC44AF0062B12B /* Info.plist */,
+				2EBAC93D2ACC42700062B12B /* lotta.entitlements */,
+				2EBAC93A2ACB9D0F0062B12B /* group */,
 				2E6B04BF2ACB477E00A10052 /* api */,
 				2E0268A62AB900E400C18681 /* model */,
 				2E98A7FA2ABCD501000BB6CF /* component */,
@@ -246,6 +263,23 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		2E4191A82ACC620700FD0FDA /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				2E4191A92ACC621F00FD0FDA /* Data+hexString.swift */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
+		2E6A39D22ACC4E830003F447 /* service */ = {
+			isa = PBXGroup;
+			children = (
+				2E6A39D32ACC4EFA0003F447 /* PushNotificationService.swift */,
+				2E4191AB2ACC913000FD0FDA /* DeviceIdentificationService.swift */,
+			);
+			path = service;
+			sourceTree = "<group>";
+		};
 		2E6B04BF2ACB477E00A10052 /* api */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +302,14 @@
 			path = component;
 			sourceTree = "<group>";
 		};
+		2EBAC93A2ACB9D0F0062B12B /* group */ = {
+			isa = PBXGroup;
+			children = (
+				2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */,
+			);
+			path = group;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -286,11 +328,12 @@
 			name = lotta;
 			packageProductDependencies = (
 				2E0268A22AB8988400C18681 /* LottaCoreAPI */,
-				2E4C2E952AC07B0400F846E9 /* Apollo */,
-				2E4C2E972AC07B0400F846E9 /* ApolloAPI */,
-				2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */,
 				2E6B04BD2ACB357900A10052 /* KeychainSwift */,
 				2E6B04C52ACB4CA900A10052 /* JWTDecode */,
+				2E4191A22ACC5B5800FD0FDA /* Apollo */,
+				2E4191A42ACC5B5800FD0FDA /* ApolloAPI */,
+				2E4191A62ACC5B5800FD0FDA /* ApolloWebSocket */,
+				2E4191B02ACC946200FD0FDA /* DeviceKit */,
 			);
 			productName = lotta;
 			productReference = 2E0268682AB88F4500C18681 /* lotta.app */;
@@ -366,9 +409,10 @@
 			mainGroup = 2E02685F2AB88F4500C18681;
 			packageReferences = (
 				2E0268A12AB8988400C18681 /* XCLocalSwiftPackageReference "lottaCoreAPI" */,
-				2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */,
 				2E6B04BC2ACB357900A10052 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */,
+				2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */,
+				2E4191AF2ACC946200FD0FDA /* XCRemoteSwiftPackageReference "DeviceKit" */,
 			);
 			productRefGroup = 2E0268692AB88F4500C18681 /* Products */;
 			projectDirPath = "";
@@ -412,8 +456,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */,
 				2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */,
 				2E3952F32AC346810013465C /* MainView.swift in Sources */,
+				2E4191AC2ACC913000FD0FDA /* DeviceIdentificationService.swift in Sources */,
 				2E12B3E72ABDA5DB00555B9D /* ConversationsList.swift in Sources */,
 				2E4C2E8D2ABEC6C800F846E9 /* ConversationListItem.swift in Sources */,
 				2E12B4012ABE532500555B9D /* LoginSession.swift in Sources */,
@@ -427,9 +473,11 @@
 				2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */,
 				2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */,
 				2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */,
+				2E4191AA2ACC621F00FD0FDA /* Data+hexString.swift in Sources */,
 				2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */,
 				2E12B3F92ABDF74200555B9D /* MessageInput.swift in Sources */,
 				2E0268A52AB900DC00C18681 /* Tenant.swift in Sources */,
+				2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */,
 				2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */,
 				2E12B3FB2ABE13AC00555B9D /* RootView.swift in Sources */,
 				2E02689D2AB8942600C18681 /* LoginView.swift in Sources */,
@@ -601,12 +649,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = lotta/lotta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"lotta/Preview Content\"";
 				DEVELOPMENT_TEAM = VHQ44CA7A4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = lotta/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -631,12 +681,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = lotta/lotta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"lotta/Preview Content\"";
 				DEVELOPMENT_TEAM = VHQ44CA7A4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = lotta/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -781,12 +833,20 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
+		2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apollographql/apollo-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
+				minimumVersion = 1.5.2;
+			};
+		};
+		2E4191AF2ACC946200FD0FDA /* XCRemoteSwiftPackageReference "DeviceKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devicekit/DeviceKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
 			};
 		};
 		2E6B04BC2ACB357900A10052 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
@@ -812,20 +872,25 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = LottaCoreAPI;
 		};
-		2E4C2E952AC07B0400F846E9 /* Apollo */ = {
+		2E4191A22ACC5B5800FD0FDA /* Apollo */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			package = 2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */;
 			productName = Apollo;
 		};
-		2E4C2E972AC07B0400F846E9 /* ApolloAPI */ = {
+		2E4191A42ACC5B5800FD0FDA /* ApolloAPI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			package = 2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */;
 			productName = ApolloAPI;
 		};
-		2E4C2E992AC07B0400F846E9 /* ApolloWebSocket */ = {
+		2E4191A62ACC5B5800FD0FDA /* ApolloWebSocket */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2E4C2E942AC07B0400F846E9 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			package = 2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */;
 			productName = ApolloWebSocket;
+		};
+		2E4191B02ACC946200FD0FDA /* DeviceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E4191AF2ACC946200FD0FDA /* XCRemoteSwiftPackageReference "DeviceKit" */;
+			productName = DeviceKit;
 		};
 		2E6B04BD2ACB357900A10052 /* KeychainSwift */ = {
 			isa = XCSwiftPackageProductDependency;

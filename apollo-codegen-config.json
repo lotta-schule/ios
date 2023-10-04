@@ -1,29 +1,23 @@
 {
-  "schemaNamespace" : "lottaCoreAPI",
-  "input" : {
-    "operationSearchPaths" : [
-      "**/*.graphql"
-    ],
-    "schemaSearchPaths" : [
-      "**/*.graphqls"
-    ]
+  "schemaNamespace": "lottaCoreAPI",
+  "input": {
+    "operationSearchPaths": ["graphql/operations/**/*.graphql"],
+    "schemaSearchPaths": ["graphql/*.graphqls"]
   },
-  "output" : {
-    "testMocks" : {
-      "none" : {
-      }
+  "output": {
+    "testMocks": {
+      "none": {}
     },
-    "schemaTypes" : {
-      "path" : "./lottaCoreAPI",
-      "moduleType" : {
-        "swiftPackageManager" : {
-          "name" : "lotta"
+    "schemaTypes": {
+      "path": "./lottaCoreAPI",
+      "moduleType": {
+        "swiftPackageManager": {
+          "name": "lotta"
         }
       }
     },
-    "operations" : {
-      "inSchemaModule" : {
-      }
+    "operations": {
+      "inSchemaModule": {}
     }
   }
 }

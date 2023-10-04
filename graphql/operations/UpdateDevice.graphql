@@ -1,0 +1,5 @@
+mutation UpdateDevice($id: ID!, $device: UpdateDeviceInput!) {
+  device: updateDevice(id: $id, device: $device) {
+    id
+  }
+}

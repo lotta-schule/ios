@@ -33,6 +33,7 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "UserGroup": return LottaCoreAPI.Objects.UserGroup
     case "RootMutationType": return LottaCoreAPI.Objects.RootMutationType
     case "Authresult": return LottaCoreAPI.Objects.Authresult
+    case "Device": return LottaCoreAPI.Objects.Device
     default: return nil
     }
   }

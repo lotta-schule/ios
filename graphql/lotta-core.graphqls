@@ -4,9 +4,13 @@ schema {
   subscription: RootSubscriptionType
 }
 
-"""Exposes a URL that specifies the behavior of this scalar."""
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
 directive @specifiedBy(
-  """The URL that specifies the behavior of this scalar."""
+  """
+  The URL that specifies the behavior of this scalar.
+  """
   url: String!
 ) on SCALAR
 
@@ -27,12 +31,18 @@ type Article {
   users: [User]
 }
 
-"""Filtering options for the article list"""
+"""
+Filtering options for the article list
+"""
 input ArticleFilter {
-  """Limit the number of results to return"""
+  """
+  Limit the number of results to return
+  """
   first: Int
 
-  """Return only results updated before than a given date"""
+  """
+  Return only results updated before than a given date
+  """
   updatedBefore: DateTime
 }
 
@@ -160,6 +170,18 @@ be converted to UTC if there is an offset.
 """
 scalar DateTime
 
+type Device {
+  customName: String
+  deviceType: String
+  id: ID
+  insertedAt: DateTime
+  lastUsed: DateTime
+  modelName: String
+  operatingSystem: String
+  platformId: String
+  updatedAt: DateTime
+}
+
 type Directory {
   id: ID
   insertedAt: DateTime
@@ -222,7 +244,12 @@ enum FileType {
   VIDEO
 }
 
-union FileUsageLocation = FileArticleUsageLocation | FileCategoryUsageLocation | FileContentModuleUsageLocation | FileSystemUsageLocation | FileUserUsageLocation
+union FileUsageLocation =
+    FileArticleUsageLocation
+  | FileCategoryUsageLocation
+  | FileContentModuleUsageLocation
+  | FileSystemUsageLocation
+  | FileUserUsageLocation
 
 type FileUserUsageLocation {
   usage: String
@@ -259,6 +286,15 @@ input MessageInput {
   recipientUser: SelectUserInput
 }
 
+input RegisterDeviceInput {
+  customName: String
+  deviceType: String
+  modelName: String
+  operatingSystem: String
+  platformId: String!
+  pushToken: String
+}
+
 input RegisterUserParams {
   email: String
   hideFullName: Boolean
@@ -269,7 +305,11 @@ input RegisterUserParams {
 type RootMutationType {
   createArticle(article: ArticleInput!): Article
   createCategory(category: CreateCategoryInput!): Category
-  createDirectory(isPublic: Boolean, name: String!, parentDirectoryId: ID): Directory
+  createDirectory(
+    isPublic: Boolean
+    name: String!
+    parentDirectoryId: ID
+  ): Directory
   createMessage(message: MessageInput!): Message
   createUserGroup(group: UserGroupInput!): UserGroup
   createWidget(title: String!, type: WidgetType!): Widget
@@ -284,6 +324,7 @@ type RootMutationType {
   login(password: String, username: String): Authresult
   logout: Authresult
   register(groupKey: String, user: RegisterUserParams!): Boolean
+  registerDevice(device: RegisterDeviceInput!): Device
   requestHisecToken(password: String): String
   requestPasswordReset(email: String!): Boolean
   resetPassword(email: String!, password: String!, token: String!): Authresult
@@ -291,6 +332,7 @@ type RootMutationType {
   toggleArticlePin(id: ID!): Article
   updateArticle(article: ArticleInput!, id: ID!): Article
   updateCategory(category: UpdateCategoryInput!, id: ID!): Category
+  updateDevice(device: UpdateDeviceInput!, id: ID!): Device
   updateDirectory(id: ID!, name: String, parentDirectoryId: ID): Directory
   updateEmail(newEmail: String!): User
   updateFile(filename: String, id: ID!, parentDirectoryId: ID): File
@@ -313,6 +355,7 @@ type RootQueryType {
   conversation(id: ID!): Conversation
   conversations: [Conversation]
   currentUser: User
+  devices: [Device]
   directories(parentDirectoryId: ID): [Directory]
   directory(id: ID): Directory
   file(id: ID): File
@@ -410,6 +453,12 @@ input UpdateCategoryInput {
   widgets: [SelectWidgetInput] = []
 }
 
+input UpdateDeviceInput {
+  customName: String
+  deviceType: String
+  pushToken: String
+}
+
 input UpdateUserParams {
   avatarImageFile: SelectFileInput
   class: String
@@ -419,7 +468,9 @@ input UpdateUserParams {
   nickname: String
 }
 
-"""Represents an uploaded file."""
+"""
+Represents an uploaded file.
+"""
 scalar Upload
 
 type Usage {
@@ -487,4 +538,3 @@ enum WidgetType {
   SCHEDULE
   TAGCLOUD
 }
-

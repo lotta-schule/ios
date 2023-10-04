@@ -22,9 +22,11 @@ let keychain = KeychainSwift()
     private(set) var conversations = [Conversation]()
     
     var unreadMessageCount: Int {
-        self.conversations.reduce(into: 0) { partialResult, conversation in
+        let count = self.conversations.reduce(into: 0) { partialResult, conversation in
             partialResult += conversation.unreadMessages
         }
+        UIApplication.shared.applicationIconBadgeNumber = count
+        return count
     }
     
     var theme: Theme {
@@ -42,7 +44,7 @@ let keychain = KeychainSwift()
                 self.currentSession.refreshToken = jwt
             }
         
-            self.recreateApi()
+            _ = self.recreateApi()
             
             Task {
                 await self.authenticate()
@@ -52,14 +54,18 @@ let keychain = KeychainSwift()
     
     func setUser(_ user: User) -> Void {
         self.currentUser = user
-        self.recreateApi()
+        let updatedApi = self.recreateApi()
+        PushNotificationService.shared.startReceivingNotifications(api: updatedApi)
     }
     
     func resetUser() -> Void {
         self.currentUser = nil
         self.currentSession.accessToken = nil
         self.currentSession.refreshToken = nil
-        self.recreateApi()
+        Task {
+            await PushNotificationService.shared.stopReceivingNotifications()
+        }
+        _ = self.recreateApi()
     }
     
     func addMessage(_ message: Message, toConversation conversation: Conversation) -> Void {
@@ -96,7 +102,7 @@ let keychain = KeychainSwift()
             }
             currentSession.accessToken = accessToken
             
-            self.recreateApi()
+            _ = self.recreateApi()
             
             return await authenticate()
         } catch {
@@ -117,6 +123,8 @@ let keychain = KeychainSwift()
                 return false
             }
             self.setUser(User(from: userResult))
+            
+           await UIApplication.shared.registerForRemoteNotifications()
             return true
         } catch {
             print("error logging in: \(error)")
@@ -162,7 +170,7 @@ let keychain = KeychainSwift()
             }
     }
 
-    private func recreateApi() -> Void {
+    private func recreateApi() -> CoreApi {
         if let currentTenant = currentTenant {
             if currentSession.accessToken != nil {
                 self.api = CoreApi(withTenantSlug: currentTenant.slug, tenantId: currentTenant.id, andLoginSession: currentSession)
@@ -172,5 +180,7 @@ let keychain = KeychainSwift()
         } else {
             self.api = CoreApi()
         }
+        
+        return self.api
     }
 }

@@ -22,6 +22,7 @@ struct lottaApp: App {
     //        fatalError("Could not create ModelContainer: \(error)")
     //    }
     //}()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
         WindowGroup {

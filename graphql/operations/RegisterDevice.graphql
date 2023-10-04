@@ -1,0 +1,5 @@
+mutation RegisterDevice($device: RegisterDeviceInput!) {
+  device: registerDevice(device: $device) {
+    id
+  }
+}

@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct MessageRow : View {
-    @Environment(ModelData.self) private var modelData
+    @Environment(UserSession.self) private var userSession
     var message: Message
     var fromCurrentUser: Bool
     
     var body: some View {
-        HStack(alignment: .bottom, spacing: CGFloat(modelData.theme.spacing)) {
+        HStack(alignment: .bottom, spacing: CGFloat(userSession.theme.spacing)) {
             if fromCurrentUser {
                 Spacer()
             } else {
                 UserAvatar(user: message.user)
                     .frame(width: 40, height: 40, alignment: .center)
-                    .padding(.leading, CGFloat(modelData.theme.borderRadius))
+                    .padding(.leading, CGFloat(userSession.theme.borderRadius))
             }
             MessageBubble(
                 message: message,
@@ -46,5 +46,14 @@ struct MessageRow : View {
         ),
         fromCurrentUser: true
     )
-    .environment(ModelData())
+    .environment(
+        UserSession(
+            tenant: Tenant(
+                id: "0",
+                title: "",
+                slug: "slug"),
+            authInfo: AuthInfo(),
+            user: User(id: "0")
+        )
+    )
 }

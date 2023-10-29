@@ -8,32 +8,32 @@
 import SwiftUI
 
 struct MessageBubble : View {
-    @Environment(ModelData.self) private var modelData: ModelData
+    @Environment(UserSession.self) private var userSession: UserSession
     
     var message: Message
     var fromCurrentUser: Bool
     
     var body: some View {
         Text(message.content ?? "[File-Message]")
-            .padding(CGFloat(modelData.theme.spacing))
-            .foregroundColor(modelData.theme.textColor)
+            .padding(CGFloat(userSession.theme.spacing))
+            .foregroundColor(userSession.theme.textColor)
             .background(
                 fromCurrentUser
-                    ? modelData.theme.primaryColor.opacity(0.3)
-                    : modelData.theme.disabledColor.opacity(0.08)
+                    ? userSession.theme.primaryColor.opacity(0.3)
+                    : userSession.theme.disabledColor.opacity(0.08)
             )
             .overlay(
                 RoundedRectangle(
-                    cornerRadius: CGFloat(modelData.theme.borderRadius) * 3
+                    cornerRadius: CGFloat(userSession.theme.borderRadius) * 3
                 )
                 .stroke(
                     fromCurrentUser
-                        ? modelData.theme.primaryColor
-                        : modelData.theme.disabledColor.opacity(0.5),
+                        ? userSession.theme.primaryColor
+                        : userSession.theme.disabledColor.opacity(0.5),
                     lineWidth: 1
                 )
             )
-            .cornerRadius(CGFloat(modelData.theme.borderRadius) * 3)
+            .cornerRadius(CGFloat(userSession.theme.borderRadius) * 3)
     }
 }
 

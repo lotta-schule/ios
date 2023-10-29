@@ -9,14 +9,12 @@ import UserNotifications
 import UIKit
 import LottaCoreAPI
 
-class PushNotificationService {
+class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     static let shared = PushNotificationService()
     
     private var api: CoreApi?
     
     private var currentDeviceId: String?
-    
-    init() {}
     
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: Data) async -> Void {
         if let api = api {
@@ -44,6 +42,8 @@ class PushNotificationService {
     
     func startReceivingNotifications(api: CoreApi) -> Void {
         self.api = api
+        let receiveMessageCategory = UNNotificationCategory(identifier: "receive_message", actions: [], intentIdentifiers: [])
+        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory])
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
             case .notDetermined:

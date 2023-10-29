@@ -13,9 +13,9 @@ import JWTDecode
 class RefreshTokenInterceptor: ApolloInterceptor {
     public var id: String = UUID().uuidString
     
-    private var loginSession: LoginSession?
+    private var loginSession: AuthInfo?
     
-    init(loginSession: LoginSession?) {
+    init(loginSession: AuthInfo?) {
         self.loginSession = loginSession
     }
     

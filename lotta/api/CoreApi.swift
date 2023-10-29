@@ -17,7 +17,7 @@ let LOTTA_API_HOST = "core.staging.lotta.schule"
 let LOTTA_API_HTTP_URL = URL(string: "https://\(LOTTA_API_HOST)")!
 let LOTTA_API_WEBSOCKET_URL = URL(string: "wss://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
 
-fileprivate func getHttpTransport(loginSession: LoginSession? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
+fileprivate func getHttpTransport(loginSession: AuthInfo? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
     var additionalHeaders: [String:String] = [:]
     if let slug = slug {
         additionalHeaders["Tenant"] = "slug:\(slug)"
@@ -30,7 +30,7 @@ fileprivate func getHttpTransport(loginSession: LoginSession? = nil, tenantSlug 
     )
 }
 
-fileprivate func getWSTransport(loginSession: LoginSession, tenantId tid: String, store: ApolloStore) -> WebSocketTransport {
+fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, store: ApolloStore) -> WebSocketTransport {
     return WebSocketTransport(
         websocket: WebSocket(
             url: LOTTA_API_WEBSOCKET_URL,
@@ -54,12 +54,12 @@ class CoreApi {
         
         self.apollo = client
     }
-    init(withTenantSlug slug: String, loginSession: LoginSession? = nil) {
+    init(withTenantSlug slug: String, loginSession: AuthInfo? = nil) {
         let store = ApolloStore(cache: InMemoryNormalizedCache())
         let transport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
         self.apollo = ApolloClient(networkTransport: transport, store: store)
     }
-    init(withTenantSlug slug: String, tenantId: String, andLoginSession loginSession: LoginSession) {
+    init(withTenantSlug slug: String, tenantId: String, andLoginSession loginSession: AuthInfo) {
         let store = ApolloStore(cache: InMemoryNormalizedCache())
         let httpTransport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
         let wsTransport = getWSTransport(loginSession: loginSession, tenantId: tenantId, store: store)
@@ -75,29 +75,38 @@ class CoreApi {
 }
 
 extension ApolloClient {
-    func fetchAsync<Query: GraphQLQuery>(query: Query, cachePolicy: CachePolicy = .returnCacheDataElseFetch) async throws -> GraphQLResult<Query.Data> {
-    return try await withCheckedThrowingContinuation { continuation in
-      fetch(query: query, cachePolicy: cachePolicy) { result in
-        switch result {
-        case .success(let value):
-          continuation.resume(returning: value)
-        case .failure(let error):
-          continuation.resume(throwing: error)
-        }
+    func fetchAsync<Query: GraphQLQuery>(query: Query, cachePolicy: CachePolicy = .returnCacheDataElseFetch, queue: DispatchQueue = .main) async throws -> Query.Data {
+        return try await withCheckedThrowingContinuation({ continuation in
+            self.fetch(query: query, cachePolicy: cachePolicy, queue: queue) { [weak self] result in
+            switch result {
+            case .success(let data):
+              let error = data.errors?.first
+                _ = error?.extensions?["code"] as? String
+              if let error = error {
+                continuation.resume(throwing: error)
+              } else if let data = data.data {
+                continuation.resume(returning: data)
+              } else {
+                let errorUn = NSError(domain: "Can't get data at this time", code: 403)
+                continuation.resume(throwing: errorUn)
+              }
+            case .failure(let error):
+              continuation.resume(throwing: error)
+            }
+          }
+        })
       }
-    }
-  }
   
     func performAsync<Mutation: GraphQLMutation>(mutation: Mutation) async throws -> GraphQLResult<Mutation.Data> {
-    return try await withCheckedThrowingContinuation { continuation in
-      perform(mutation: mutation) { result in
-        switch result {
-        case .success(let value):
-          continuation.resume(returning: value)
-        case .failure(let error):
-          continuation.resume(throwing: error)
+        return try await withCheckedThrowingContinuation { continuation in
+            perform(mutation: mutation) { result in
+                switch result {
+                case .success(let value):
+                    continuation.resume(returning: value)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
         }
-      }
     }
-  }
 }

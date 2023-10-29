@@ -10,9 +10,9 @@ class AuthorizationInterceptor: ApolloInterceptor {
     
     public var id: String = UUID().uuidString
     
-    private var loginSession: LoginSession?
+    private var loginSession: AuthInfo?
     
-    init(loginSession: LoginSession?) {
+    init(loginSession: AuthInfo?) {
         self.loginSession = loginSession
     }
     
@@ -52,10 +52,16 @@ class AuthorizationInterceptor: ApolloInterceptor {
         }
         
         // If we've gotten here, there is a token!
-        guard (self.loginSession?.refreshToken?.expired ?? true) == false else {
+        guard (self.loginSession?.refreshToken?.expired ?? false) == false else {
             self.loginSession?.accessToken = nil
             self.loginSession?.refreshToken = nil
             // TODO: Here we must notify of a logout action
+            chain.handleErrorAsync(
+                UserError.noUserLoggedIn,
+                request: request,
+                response: response,
+                completion: completion
+            )
             return
         }
         
@@ -76,6 +82,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
                         completion: completion
                     )
                 case .failure(let error):
+                    
                     print(error)
                     chain.proceedAsync(
                         request: request,

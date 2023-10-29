@@ -9,16 +9,15 @@ import SwiftUI
 import LottaCoreAPI
 
 struct ConversationsList : View {
-    var conversations: [Conversation]
-    var currentUser: User?
+    @Environment(UserSession.self) private var userSession
 
     var body: some View {
         List {
-            ForEach(conversations, id: \.id) { conversation in
+            ForEach(userSession.conversations, id: \.id) { conversation in
                 NavigationLink {
-                    MessageListView(conversation: conversation)
+                    ConversationView(conversation: conversation)
                 } label: {
-                    ConversationListItem(conversation: conversation, excluding: currentUser)
+                    ConversationListItem(conversation: conversation, excluding: userSession.user)
                 }
             }
         // .onDelete(perform: deleteItems)

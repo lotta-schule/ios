@@ -1,5 +1,5 @@
 //
-//  CurrentSession.swift
+//  AuthInfo.swift
 //  lotta
 //
 //  Created by Alexis Rinaldoni on 23/09/2023.
@@ -9,7 +9,7 @@ import JWTDecode
 import Apollo
 import KeychainSwift
 
-class LoginSession {
+class AuthInfo {
     enum RenewError: Error {
         case invalidToken
         case missingToken

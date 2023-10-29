@@ -17,7 +17,7 @@ class User: Identifiable {
     
     var avatarImageFileId: LottaFileID?
     
-    init(id: ID, name: String?, nickname: String?, avatarImageFileId: LottaFileID? = nil) {
+    init(id: ID, name: String? = nil, nickname: String? = nil, avatarImageFileId: LottaFileID? = nil) {
         self.id = id
         self.name = name
         self.nickname = nickname

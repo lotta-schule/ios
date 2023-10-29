@@ -10,9 +10,9 @@ import Apollo
 import ApolloAPI
 
 class NetworkInterceptorProvider: DefaultInterceptorProvider {
-    private var loginSession: LoginSession?
+    private var loginSession: AuthInfo?
     
-    init(loginSession: LoginSession?, store: ApolloStore) {
+    init(loginSession: AuthInfo?, store: ApolloStore) {
         self.loginSession = loginSession
         super.init(shouldInvalidateClientOnDeinit: true, store: store)
     }

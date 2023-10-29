@@ -9,7 +9,7 @@ import LottaCoreAPI
 import SwiftUI
 
 struct MessageInput : View {
-    @Environment(ModelData.self) var modelData: ModelData
+    @Environment(UserSession.self) var userSession: UserSession
     var user: User?
     var group: Group?
     var onSent: (Message) -> ()
@@ -18,8 +18,9 @@ struct MessageInput : View {
     
     var body: some View {
         HStack {
-           TextField("Message...", text: $content)
+            TextField("Message...", text: $content, axis: .vertical)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .lineLimit(5)
                 .submitLabel(.send)
                 .frame(minHeight: CGFloat(30))
                 .onSubmit {
@@ -36,33 +37,23 @@ struct MessageInput : View {
                     .foregroundStyle(.primary)
             })
         }
-        .padding(4)
+        .padding(.horizontal, CGFloat(userSession.theme.spacing))
     }
     
     func sendMessage() async -> Void {
         do {
-            var recipientGroup: GraphQLNullable<SelectUserGroupInput> = nil
-            var recipientUser: GraphQLNullable<SelectUserInput> = nil
-            if let group = group {
-                recipientGroup = GraphQLNullable(SelectUserGroupInput(id: GraphQLNullable(stringLiteral: group.id)))
-            }
-            if let user = user {
-                recipientUser = GraphQLNullable(SelectUserInput(id: GraphQLNullable(stringLiteral: user.id)))
-            }
-            let graphqlResult = try await modelData.api.apollo.performAsync(
-                mutation: SendMessageMutation(
-                    message: LottaCoreAPI.MessageInput(
-                        content: GraphQLNullable(stringLiteral: content),
-                        recipientGroup: recipientGroup,
-                        recipientUser: recipientUser
-                    )
-                )
-            )
-            if let message = graphqlResult.data?.message {
-                onSent(Message(from: message))
+            let message: Message? =
+                if let user = user {
+                    try await userSession.sendMessage(content, to: user)
+                } else if let group = group {
+                    try await userSession.sendMessage(content, to: group)
+                } else {
+                    nil
+                }
+            if let message = message {
+                onSent(message)
                 content = ""
             }
-            print(graphqlResult)
         } catch {
             print("error: \(error)")
         }
@@ -73,5 +64,14 @@ struct MessageInput : View {
     MessageInput { message in
         print(message)
     }
-    .environment(ModelData())
+    .environment(
+        UserSession(
+            tenant: Tenant(
+                id: "0",
+                title: "",
+                slug: "slug"),
+            authInfo: AuthInfo(),
+            user: User(id: "0")
+        )
+    )
 }

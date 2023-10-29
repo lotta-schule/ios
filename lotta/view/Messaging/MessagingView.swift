@@ -10,16 +10,13 @@ import SwiftData
 import LottaCoreAPI
 
 struct MessagingView: View {
-    @Environment(ModelData.self) var modelData: ModelData
+    @Environment(UserSession.self) var userSession: UserSession
 
     var body: some View {
         NavigationSplitView {
-            ConversationsList(
-                conversations: modelData.conversations,
-                currentUser: modelData.currentUser
-            )
+            ConversationsList()
             .refreshable {
-                try? await modelData.loadConversations()
+                try? await userSession.loadConversations()
             }
             .toolbar {
                 ToolbarItem {
@@ -51,5 +48,14 @@ struct MessagingView: View {
 
 #Preview {
     MessagingView()
-        .environment(ModelData())
+        .environment(
+            UserSession(
+                tenant: Tenant(
+                    id: "0",
+                    title: "",
+                    slug: "slug"),
+                authInfo: AuthInfo(),
+                user: User(id: "0")
+            )
+        )
 }

@@ -145,5 +145,8 @@ struct Theme {
         self.borderRadius = getNumber(forKey: "borderRadius", in: themeOverrides) ?? Theme.Default.borderRadius
     }
     
+    init() {
+        self.init(themeOverrides: [:])
+    }
     
 }

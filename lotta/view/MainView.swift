@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
+import Apollo
 
 struct MainView : View {
-    @Environment(ModelData.self) var modelData: ModelData
+    @Environment(UserSession.self) var userSession: UserSession
+    
+    @State private var cancelMessageSubscription: Cancellable?
     
     var body: some View {
             TabView {
                 MessagingView()
-                    .badge(modelData.unreadMessageCount)
+                    .badge(userSession.unreadMessageCount)
                     .tabItem {
                         Label("Nachrichten", systemImage: "message")
                     }
@@ -24,9 +27,14 @@ struct MainView : View {
             }
             .onAppear {
                 Task {
-                    try? await modelData.loadConversations()
+                    try? await userSession.loadConversations()
                 }
-                modelData.subscribeToMessages()
+                cancelMessageSubscription = userSession.subscribeToMessages()
+            }
+            .onDisappear {
+                if let cancelMessageSubscription = cancelMessageSubscription {
+                    cancelMessageSubscription.cancel()
+                }
             }
     }
 }

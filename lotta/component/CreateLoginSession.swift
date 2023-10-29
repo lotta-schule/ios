@@ -46,8 +46,6 @@ struct LoginView: View {
                let url = String(tenantId).getUrl() {
                 AsyncImage(url: url)
                     .frame(width: 100, height: 100)
-                    .padding(.top, 50)
-                    .padding(.bottom, 75)
             }
             
             Form {
@@ -100,7 +98,9 @@ struct LoginView: View {
             }
             
             
-        } .animation(.spring(), value: selectedTenantDescriptor)
+        }
+        .preferredColorScheme(.light)
+        .animation(.spring(), value: selectedTenantDescriptor)
     }
     
     func fetchPossibleTenants() -> Void {

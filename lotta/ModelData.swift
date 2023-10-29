@@ -42,9 +42,26 @@ enum AuthenticationError: Error {
         self.setSession(bySlug: session.tenant.slug)
     }
     
+    func remove(session: UserSession) -> Void {
+        self.userSessions.removeAll { existingSession in
+            existingSession.tenant.id == session.tenant.id
+        }
+    }
+    
+    func removeCurrentSession() -> Void {
+        if let session = currentSession {
+            remove(session: session)
+        }
+        
+        if let session = currentSession {
+            currentSessionSlug = session.tenant.slug
+            UserDefaults.standard.setValue(currentSessionSlug, forKey: "lotta-tenant-slug")
+        }
+    }
+    
     var currentSession: UserSession? {
         get {
-            userSessions.first { $0.tenant.slug == currentSessionSlug }
+            userSessions.first { $0.tenant.slug == currentSessionSlug } ?? userSessions.first
         }
     }
 }

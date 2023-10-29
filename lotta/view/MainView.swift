@@ -25,6 +25,7 @@ struct MainView : View {
                         Label("Profil", systemImage: "person")
                     }
             }
+            .tint(userSession.theme.primaryColor)
             .onAppear {
                 Task {
                     try? await userSession.loadConversations()

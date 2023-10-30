@@ -28,9 +28,8 @@ struct MessagingView: View {
                 }
             }
         }, detail: {
-            if let conversationId = routerData.selectedConversationId,
-               let conversation = userSession.conversations.first(where: { $0.id == conversationId }) {
-                ConversationView(conversation: conversation)
+            if let conversationId = routerData.selectedConversationId {
+                ConversationView(conversationId: conversationId)
             } else {
                 Text("Unterhaltung wählen")
             }

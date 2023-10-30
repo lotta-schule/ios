@@ -11,9 +11,11 @@ import LottaCoreAPI
 
 struct MessagingView: View {
     @Environment(UserSession.self) var userSession: UserSession
-
+    @Environment(RouterData.self) var routerData: RouterData
+    @State private var messagePath = [String]()
+    
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(sidebar: {
             ConversationsList()
             .refreshable {
                 try? await userSession.loadConversations()
@@ -25,9 +27,14 @@ struct MessagingView: View {
                     }
                 }
             }
-        } detail: {
-            Text("Select an item")
-        }
+        }, detail: {
+            if let conversationId = routerData.selectedConversationId,
+               let conversation = userSession.conversations.first(where: { $0.id == conversationId }) {
+                ConversationView(conversation: conversation)
+            } else {
+                Text("Unterhaltung wählen")
+            }
+        })
     }
     
     private func addItem() {
@@ -58,4 +65,5 @@ struct MessagingView: View {
                 user: User(id: "0")
             )
         )
+        .environment(RouterData.shared)
 }

@@ -26,5 +26,6 @@ struct ConversationView : View {
                 }
             }
         }
+        .navigationTitle(conversation.getName(excluding: userSession.user))
     }
 }

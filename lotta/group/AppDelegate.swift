@@ -27,4 +27,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
                 print("notification: \(userInfo)")
         }
     }
+    
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = PushNotificationService.shared
+        
+        return true
+    }
 }

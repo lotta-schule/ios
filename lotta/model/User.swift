@@ -8,7 +8,7 @@
 import LottaCoreAPI
 import SwiftData
 
-class User: Identifiable {
+final class User {
     var id: ID
     
     var name: String?
@@ -96,5 +96,17 @@ class User: Identifiable {
         } else {
             return name
         }
+    }
+}
+
+extension User: Identifiable {}
+
+extension User: Hashable {
+    static func == (lhs: User, rhs: User) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

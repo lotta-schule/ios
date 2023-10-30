@@ -10,18 +10,28 @@ import LottaCoreAPI
 
 struct ConversationsList : View {
     @Environment(UserSession.self) private var userSession
-
+    @Environment(RouterData.self) private var routerData: RouterData
+    
+    @State private var currentSelectionId: ID? = nil
+    
     var body: some View {
-        List {
-            ForEach(userSession.conversations, id: \.id) { conversation in
-                NavigationLink {
-                    ConversationView(conversation: conversation)
-                } label: {
-                    ConversationListItem(conversation: conversation, excluding: userSession.user)
-                }
-            }
+        List(userSession.conversations, selection: $currentSelectionId) { conversation in
+            ConversationListItem(conversation: conversation, excluding: userSession.user)
         // .onDelete(perform: deleteItems)
         }
         .listStyle(.plain)
+        .onChange(of: currentSelectionId, initial: true) {
+            withAnimation {
+                routerData.selectedConversationId = currentSelectionId
+            }
+        }
+        .onChange(of: routerData.selectedConversationId, initial: true) {
+            if routerData.selectedConversationId != currentSelectionId {
+                withAnimation {
+                    currentSelectionId = routerData.selectedConversationId
+                }
+            }
+        }
     }
+    
 }

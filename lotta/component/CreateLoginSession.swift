@@ -12,6 +12,8 @@ struct TenantDescriptor: Codable, Hashable {
     let id: Int
     let title: String
     let slug: String
+    let logoImageFileId: ID?
+    let backgroundImageFileId: ID?
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -40,11 +42,12 @@ struct LoginView: View {
         VStack {
             Text("Anmelden")
                 .font(.title)
-                .padding(.top)
+                .padding(.vertical)
             
-            if let tenantId = selectedTenantDescriptor?.id,
-               let url = String(tenantId).getUrl() {
+            if let logoImageFileId = selectedTenantDescriptor?.logoImageFileId,
+               let url = String(logoImageFileId).getUrl() {
                 AsyncImage(url: url)
+                    .padding(8)
                     .frame(width: 100, height: 100)
             }
             
@@ -62,7 +65,7 @@ struct LoginView: View {
                     Text("Email:")
                 }
                 
-                if availableTenantDescriptors.count > 0 {
+                if availableTenantDescriptors.count > 1 {
                     Picker("Schule", selection: $selectedTenantDescriptor) {
                         ForEach(availableTenantDescriptors, id: \.id) {
                             Text($0.title).tag($0 as TenantDescriptor?)
@@ -115,6 +118,11 @@ struct LoginView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data,
                let data = try? JSONDecoder().decode(ListTenantsResult.self, from: data) {
+                guard let tenants = data.tenants,
+                      !tenants.isEmpty else {
+                          showErrorMessage("Kein Benutzerkonto gefunden")
+                          return
+                      }
                 if let tenants = data.tenants {
                     withAnimation {
                         self.availableTenantDescriptors = tenants

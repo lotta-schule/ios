@@ -19,10 +19,11 @@ struct RootView: View {
             if let session = modelData.currentSession {
                 TenantRootView()
                     .environment(session)
+                    .environment(RouterData.shared)
             }
         }
         .preferredColorScheme(.light)
-        .popover(isPresented: $isShowLoginView) {
+        .fullScreenCover(isPresented: $isShowLoginView) {
             LoginView() { userSession in
                 modelData.add(session: userSession)
                 isShowLoginView.toggle()

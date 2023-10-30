@@ -40,3 +40,14 @@ class Group {
 }
 
 extension Group: Identifiable {}
+
+extension Group: Hashable {
+    static func == (lhs: Group, rhs: Group) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+}

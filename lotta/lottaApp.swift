@@ -28,7 +28,7 @@ struct lottaApp: App {
         WindowGroup {
             RootView()
         }
-        .environment(ModelData())
+        .environment(ModelData.shared)
         // .modelContext(ModelContext(sharedModelContainer))
     }
 }

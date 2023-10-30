@@ -84,3 +84,15 @@ import LottaCoreAPI
         return "?"
     }
 }
+
+extension Conversation: Identifiable {}
+
+extension Conversation: Hashable {
+    static func == (lhs: Conversation, rhs: Conversation) -> Bool {
+        lhs.id == rhs.id
+        
+    }
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+}

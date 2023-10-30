@@ -23,15 +23,22 @@ enum AuthenticationError: Error {
 }
 
 @Observable final class ModelData {
+    static let shared = ModelData()
+    
     var userSessions = [UserSession]()
     
     private var currentSessionSlug = UserDefaults.standard.string(forKey: "lotta-tenant-slug")
     
-    func setSession(bySlug slug: String) -> Void {
+    func setSession(bySlug slug: String) -> Bool {
+        if currentSessionSlug == slug {
+            return true
+        }
         if userSessions.contains(where: { $0.tenant.slug == slug }) {
             UserDefaults.standard.setValue(slug, forKey: "lotta-tenant-slug")
             currentSessionSlug = slug
+            return true
         }
+        return false
     }
     
     func add(session: UserSession) {
@@ -39,7 +46,7 @@ enum AuthenticationError: Error {
             $0.tenant.id == session.tenant.id
         })
         userSessions.append(session)
-        self.setSession(bySlug: session.tenant.slug)
+        _ = self.setSession(bySlug: session.tenant.slug)
     }
     
     func remove(session: UserSession) -> Void {

@@ -57,24 +57,6 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func stopReceivingNotifications() async -> Void {
-        if let api = api, let currentDeviceId = currentDeviceId  {
-            do {
-                let graphqlResult = try await api.apollo.performAsync(
-                    mutation: UpdateDeviceMutation(
-                        id: currentDeviceId,
-                        device: UpdateDeviceInput(
-                            pushToken: nil
-                        )
-                    )
-                )
-            } catch {
-                print("Upsala Lala! Error: \(error)")
-            }
-            self.api = nil
-        }
-    }
-    
     private func requestPermission() -> Void {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
@@ -83,5 +65,25 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
                 UIApplication.shared.registerForRemoteNotifications()
             }
         }
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                didReceive response: UNNotificationResponse,
+                withCompletionHandler completionHandler:
+                   @escaping () -> Void) {
+       print(response)
+        switch response.actionIdentifier {
+            case UNNotificationDefaultActionIdentifier:
+            let threadIdentifier = response.notification.request.content.threadIdentifier.split(separator: "/")
+            if let tenantSlug = threadIdentifier.first, let conversationId = threadIdentifier.last {
+                if ModelData.shared.setSession(bySlug: String(tenantSlug)) {
+                    RouterData.shared.selectedConversationId = String(conversationId)
+                }
+            }
+            default:
+                print("Unknown action \(response.actionIdentifier)")
+        }
+       
+       completionHandler()
     }
 }

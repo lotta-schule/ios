@@ -61,8 +61,11 @@ struct MessagingView: View {
                     title: "",
                     slug: "slug"),
                 authInfo: AuthInfo(),
-                user: User(id: "0")
+                user: User(tenant: Tenant(
+                    id: "0",
+                    title: "",
+                    slug: "slug"), id: "0")
             )
         )
-        .environment(RouterData.shared)
+        .environment(RouterData())
 }

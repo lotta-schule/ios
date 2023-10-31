@@ -9,45 +9,67 @@ import Foundation
 import LottaCoreAPI
 
 final class Message {
+    var tenant: Tenant
+    
     var id: ID
     
     var user: User
     
     var content: String?
     
+    var files: [LottaFile]
+    
     var insertedAt: Date
     
-    init(id: ID, user: User, content: String?, createdAt: Date) {
+    init(tenant: Tenant, id: ID, user: User, content: String?, createdAt: Date, files: [LottaFile]) {
+        self.tenant = tenant
         self.id = id
         self.user = user
         self.content = content
         self.insertedAt = createdAt
+        self.files = files
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.Message) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetConversationQuery.Data.Conversation.Message) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
-            user: User(from: graphQLResult.user!),
+            user: User(in: tenant, from: graphQLResult.user!),
             content: graphQLResult.content,
-            createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now
+            createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now,
+            files: graphQLResult.files?.compactMap {
+                guard let data = $0 else {
+                    return nil
+                }
+                return LottaFile(in: tenant, from: data)
+            } ?? []
         )
     }
     
-    convenience init(from graphQLResult: SendMessageMutation.Data.Message) {
+    convenience init(in tenant: Tenant, from graphQLResult: SendMessageMutation.Data.Message) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
-            user: User(from: graphQLResult.user!),
+            user: User(in: tenant, from: graphQLResult.user!),
             content: graphQLResult.content,
-            createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now
+            createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now,
+            files: graphQLResult.files?.compactMap {
+                guard let data = $0 else {
+                    return nil
+                }
+                return LottaFile(in: tenant, from: data)
+            } ?? []
         )
     }
     
-    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message) {
+    convenience init(in tenant: Tenant, from graphQLResult: ReceiveMessageSubscription.Data.Message) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
-            user: User(from: graphQLResult.user!),
+            user: User(in: tenant, from: graphQLResult.user!),
             content: graphQLResult.content,
-            createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now
+            createdAt: graphQLResult.insertedAt?.toDate() ?? Date.now,
+            files: []
         )
     }
 }

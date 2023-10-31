@@ -39,10 +39,18 @@ struct MessageRow : View {
 #Preview {
     MessageRow(
         message: Message(
+            tenant: Tenant(
+                id: "0",
+                title: "",
+                slug: "slug"),
             id: "1",
-            user: User(id: "1", name: "Rosa Luxemburg", nickname: nil),
+            user: User(tenant: Tenant(
+                id: "0",
+                title: "",
+                slug: "slug"), id: "1", name: "Rosa Luxemburg", nickname: nil),
             content: "Lorem ipsum dolor sit amed bla bla bli blub.",
-            createdAt: Date.now
+            createdAt: Date.now,
+            files: []
         ),
         fromCurrentUser: true
     )
@@ -53,7 +61,10 @@ struct MessageRow : View {
                 title: "",
                 slug: "slug"),
             authInfo: AuthInfo(),
-            user: User(id: "0")
+            user: User(tenant: Tenant(
+                id: "0",
+                title: "",
+                slug: "slug"), id: "0")
         )
     )
 }

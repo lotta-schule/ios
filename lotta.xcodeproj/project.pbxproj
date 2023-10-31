@@ -48,6 +48,7 @@
 		2E54609C2AE254E100040149 /* TenantRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E54609B2AE254E100040149 /* TenantRootView.swift */; };
 		2E54609E2AEE5AC800040149 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E54609D2AEE5AC800040149 /* ConversationView.swift */; };
 		2E5460A02AEF162D00040149 /* RouterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E54609F2AEF162D00040149 /* RouterData.swift */; };
+		2E5460A22AF123D000040149 /* MessageBubbleFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5460A12AF123D000040149 /* MessageBubbleFileRow.swift */; };
 		2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6A39D32ACC4EFA0003F447 /* PushNotificationService.swift */; };
 		2E6B04BE2ACB357900A10052 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2E6B04BD2ACB357900A10052 /* KeychainSwift */; };
 		2E6B04C12ACB47AE00A10052 /* AuthorizationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */; };
@@ -116,6 +117,7 @@
 		2E54609B2AE254E100040149 /* TenantRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenantRootView.swift; sourceTree = "<group>"; };
 		2E54609D2AEE5AC800040149 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
 		2E54609F2AEF162D00040149 /* RouterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterData.swift; sourceTree = "<group>"; };
+		2E5460A12AF123D000040149 /* MessageBubbleFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubbleFileRow.swift; sourceTree = "<group>"; };
 		2E6A39D32ACC4EFA0003F447 /* PushNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationService.swift; sourceTree = "<group>"; };
 		2E6B04C02ACB47AE00A10052 /* AuthorizationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationInterceptor.swift; sourceTree = "<group>"; };
 		2E6B04C22ACB494900A10052 /* NetworkInterceptorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterceptorProvider.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				2E12B3EE2ABDE6A100555B9D /* Avatar.swift */,
 				2E02689C2AB8942600C18681 /* CreateLoginSession.swift */,
 				2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */,
+				2E5460A12AF123D000040149 /* MessageBubbleFileRow.swift */,
 				2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */,
 				2E12B3F02ABDEBF000555B9D /* MessageList.swift */,
 			);
@@ -487,6 +490,7 @@
 				2E4C2E8D2ABEC6C800F846E9 /* ConversationListItem.swift in Sources */,
 				2E12B4012ABE532500555B9D /* AuthInfo.swift in Sources */,
 				2E12B3FD2ABE160500555B9D /* SelectTenantView.swift in Sources */,
+				2E5460A22AF123D000040149 /* MessageBubbleFileRow.swift in Sources */,
 				2E0268AF2AB90A2400C18681 /* ModelData.swift in Sources */,
 				2E6B04C32ACB494900A10052 /* NetworkInterceptorProvider.swift in Sources */,
 				2E12B3EF2ABDE6A100555B9D /* Avatar.swift in Sources */,

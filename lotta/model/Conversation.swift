@@ -9,6 +9,8 @@ import Foundation
 import LottaCoreAPI
 
 @Observable final class Conversation {
+    var tenant: Tenant
+    
     var id: ID
     
     var users: [User]
@@ -21,7 +23,8 @@ import LottaCoreAPI
     
     var updatedAt: Date
     
-    init(id: ID, users: [User], groups: [Group], messages: [Message], updatedAt: Date) {
+    init(tenant: Tenant, id: ID, users: [User], groups: [Group], messages: [Message], updatedAt: Date) {
+        self.tenant = tenant
         self.id = id
         self.users = users
         self.groups = groups
@@ -31,10 +34,11 @@ import LottaCoreAPI
         self.updatedAt = updatedAt
     }
     
-    convenience init(from graphQLResult: GetConversationsQuery.Data.Conversation) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetConversationsQuery.Data.Conversation) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
-            users: graphQLResult.users?.map { User(from: $0) } ?? [],
+            users: graphQLResult.users?.map { User(in: tenant, from: $0) } ?? [],
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
             messages: [],
             updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
@@ -44,20 +48,22 @@ import LottaCoreAPI
         }
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetConversationQuery.Data.Conversation) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
-            users: graphQLResult.users?.map { User(from: $0) } ?? [],
+            users: graphQLResult.users?.map { User(in: tenant, from: $0) } ?? [],
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
-            messages: graphQLResult.messages?.map { Message(from: $0) } ?? [],
+            messages: graphQLResult.messages?.map { Message(in: tenant, from: $0) } ?? [],
             updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
         )
     }
     
-    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation) {
+    convenience init(in tenant: Tenant, from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
-            users: graphQLResult.users?.map { User(from: $0) } ?? [],
+            users: graphQLResult.users?.map { User(in: tenant, from: $0) } ?? [],
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
             messages: [],
             updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
@@ -69,7 +75,7 @@ import LottaCoreAPI
             .filter { $0.id != excludedUser?.id }
             .first(where: { $0.id != excludedUser?.id })?
             .avatarImageFileId?
-            .getUrl(queryItems: [.init(name: "width", value: "100")])
+            .getUrl(for: tenant)
     }
     
     

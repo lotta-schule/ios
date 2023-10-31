@@ -71,7 +71,10 @@ struct MessageInput : View {
                 title: "",
                 slug: "slug"),
             authInfo: AuthInfo(),
-            user: User(id: "0")
+            user: User(tenant: Tenant(
+                id: "0",
+                title: "",
+                slug: "slug"), id: "0")
         )
     )
 }

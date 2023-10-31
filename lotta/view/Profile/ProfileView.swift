@@ -52,6 +52,11 @@ struct ProfileView_Previews: PreviewProvider {
             ),
             authInfo: AuthInfo(),
             user: User(
+                tenant: Tenant(
+                    id: "0",
+                    title: "test",
+                    slug: "test"
+                ),
                 id: "0",
                 name: "Napoleon Bonaparte",
                 nickname: "Naps"
@@ -72,6 +77,11 @@ struct ProfileView_Previews: PreviewProvider {
             ),
             authInfo: AuthInfo(),
             user: User(
+                tenant: Tenant(
+                    id: "0",
+                    title: "test",
+                    slug: "test"
+                ),
                 id: "0",
                 name: "Napoleon Bonaparte",
                 nickname: "Naps"
@@ -85,6 +95,11 @@ struct ProfileView_Previews: PreviewProvider {
             ),
             authInfo: AuthInfo(),
             user: User(
+                tenant: Tenant(
+                    id: "0",
+                    title: "test",
+                    slug: "test"
+                ),
                 id: "5",
                 name: "Napoleon Bonaparte",
                 nickname: "Napoleon"
@@ -98,6 +113,11 @@ struct ProfileView_Previews: PreviewProvider {
             ),
             authInfo: AuthInfo(),
             user: User(
+                tenant: Tenant(
+                    id: "0",
+                    title: "test",
+                    slug: "test"
+                ),
                 id: "2",
                 name: "Napoleon",
                 nickname: ""

@@ -45,10 +45,17 @@ struct LoginView: View {
                 .padding(.vertical)
             
             if let logoImageFileId = selectedTenantDescriptor?.logoImageFileId,
-               let url = String(logoImageFileId).getUrl() {
+               let url = String(logoImageFileId).getUrl(for: Tenant(
+                id: String(selectedTenantDescriptor!.id),
+                title: selectedTenantDescriptor!.title,
+                slug: selectedTenantDescriptor!.slug
+               ), queryItems: [
+                URLQueryItem(name: "width", value: "400"),
+                URLQueryItem(name: "height", value: "200")
+               ]) {
                 AsyncImage(url: url)
                     .padding(8)
-                    .frame(width: 100, height: 100)
+                    .frame(width: 200, height: 100)
             }
             
             Form {
@@ -93,11 +100,13 @@ struct LoginView: View {
             if availableTenantDescriptors.count == 0 {
                 LottaButton("weiter", action: fetchPossibleTenants, isLoading: isLoadingTenants)
                     .disabled(isLoadingTenants || email.isEmpty)
+                    .padding()
             }
             
             if selectedTenantDescriptor != nil {
                 LottaButton("anmelden", action: onSubmit, isLoading: isLoading)
                     .disabled(isDisabled())
+                    .padding()
             }
             
             

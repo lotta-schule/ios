@@ -77,7 +77,7 @@ enum UserSessionError : Error {
                 // self.resetUser()
                 return .error(AuthenticationError.invalidResponse("No user in response! \(userGraphqlResult)"))
             }
-            self.user = User(from: userResult)
+            self.user = User(in: tenant, from: userResult)
             
             await UIApplication.shared.registerForRemoteNotifications()
             return .success
@@ -91,7 +91,7 @@ enum UserSessionError : Error {
         if let conversations =
             result.conversations?.filter({ conversation in
                 conversation != nil
-            }).map({ Conversation(from: $0!) }) {
+            }).map({ Conversation(in: tenant, from: $0!) }) {
             self.conversations = conversations.sorted(by: {
                 $0.updatedAt.compare($1.updatedAt) == .orderedDescending
             })
@@ -111,7 +111,7 @@ enum UserSessionError : Error {
         guard let messageData = graphqlResult.data?.message else {
             throw UserSessionError.generic("Invalid Message")
         }
-        let message = Message(from: messageData)
+        let message = Message(in: tenant, from: messageData)
         return message
     }
     
@@ -128,14 +128,14 @@ enum UserSessionError : Error {
         guard let messageData = graphqlResult.data?.message else {
             throw UserSessionError.generic("Invalid Message")
         }
-        let message = Message(from: messageData)
+        let message = Message(in: tenant, from: messageData)
         return message
     }
     
     func loadConversation(_ conversation: Conversation) async throws -> Void {
         let result = try await api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id), cachePolicy: .fetchIgnoringCacheData)
         if let conversationData = result.conversation {
-            let loadedConversation = Conversation(from: conversationData)
+            let loadedConversation = Conversation(in: tenant, from: conversationData)
             if let i = self.conversations.firstIndex(where: { $0.id == conversation.id }) {
                 self.conversations[i] = loadedConversation
             } else {
@@ -150,8 +150,8 @@ enum UserSessionError : Error {
         ) {
                 switch $0 {
                 case .success(let graphqlResult):
-                    let conversation = Conversation(from: graphqlResult.data!.message!.conversation!)
-                    let message = Message(from: graphqlResult.data!.message!)
+                    let conversation = Conversation(in: self.tenant, from: graphqlResult.data!.message!.conversation!)
+                    let message = Message(in: self.tenant, from: graphqlResult.data!.message!)
                     self.addMessage(message, toConversation: conversation)
                 case .failure(let error):
                     print("Error subscribing: \(error)")
@@ -185,7 +185,7 @@ enum UserSessionError : Error {
             throw AuthenticationError.invalidResponse("Auth token is not valid, does not contain a user id")
         }
         
-        let user = User(id: userId)
+        let user = User(tenant: tenant, id: userId)
         let userSession = UserSession(tenant: tenant, authInfo: authInfo, user: user)
         
         switch await userSession.refetchUserData() {

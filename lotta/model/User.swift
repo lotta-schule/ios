@@ -9,6 +9,8 @@ import LottaCoreAPI
 import SwiftData
 
 final class User {
+    var tenant: Tenant
+    
     var id: ID
     
     var name: String?
@@ -17,15 +19,17 @@ final class User {
     
     var avatarImageFileId: LottaFileID?
     
-    init(id: ID, name: String? = nil, nickname: String? = nil, avatarImageFileId: LottaFileID? = nil) {
+    init(tenant: Tenant, id: ID, name: String? = nil, nickname: String? = nil, avatarImageFileId: LottaFileID? = nil) {
+        self.tenant = tenant
         self.id = id
         self.name = name
         self.nickname = nickname
         self.avatarImageFileId = avatarImageFileId
     }
     
-    convenience init(from graphQLResult: GetCurrentUserQuery.Data.CurrentUser) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetCurrentUserQuery.Data.CurrentUser) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
@@ -33,8 +37,9 @@ final class User {
         )
     }
     
-    convenience init(from graphQLResult: GetConversationsQuery.Data.Conversation.User) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetConversationsQuery.Data.Conversation.User) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
@@ -42,8 +47,9 @@ final class User {
         )
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.User) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetConversationQuery.Data.Conversation.User) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
@@ -51,8 +57,9 @@ final class User {
         )
     }
     
-    convenience init(from graphQLResult: GetConversationQuery.Data.Conversation.Message.User) {
+    convenience init(in tenant: Tenant, from graphQLResult: GetConversationQuery.Data.Conversation.Message.User) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
@@ -60,8 +67,9 @@ final class User {
         )
     }
     
-    convenience init(from graphQLResult: SendMessageMutation.Data.Message.User) {
+    convenience init(in tenant: Tenant, from graphQLResult: SendMessageMutation.Data.Message.User) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
@@ -69,8 +77,9 @@ final class User {
         )
     }
     
-    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.User) {
+    convenience init(in tenant: Tenant, from graphQLResult: ReceiveMessageSubscription.Data.Message.User) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
@@ -78,8 +87,9 @@ final class User {
         )
     }
     
-    convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation.User) {
+    convenience init(in tenant: Tenant, from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation.User) {
         self.init(
+            tenant: tenant,
             id: graphQLResult.id!,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,

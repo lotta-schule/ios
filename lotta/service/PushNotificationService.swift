@@ -76,7 +76,7 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
             case UNNotificationDefaultActionIdentifier:
             let threadIdentifier = response.notification.request.content.threadIdentifier.split(separator: "/")
             if let tenantSlug = threadIdentifier.first, let conversationId = threadIdentifier.last {
-                if ModelData.shared.setSession(bySlug: String(tenantSlug)) {
+                if ModelData.shared.setSession(byTenantSlug: String(tenantSlug)) {
                     RouterData.shared.selectedConversationId = String(conversationId)
                 }
             }

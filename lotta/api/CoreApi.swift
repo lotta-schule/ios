@@ -14,8 +14,9 @@ import LottaCoreAPI
 import SwiftData
 
 let LOTTA_API_HOST = "core.staging.lotta.schule"
-let LOTTA_API_HTTP_URL = URL(string: "https://\(LOTTA_API_HOST)")!
-let LOTTA_API_WEBSOCKET_URL = URL(string: "wss://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
+let USE_SECURE_CONNECTION = true
+let LOTTA_API_HTTP_URL = URL(string: "\(USE_SECURE_CONNECTION ? "https" : "http")://\(LOTTA_API_HOST)")!
+let LOTTA_API_WEBSOCKET_URL = URL(string: "\(USE_SECURE_CONNECTION ? "wss" : "ws")://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
 
 fileprivate func getHttpTransport(loginSession: AuthInfo? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
     var additionalHeaders: [String:String] = [:]

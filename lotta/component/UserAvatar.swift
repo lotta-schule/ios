@@ -11,6 +11,6 @@ struct UserAvatar: View {
     var user: User
     
     var body: some View {
-        Avatar(url: user.avatarImageFileId?.getUrl(queryItems: [.init(name: "width", value: "100")]))
+        Avatar(url: user.avatarImageFileId?.getUrl(for: user.tenant))
     }
 }

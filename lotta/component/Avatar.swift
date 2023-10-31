@@ -10,11 +10,16 @@ import SwiftUI
 
 struct Avatar: View {
     var url: URL?
+    var size: Int = 44
     
     var body: some View {
         if let url = url {
             AsyncImage(
-                url: url.appending(queryItems: [.init(name: "aspectRatio", value: "1"), .init(name: "resize", value: "cover")]),
+                url: url.appending(queryItems: [
+                    .init(name: "aspectRatio", value: "1"),
+                    .init(name: "resize", value: "cover"),
+                    .init(name: "width", value: String(size * 2))
+                ]),
                 transaction: Transaction(animation: .easeInOut)
             ) { phase in
                 switch phase {
@@ -30,7 +35,7 @@ struct Avatar: View {
                     EmptyView()
                 }
             }
-            .frame(width: 44, height: 44)
+            .frame(width: CGFloat(size), height: CGFloat(size))
             .background(Color.white)
             .clipShape(.circle)
         } else {

@@ -50,8 +50,8 @@ struct LoginView: View {
                 title: selectedTenantDescriptor!.title,
                 slug: selectedTenantDescriptor!.slug
                ), queryItems: [
-                URLQueryItem(name: "width", value: "400"),
-                URLQueryItem(name: "height", value: "200")
+                URLQueryItem(name: "width", value: "200"),
+                URLQueryItem(name: "height", value: "100")
                ]) {
                 AsyncImage(url: url)
                     .padding(8)

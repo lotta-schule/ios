@@ -137,6 +137,7 @@ struct LoginView: View {
                         self.availableTenantDescriptors = tenants
                         self.selectedTenantDescriptor = tenants[0]
                     }
+                    saveTenantDescriptorsToDisk(results: data)
                 }
             } else if let error = error {
                 showErrorMessage(error.localizedDescription)
@@ -147,6 +148,19 @@ struct LoginView: View {
             }
             isLoadingTenants = false
         } .resume()
+    }
+    
+    func saveTenantDescriptorsToDisk(results: ListTenantsResult) -> Void {
+        let resultsData = try? JSONEncoder().encode(results)
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first!
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let jsonFileURL = documentsURL.appendingPathComponent("tenants-list.json")
+        
+        try? resultsData?.write(to: jsonFileURL)
     }
     
     func onSubmit() -> Void {

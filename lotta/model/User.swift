@@ -109,9 +109,9 @@ final class User {
     }
 }
 
-extension User: Identifiable {}
+extension User : Identifiable {}
 
-extension User: Hashable {
+extension User : Hashable {
     static func == (lhs: User, rhs: User) -> Bool {
         lhs.id == rhs.id
     }
@@ -120,3 +120,5 @@ extension User: Hashable {
         hasher.combine(id)
     }
 }
+
+extension User : Codable {}

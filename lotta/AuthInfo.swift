@@ -76,7 +76,19 @@ class AuthInfo {
             
             completion(.success(tokenPair))
         }.resume()
-
+    }
+        
+    func renewAsync(additionalHeaders: [String:String] = [:]) async throws -> TokenPair {
+        return try await withCheckedThrowingContinuation { continuation in
+            return self.renew(additionalHeaders: additionalHeaders, completion: { result in
+                switch result {
+                case .success(let tokenPair):
+                    continuation.resume(returning: tokenPair)
+                case .failure(let failure):
+                    continuation.resume(throwing: failure)
+                }
+            })
+        }
     }
     
     struct TokenPair {

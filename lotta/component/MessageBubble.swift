@@ -24,7 +24,7 @@ struct MessageBubble : View {
             }
         }
         .padding(CGFloat(userSession.theme.spacing))
-        .foregroundColor(userSession.theme.textColor)
+        .foregroundColor(userSession.theme.textColor.toColor())
         .background(
             fromCurrentUser
             ? userSession.theme.primaryColor.opacity(0.3)
@@ -36,8 +36,8 @@ struct MessageBubble : View {
             )
             .stroke(
                 fromCurrentUser
-                ? userSession.theme.primaryColor
-                : userSession.theme.disabledColor.opacity(0.5),
+                ? userSession.theme.primaryColor.toColor()
+                : userSession.theme.disabledColor.toColor().opacity(0.5),
                 lineWidth: 1
             )
         )

@@ -34,6 +34,12 @@ struct RootView: View {
                 isShowLoginView.toggle()
             }
         }
+        .onChange(of: modelData.userSessions) {
+            let newBadgeNumber = modelData.userSessions.reduce(into: 0) { partialResult, session in
+                partialResult += session.unreadMessageCount
+            }
+            UIApplication.shared.applicationIconBadgeNumber = newBadgeNumber
+        }
     }
     
 }

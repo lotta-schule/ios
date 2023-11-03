@@ -14,7 +14,7 @@ struct TenantRootView: View {
         MainView()
         .background {
             ZStack {
-                userSession.theme.pageBackgroundColor
+                userSession.theme.pageBackgroundColor.toColor()
                 if let url = userSession.tenant.backgroundImageFileId?.getUrl(for: userSession.tenant) {
                     AsyncImage(url: url)
                         .scaledToFill()

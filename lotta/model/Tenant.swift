@@ -17,10 +17,6 @@ final class Tenant {
     
     var customTheme = Theme()
     
-    var files = [LottaFile]()
-    
-    var users = [User]()
-    
     var backgroundImageFileId: String?
     
     var logoImageFileId: String?
@@ -65,3 +61,5 @@ extension Tenant: Equatable {
         return lhs.slug == rhs.slug && lhs.id == rhs.id
     }
 }
+
+extension Tenant: Codable {}

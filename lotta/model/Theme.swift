@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-fileprivate func getColor(forKey key: String, in dict: [String: String]) -> Color? {
+fileprivate func getColor(forKey key: String, in dict: [String: String]) -> ThemeColor? {
     guard let value = dict[key] else {
         return nil
     }
@@ -19,9 +19,9 @@ fileprivate func getColor(forKey key: String, in dict: [String: String]) -> Colo
         }
         let opacity: Double? = if let opacityString = match.4 { Double(opacityString) } else { nil }
         if let opacity = opacity {
-            return Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255, opacity: opacity / 255)
+            return ThemeColor(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255, opacity: opacity / 255)
         } else {
-            let color = Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255)
+            let color = ThemeColor(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255)
             return color
         }
     }
@@ -42,65 +42,65 @@ fileprivate func getNumber(forKey key: String, in dict: [String: String]) -> Int
 }
 
 struct Theme {
-    let primaryColor: Color
-    let navigationBackgroundColor: Color
-    let errorColor: Color
-    let successColor: Color
-    let navigationColor: Color
-    let disabledColor: Color
-    let textColor: Color
-    let labelTextColor: Color
-    let navigationContrastTextColor: Color
-    let primaryContrastTextColor: Color
-    let boxBackgroundColor: Color
-    let pageBackgroundColor: Color
-    let dividerColor: Color
-    let highlightColor: Color
-    let bannerBackgroundColor: Color
-    let accentGreyColor: Color
+    let primaryColor: ThemeColor
+    let navigationBackgroundColor: ThemeColor
+    let errorColor: ThemeColor
+    let successColor: ThemeColor
+    let navigationColor: ThemeColor
+    let disabledColor: ThemeColor
+    let textColor: ThemeColor
+    let labelTextColor: ThemeColor
+    let navigationContrastTextColor: ThemeColor
+    let primaryContrastTextColor: ThemeColor
+    let boxBackgroundColor: ThemeColor
+    let pageBackgroundColor: ThemeColor
+    let dividerColor: ThemeColor
+    let highlightColor: ThemeColor
+    let bannerBackgroundColor: ThemeColor
+    let accentGreyColor: ThemeColor
     
     let spacing: Int
     let borderRadius: Int
     
     static let Default = Theme(
-        primaryColor: Color(red: 1.0, green: 0.34, blue: 0.13),
-        navigationBackgroundColor: Color(red: 0.2, green: 0.2, blue: 0.2),
-        errorColor: Color(red: 1, green: 0, blue: 0),
-        successColor: Color(red: 0.04, green: 0.32, blue: 0.15),
-        navigationColor: Color(red: 0.2, green: 0.2, blue: 0.2),
-        disabledColor: Color(red: 0.38, green: 0.38, blue: 0.38),
-        textColor: Color(red: 0.13, green: 0.13, blue: 0.13),
-        labelTextColor: Color(red: 0.62, green: 0.62, blue: 0.62),
-        navigationContrastTextColor: Color(red: 1, green: 1, blue: 1),
-        primaryContrastTextColor: Color(red: 1, green: 1, blue: 1),
-        boxBackgroundColor: Color(red: 1, green: 1, blue: 1),
-        pageBackgroundColor: Color(red: 0.79, green: 0.8, blue: 0.84),
-        dividerColor: Color(red: 0.88, green: 0.88, blue: 0.88),
-        highlightColor: Color(red: 0.88, green: 0.88, blue: 0.88),
-        bannerBackgroundColor: Color(red: 0.21, green: 0.48, blue: 0.94),
-        accentGreyColor: Color(red: 0.89, green: 0.89, blue: 0.89),
+        primaryColor: ThemeColor(red: 1.0, green: 0.34, blue: 0.13),
+        navigationBackgroundColor: ThemeColor(red: 0.2, green: 0.2, blue: 0.2),
+        errorColor: ThemeColor(red: 1, green: 0, blue: 0),
+        successColor: ThemeColor(red: 0.04, green: 0.32, blue: 0.15),
+        navigationColor: ThemeColor(red: 0.2, green: 0.2, blue: 0.2),
+        disabledColor: ThemeColor(red: 0.38, green: 0.38, blue: 0.38),
+        textColor: ThemeColor(red: 0.13, green: 0.13, blue: 0.13),
+        labelTextColor: ThemeColor(red: 0.62, green: 0.62, blue: 0.62),
+        navigationContrastTextColor: ThemeColor(red: 1, green: 1, blue: 1),
+        primaryContrastTextColor: ThemeColor(red: 1, green: 1, blue: 1),
+        boxBackgroundColor: ThemeColor(red: 1, green: 1, blue: 1),
+        pageBackgroundColor: ThemeColor(red: 0.79, green: 0.8, blue: 0.84),
+        dividerColor: ThemeColor(red: 0.88, green: 0.88, blue: 0.88),
+        highlightColor: ThemeColor(red: 0.88, green: 0.88, blue: 0.88),
+        bannerBackgroundColor: ThemeColor(red: 0.21, green: 0.48, blue: 0.94),
+        accentGreyColor: ThemeColor(red: 0.89, green: 0.89, blue: 0.89),
         
         spacing: 8,
         borderRadius: 4
     )
     
     init(
-        primaryColor: Color,
-        navigationBackgroundColor: Color,
-        errorColor: Color,
-        successColor: Color,
-        navigationColor: Color,
-        disabledColor: Color,
-        textColor: Color,
-        labelTextColor: Color,
-        navigationContrastTextColor: Color,
-        primaryContrastTextColor: Color,
-        boxBackgroundColor: Color,
-        pageBackgroundColor: Color,
-        dividerColor: Color,
-        highlightColor: Color,
-        bannerBackgroundColor: Color,
-        accentGreyColor: Color,
+        primaryColor: ThemeColor,
+        navigationBackgroundColor: ThemeColor,
+        errorColor: ThemeColor,
+        successColor: ThemeColor,
+        navigationColor: ThemeColor,
+        disabledColor: ThemeColor,
+        textColor: ThemeColor,
+        labelTextColor: ThemeColor,
+        navigationContrastTextColor: ThemeColor,
+        primaryContrastTextColor: ThemeColor,
+        boxBackgroundColor: ThemeColor,
+        pageBackgroundColor: ThemeColor,
+        dividerColor: ThemeColor,
+        highlightColor: ThemeColor,
+        bannerBackgroundColor: ThemeColor,
+        accentGreyColor: ThemeColor,
         spacing: Int,
         borderRadius: Int
     ) {
@@ -150,3 +150,5 @@ struct Theme {
     }
     
 }
+
+extension Theme: Codable {}

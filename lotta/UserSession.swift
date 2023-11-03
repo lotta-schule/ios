@@ -10,6 +10,7 @@ import JWTDecode
 import LottaCoreAPI
 import UIKit
 import Apollo
+import KeychainSwift
 
 enum UserSessionError : Error {
     case generic(String)
@@ -31,12 +32,9 @@ enum UserSessionError : Error {
     }
     
     var unreadMessageCount: Int {
-        let count = self.conversations.reduce(into: 0) { partialResult, conversation in
+        return self.conversations.reduce(into: 0) { partialResult, conversation in
             partialResult += conversation.unreadMessages
         }
-        // TODO:
-        // UIApplication.shared.applicationIconBadgeNumber = count
-        return count
     }
     
     var theme: Theme {
@@ -70,14 +68,31 @@ enum UserSessionError : Error {
     func refetchUserData() async -> AuthenticationResult {
         do {
             let userGraphqlResult = try await api.apollo.fetchAsync(
-                query: GetCurrentUserQuery(),
-                queue: .init(label: "test")
+                query: GetCurrentUserQuery()
             )
             guard let userResult = userGraphqlResult.currentUser else {
                 // self.resetUser()
                 return .error(AuthenticationError.invalidResponse("No user in response! \(userGraphqlResult)"))
             }
             self.user = User(in: tenant, from: userResult)
+            
+            await UIApplication.shared.registerForRemoteNotifications()
+            return .success
+        } catch {
+            return .error(error)
+        }
+    }
+    
+    func refetchTenantData() async -> AuthenticationResult {
+        do {
+            let tenantGraphqlResult = try await api.apollo.fetchAsync(
+                query: GetTenantQuery()
+            )
+            guard let tenantResult = tenantGraphqlResult.tenant else {
+                // self.resetUser()
+                return .error(AuthenticationError.invalidResponse("No user in response! \(tenantGraphqlResult)"))
+            }
+            self.tenant = Tenant(from: tenantResult)
             
             await UIApplication.shared.registerForRemoteNotifications()
             return .success
@@ -167,7 +182,8 @@ enum UserSessionError : Error {
         }
         let tenant = Tenant(from: tenantData)
         
-        let tenantApi = CoreApi(withTenantSlug: tenant.slug)
+        let authInfo = AuthInfo()
+        let tenantApi = CoreApi(withTenantSlug: tenant.slug, loginSession: authInfo)
         
         let tokenGraphqlResult = try await tenantApi.apollo.performAsync(
             mutation: LoginMutation(username: username, password: password)
@@ -176,7 +192,6 @@ enum UserSessionError : Error {
               let accessToken = try? decode(jwt: accessToken) else {
             throw AuthenticationError.invalidResponse("No auth token in response!")
         }
-        let authInfo = AuthInfo(accessToken: accessToken)
         if accessToken.claim(name: "typ").string != "access" {
             throw AuthenticationError.invalidResponse("Auth token is not a valid lotta jwt access token")
         }
@@ -185,17 +200,96 @@ enum UserSessionError : Error {
             throw AuthenticationError.invalidResponse("Auth token is not valid, does not contain a user id")
         }
         
+        authInfo.accessToken = accessToken
         let user = User(tenant: tenant, id: userId)
         let userSession = UserSession(tenant: tenant, authInfo: authInfo, user: user)
+        
+        _ = try? await authInfo.renewAsync()
         
         switch await userSession.refetchUserData() {
             case .error(let authError):
                 throw authError
             case .success:
+                try? userSession.writeToDisk()
                 return userSession
         }
     }
     
+    static func readFromDisk() -> [UserSession] {
+        var results = [UserSession]()
+        let keychain = KeychainSwift()
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first!
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        
+        do {
+            let files = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            let sessionFiles = files.filter { url in
+                let regex = /^usersession-[^-]+-[^-]+\.json$/
+                return url.isFileURL && url.lastPathComponent.wholeMatch(of: regex) != nil
+            }
+            for fileUrl in sessionFiles {
+                if let userSessionData = try? Data(contentsOf: fileUrl),
+                   let persistedUserSession = try? JSONDecoder().decode(PersistedUserSession.self, from: userSessionData),
+                   let refreshToken = keychain.get("\(persistedUserSession.tenant.id)--refresh-token"),
+                   let jwt = try? JWTDecode.decode(jwt: refreshToken),
+                   jwt.expired == false {
+                    let authInfo = AuthInfo(refreshToken: jwt)
+                    let userSession = UserSession(tenant: persistedUserSession.tenant, authInfo: authInfo, user: persistedUserSession.user)
+                    
+                    results.append(userSession)
+                    
+                    Task {
+                        _ = await userSession.refetchUserData()
+                        _ = await userSession.refetchTenantData()
+                        try? userSession.writeToDisk()
+                    }
+                } else {
+                    do {
+                        try FileManager.default.removeItem(at: fileUrl)
+                    } catch {
+                        print("error writing usersession data: \(error)")
+                    }
+                }
+            }
+        } catch {
+            print("Error reading files: \(error)")
+        }
+        
+        return results
+    }
+    
+    func writeToDisk() throws -> Void {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first!
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let fileURL = documentsURL.appendingPathComponent("usersession-\(tenant.id)-\(user.id).json")
+        
+        let persistedUserSession = PersistedUserSession(tenant: tenant, user: user)
+        do {
+            try JSONEncoder().encode(persistedUserSession).write(to: fileURL)
+        } catch {
+            print("error writing usersession data: \(error)")
+        }
+    }
+    
+    func removeFromDisk() throws -> Void {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first!
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let fileURL = documentsURL.appendingPathComponent("usersession-\(tenant.id)-\(user.id).json")
+        
+        try FileManager.default.removeItem(at: fileURL)
+    }
 }
 
 extension UserSession: Equatable {

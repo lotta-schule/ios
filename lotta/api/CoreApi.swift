@@ -5,13 +5,14 @@
 //  Created by Alexis Rinaldoni on 18/09/2023.
 //
 
-import Foundation
 import Apollo
-import ApolloAPI
-import ApolloWebSocket
 import Combine
-import LottaCoreAPI
 import SwiftData
+import ApolloAPI
+import Foundation
+import ApolloSQLite
+import LottaCoreAPI
+import ApolloWebSocket
 
 let LOTTA_API_HOST = "core.staging.lotta.schule"
 let USE_SECURE_CONNECTION = true
@@ -49,19 +50,33 @@ class CoreApi {
     private(set) var apollo: ApolloClient
     
     init() {
-        let store = ApolloStore(cache: InMemoryNormalizedCache())
+        let store = ApolloStore()
         let transport = getHttpTransport(store: store)
         let client  = ApolloClient(networkTransport: transport, store: store)
         
         self.apollo = client
     }
     init(withTenantSlug slug: String, loginSession: AuthInfo? = nil) {
-        let store = ApolloStore(cache: InMemoryNormalizedCache())
+        let store = ApolloStore()
         let transport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
         self.apollo = ApolloClient(networkTransport: transport, store: store)
     }
     init(withTenantSlug slug: String, tenantId: String, andLoginSession loginSession: AuthInfo) {
-        let store = ApolloStore(cache: InMemoryNormalizedCache())
+        // 1. Determine where you would like to store your SQLite file.
+        //    A commonly used location is the user's Documents directory
+        //    within your application's sandbox.
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first!
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let sqliteFileURL = documentsURL.appendingPathComponent("test_apollo_db.sqlite")
+
+        // 2. Use that file URL to instantiate the SQLite cache:
+        let sqliteCache = try! SQLiteNormalizedCache(fileURL: sqliteFileURL)
+        
+        let store = ApolloStore(cache: sqliteCache)
         let httpTransport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
         let wsTransport = getWSTransport(loginSession: loginSession, tenantId: tenantId, store: store)
         

@@ -26,29 +26,9 @@ enum AuthenticationError: Error {
 @Observable final class ModelData {
     static let shared = ModelData()
     
-    var userSessions = [UserSession]()
+    var userSessions = UserSession.readFromDisk()
     
     private var currentSessionTenantId: ID?
-    
-    /*
-     TODO: add an initialize when we have persistence
-    init() {
-        let keychain = KeychainSwift()
-        if let tid = UserDefaults.standard.string(forKey: "lotta-tenant-id"),
-           let refreshToken = keychain.get("\(tid)--refresh-token"),
-           let jwt = try? JWTDecode.decode(jwt: refreshToken) {
-            if !jwt.expired {
-                self.userSessions.append(
-                    UserSession(
-                        tenant: <#T##Tenant#>,
-                        authInfo: <#T##AuthInfo#>,
-                        user: <#T##User#>
-                    )
-                )
-            }
-        }
-    }
-    */
     
     func setSession(byTenantId id: ID) -> Bool {
         if currentSessionTenantId == id {
@@ -78,6 +58,7 @@ enum AuthenticationError: Error {
     }
     
     func remove(session: UserSession) -> Void {
+        try? session.removeFromDisk()
         self.userSessions.removeAll { existingSession in
             existingSession.tenant.id == session.tenant.id
         }

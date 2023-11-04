@@ -5,8 +5,11 @@
 //  Created by Alexis Rinaldoni on 21/09/2023.
 //
 
-import LottaCoreAPI
+import Sentry
 import SwiftData
+import LottaCoreAPI
+
+typealias SentryUser = Sentry.User
 
 final class User {
     var tenant: Tenant
@@ -17,11 +20,14 @@ final class User {
     
     var nickname: String?
     
+    var email: String?
+    
     var avatarImageFileId: LottaFileID?
     
-    init(tenant: Tenant, id: ID, name: String? = nil, nickname: String? = nil, avatarImageFileId: LottaFileID? = nil) {
+    init(tenant: Tenant, id: ID, email: String? = nil, name: String? = nil, nickname: String? = nil, avatarImageFileId: LottaFileID? = nil) {
         self.tenant = tenant
         self.id = id
+        self.email = email
         self.name = name
         self.nickname = nickname
         self.avatarImageFileId = avatarImageFileId
@@ -31,6 +37,7 @@ final class User {
         self.init(
             tenant: tenant,
             id: graphQLResult.id!,
+            email: graphQLResult.email,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFileId: graphQLResult.avatarImageFile?.id
@@ -106,6 +113,15 @@ final class User {
         } else {
             return name
         }
+    }
+    
+    func toSentryUser() -> SentryUser {
+        let sentryUser = SentryUser(userId: id)
+        sentryUser.name = name
+        sentryUser.username = nickname
+        sentryUser.email = email
+        
+        return sentryUser
     }
 }
 

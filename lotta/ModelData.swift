@@ -5,12 +5,12 @@
 //  Created by Alexis Rinaldoni on 19/09/2023.
 //
 
-import KeychainSwift
-import LottaCoreAPI
-import JWTDecode
-import SwiftUI
+import Sentry
 import Apollo
+import SwiftUI
 import JWTDecode
+import LottaCoreAPI
+import KeychainSwift
 
 let keychain = KeychainSwift()
 
@@ -34,9 +34,16 @@ enum AuthenticationError: Error {
         if currentSessionTenantId == id {
             return true
         }
-        if userSessions.contains(where: { $0.tenant.id == id }) {
+        if let session = userSessions.first(where: { $0.tenant.id == id }) {
             UserDefaults.standard.setValue(id, forKey: "lotta-tenant-id")
             currentSessionTenantId = id
+            SentrySDK.configureScope { scope in
+                scope.setContext(value: [
+                    "id": session.tenant.id,
+                    "slug": session.tenant.slug,
+                ], key: "tenant")
+                scope.setUser(session.user.toSentryUser())
+            }
             return true
         }
         return false

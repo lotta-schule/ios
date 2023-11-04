@@ -61,6 +61,7 @@
 		2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */; };
 		2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7FB2ABCE079000BB6CF /* User.swift */; };
 		2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */; };
+		8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 5A360A425FE94FBE9718F5EF /* Sentry */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -147,6 +148,7 @@
 				2E5460A82AF17DAB00040149 /* ApolloSQLite in Frameworks */,
 				2E0268A32AB8988400C18681 /* LottaCoreAPI in Frameworks */,
 				2E4191A52ACC5B5800FD0FDA /* ApolloAPI in Frameworks */,
+				8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +156,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +358,7 @@
 				2E0268642AB88F4500C18681 /* Sources */,
 				2E0268652AB88F4500C18681 /* Frameworks */,
 				2E0268662AB88F4500C18681 /* Resources */,
+				029126A4BF6D48E790C22320 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -369,6 +374,7 @@
 				2E4191A62ACC5B5800FD0FDA /* ApolloWebSocket */,
 				2E4191B02ACC946200FD0FDA /* DeviceKit */,
 				2E5460A72AF17DAB00040149 /* ApolloSQLite */,
+				5A360A425FE94FBE9718F5EF /* Sentry */,
 			);
 			productName = lotta;
 			productReference = 2E0268682AB88F4500C18681 /* lotta.app */;
@@ -448,6 +454,7 @@
 				2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */,
 				2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */,
 				2E4191AF2ACC946200FD0FDA /* XCRemoteSwiftPackageReference "DeviceKit" */,
+				0CC4D2DE368B48D09B8A24DD /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			productRefGroup = 2E0268692AB88F4500C18681 /* Products */;
 			projectDirPath = "";
@@ -716,6 +723,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 			};
 			name = Debug;
 		};
@@ -748,6 +756,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 			};
 			name = Release;
 		};
@@ -908,6 +917,14 @@
 				minimumVersion = 3.1.0;
 			};
 		};
+		0CC4D2DE368B48D09B8A24DD /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -950,7 +967,30 @@
 			package = 2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */;
 			productName = JWTDecode;
 		};
+		5A360A425FE94FBE9718F5EF /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0CC4D2DE368B48D09B8A24DD /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		029126A4BF6D48E790C22320 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Upload Debug Symbols to Sentry";
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+			);
+			outputPaths = (
+			);
+			shellPath = /bin/sh;
+			shellScript = "# This script is responsable to upload debug symbols and source context for Sentry.\nif which sentry-cli >/dev/null; then\nexport SENTRY_ORG=lotta\nexport SENTRY_PROJECT=lotta-ios\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 	};
 	rootObject = 2E0268602AB88F4500C18681 /* Project object */;
 }

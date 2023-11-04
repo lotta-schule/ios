@@ -5,6 +5,7 @@
 //  Created by Alexis Rinaldoni on 18/09/2023.
 //
 
+import Sentry
 import SwiftUI
 import LottaCoreAPI
 
@@ -140,6 +141,7 @@ struct LoginView: View {
                     saveTenantDescriptorsToDisk(results: data)
                 }
             } else if let error = error {
+                SentrySDK.capture(error: error)
                 showErrorMessage(error.localizedDescription)
                 print(error)
             } else {

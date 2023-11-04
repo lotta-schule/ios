@@ -4,9 +4,10 @@
 //
 //  Created by Alexis Rinaldoni on 23/09/2023.
 //
+import Sentry
+import Apollo
 import SwiftUI
 import JWTDecode
-import Apollo
 import KeychainSwift
 
 class AuthInfo {
@@ -60,6 +61,10 @@ class AuthInfo {
         request.httpMethod = "POST"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                SentrySDK.capture(error: error)
+                return
+            }
             guard let data = data, let tokens = try? JSONDecoder().decode(TokenPair.Json.self, from: data) else {
                 completion(.failure(.invalidToken))
                 return

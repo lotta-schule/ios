@@ -5,6 +5,7 @@
 //  Created by Alexis Rinaldoni on 18/09/2023.
 //
 
+import Sentry
 import Apollo
 import Combine
 import SwiftData
@@ -107,7 +108,8 @@ extension ApolloClient {
                 continuation.resume(throwing: errorUn)
               }
             case .failure(let error):
-              continuation.resume(throwing: error)
+                SentrySDK.capture(error: error)
+                continuation.resume(throwing: error)
             }
           }
         })
@@ -120,6 +122,7 @@ extension ApolloClient {
                 case .success(let value):
                     continuation.resume(returning: value)
                 case .failure(let error):
+                    SentrySDK.capture(error: error)
                     continuation.resume(throwing: error)
                 }
             }

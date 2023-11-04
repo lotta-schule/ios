@@ -5,6 +5,7 @@
 //  Created by Alexis Rinaldoni on 22/09/2023.
 //
 
+import Sentry
 import SwiftUI
 import LottaCoreAPI
 
@@ -29,6 +30,7 @@ struct MessageList : View {
                         do {
                             try await userSession.loadConversation(conversation)
                         } catch {
+                            SentrySDK.capture(error: error)
                             print("Error: \(error)")
                         }
                     }

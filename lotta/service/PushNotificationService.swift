@@ -5,9 +5,10 @@
 //  Created by Alexis Rinaldoni on 03/10/2023.
 //
 
-import UserNotifications
 import UIKit
+import Sentry
 import LottaCoreAPI
+import UserNotifications
 
 class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     static let shared = PushNotificationService()
@@ -61,6 +62,7 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
                 print("D'oh: \(error.localizedDescription)")
+                SentrySDK.capture(error: error)
             } else {
                 UIApplication.shared.registerForRemoteNotifications()
             }

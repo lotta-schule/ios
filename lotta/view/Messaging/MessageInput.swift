@@ -5,8 +5,9 @@
 //  Created by Alexis Rinaldoni on 22/09/2023.
 //
 
-import LottaCoreAPI
+import Sentry
 import SwiftUI
+import LottaCoreAPI
 
 struct MessageInput : View {
     @Environment(UserSession.self) var userSession: UserSession
@@ -55,6 +56,7 @@ struct MessageInput : View {
                 content = ""
             }
         } catch {
+            SentrySDK.capture(error: error)
             print("error: \(error)")
         }
     }

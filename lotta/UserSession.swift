@@ -5,11 +5,12 @@
 //  Created by Alexis Rinaldoni on 20/10/2023.
 //
 
-import Foundation
-import JWTDecode
-import LottaCoreAPI
 import UIKit
+import Sentry
 import Apollo
+import JWTDecode
+import Foundation
+import LottaCoreAPI
 import KeychainSwift
 
 enum UserSessionError : Error {
@@ -169,6 +170,7 @@ enum UserSessionError : Error {
                     let message = Message(in: self.tenant, from: graphqlResult.data!.message!)
                     self.addMessage(message, toConversation: conversation)
                 case .failure(let error):
+                    SentrySDK.capture(error: error)
                     print("Error subscribing: \(error)")
                 }
             }
@@ -256,6 +258,7 @@ enum UserSessionError : Error {
                 }
             }
         } catch {
+            SentrySDK.capture(error: error)
             print("Error reading files: \(error)")
         }
         
@@ -275,6 +278,7 @@ enum UserSessionError : Error {
         do {
             try JSONEncoder().encode(persistedUserSession).write(to: fileURL)
         } catch {
+            SentrySDK.capture(error: error)
             print("error writing usersession data: \(error)")
         }
     }

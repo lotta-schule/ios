@@ -72,7 +72,7 @@ class CoreApi {
             true
         ).first!
         let documentsURL = URL(fileURLWithPath: documentsPath)
-        let sqliteFileURL = documentsURL.appendingPathComponent("test_apollo_db.sqlite")
+        let sqliteFileURL = documentsURL.appendingPathComponent("tenant_\(tenantId).sqlite")
 
         // 2. Use that file URL to instantiate the SQLite cache:
         let sqliteCache = try! SQLiteNormalizedCache(fileURL: sqliteFileURL)
@@ -92,25 +92,33 @@ class CoreApi {
 }
 
 extension ApolloClient {
-    func fetchAsync<Query: GraphQLQuery>(query: Query, cachePolicy: CachePolicy = .returnCacheDataElseFetch, queue: DispatchQueue = .main) async throws -> Query.Data {
+    func fetchAsync<Query: GraphQLQuery>(query: Query, cachePolicy: CachePolicy = .returnCacheDataAndFetch, queue: DispatchQueue = .main) async throws -> Query.Data {
+        var didFinish = false
         return try await withCheckedThrowingContinuation({ continuation in
             self.fetch(query: query, cachePolicy: cachePolicy, queue: queue) { [weak self] result in
-            switch result {
-            case .success(let data):
-              let error = data.errors?.first
-                _ = error?.extensions?["code"] as? String
-              if let error = error {
-                continuation.resume(throwing: error)
-              } else if let data = data.data {
-                continuation.resume(returning: data)
-              } else {
-                let errorUn = NSError(domain: "Can't get data at this time", code: 403)
-                continuation.resume(throwing: errorUn)
-              }
-            case .failure(let error):
-                SentrySDK.capture(error: error)
-                continuation.resume(throwing: error)
-            }
+                print(result)
+                if !didFinish {
+                    switch result {
+                    case .success(let data):
+                        let error = data.errors?.first
+                        _ = error?.extensions?["code"] as? String
+                        if let error = error {
+                            didFinish = true
+                            continuation.resume(throwing: error)
+                        } else if let data = data.data {
+                            didFinish = true
+                            continuation.resume(returning: data)
+                        } else {
+                            let errorUn = NSError(domain: "Can't get data at this time", code: 403)
+                            didFinish = true
+                            continuation.resume(throwing: errorUn)
+                        }
+                    case .failure(let error):
+                        didFinish = true
+                        SentrySDK.capture(error: error)
+                        continuation.resume(throwing: error)
+                    }
+                }
           }
         })
       }

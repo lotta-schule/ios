@@ -21,18 +21,35 @@ struct MessageRow : View {
                     .frame(width: 40, height: 40, alignment: .center)
                     .padding(.leading, CGFloat(userSession.theme.borderRadius))
             }
-            MessageBubble(
-                message: message,
-                fromCurrentUser: fromCurrentUser
-            )
+            VStack(alignment: fromCurrentUser ? .trailing : .leading) {
+                MessageBubble(
+                    message: message,
+                    fromCurrentUser: fromCurrentUser
+                )
+                .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
+                Text(formatDate(message.insertedAt))
+                    .font(.footnote)
+                    .foregroundStyle(userSession.theme.disabledColor)
+                    .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
+                    .padding(.top, CGFloat(integerLiteral: userSession.theme.spacing) * -0.75)
+            }
             if fromCurrentUser {
                 UserAvatar(user: message.user)
                     .frame(width: 40, height: 40, alignment: .center)
-                    .padding(.trailing, 8)
+                    .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
             } else {
                 Spacer()
             }
         }
+    }
+    
+    func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "de-DE")
+        dateFormatter.doesRelativeDateFormatting = true
+        return dateFormatter.string(from: date)
     }
 }
 

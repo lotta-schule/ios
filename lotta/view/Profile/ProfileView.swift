@@ -9,23 +9,44 @@ import SwiftUI
 
 struct ProfileView : View {
     @Environment(ModelData.self) var modelData
+    @State var isShowLoginView = false
     
     var body: some View {
         VStack {
-            List {
+            List(selection: .constant(modelData.currentSession?.tenant.id)) {
                 Section(header: Text("Angemeldet als")) {
                     ForEach(modelData.userSessions, id: \.tenant.id) { userSession in
-                        HStack {
-                            UserAvatar(user: userSession.user)
-                            Text(userSession.user.visibleName)
+                        Button(action: {
+                            _ = modelData.setSession(byTenantId: userSession.tenant.id)
+                        }) {
+                            HStack {
+                                UserAvatar(user: userSession.user)
+                                VStack(alignment: .leading) {
+                                    Text(userSession.user.visibleName)
+                                    Text(userSession.tenant.title)
+                                        .font(.footnote)
+                                }
+                            }
                         }
+                        .id(userSession.tenant.id)
                     }
                 }
-                
+                Section {
+                    Button("Zusätzliches Benutzerkonto anmelden") {
+                        isShowLoginView.toggle()
+                    }
+                }
                 Section {
                     Button("Abmelden") {
                         modelData.removeCurrentSession()
                     }
+                }
+            }
+
+            .sheet(isPresented: $isShowLoginView) {
+                LoginView(disablingTenantSlugs: modelData.userSessions.map { $0.tenant.slug }) { userSession in
+                    modelData.add(session: userSession)
+                    isShowLoginView.toggle()
                 }
             }
             

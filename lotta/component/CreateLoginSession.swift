@@ -37,6 +37,7 @@ struct LoginView: View {
     @State private var isAlertViewPresented = false
     @State private var lastErrorMessage = ""
     
+    var disablingTenantSlugs: [String] = []
     var onLogin: (UserSession) -> Void
     
     var body: some View {
@@ -128,18 +129,18 @@ struct LoginView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data,
                let data = try? JSONDecoder().decode(ListTenantsResult.self, from: data) {
-                guard let tenants = data.tenants,
-                      !tenants.isEmpty else {
-                          showErrorMessage("Kein Benutzerkonto gefunden")
-                          return
-                      }
-                if let tenants = data.tenants {
-                    withAnimation {
-                        self.availableTenantDescriptors = tenants
-                        self.selectedTenantDescriptor = tenants[0]
-                    }
-                    saveTenantDescriptorsToDisk(results: data)
+                guard let tenants = data.tenants?.filter({ td in
+                    !disablingTenantSlugs.contains(where: { $0 == td.slug })
+                  }),
+                  !tenants.isEmpty else {
+                      showErrorMessage("Kein Benutzerkonto gefunden")
+                      return
+                  }
+                withAnimation {
+                    self.availableTenantDescriptors = tenants
+                    self.selectedTenantDescriptor = tenants[0]
                 }
+                saveTenantDescriptorsToDisk(results: data)
             } else if let error = error {
                 SentrySDK.capture(error: error)
                 showErrorMessage(error.localizedDescription)

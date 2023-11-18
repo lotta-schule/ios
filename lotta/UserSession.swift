@@ -103,7 +103,7 @@ enum UserSessionError : Error {
     }
     
     func loadConversations() async throws -> Void {
-        let result = try await api.apollo.fetchAsync(query: GetConversationsQuery(), cachePolicy: .fetchIgnoringCacheData)
+        let result = try await api.apollo.fetchAsync(query: GetConversationsQuery())
         if let conversations =
             result.conversations?.filter({ conversation in
                 conversation != nil
@@ -149,7 +149,7 @@ enum UserSessionError : Error {
     }
     
     func loadConversation(_ conversation: Conversation) async throws -> Void {
-        let result = try await api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id), cachePolicy: .fetchIgnoringCacheData)
+        let result = try await api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id))
         if let conversationData = result.conversation {
             let loadedConversation = Conversation(in: tenant, from: conversationData)
             if let i = self.conversations.firstIndex(where: { $0.id == conversation.id }) {

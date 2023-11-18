@@ -26,6 +26,11 @@ struct MainView : View {
                     }
             }
             .tint(userSession.theme.primaryColor)
+            .onChange(of: userSession, initial: true) { _, _ in
+                Task {
+                    try? await userSession.loadConversations()
+                }
+            }
             .onAppear {
                 Task {
                     try? await userSession.loadConversations()

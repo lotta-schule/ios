@@ -13,36 +13,28 @@ import UserNotifications
 class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     static let shared = PushNotificationService()
     
-    private var api: CoreApi?
-    
-    private var currentDeviceId: String?
-    
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: Data) async -> Void {
-        if let api = api {
-            if currentDeviceId == nil {
-                do {
-                    let graphqlResult = try await api.apollo.performAsync(
-                        mutation: RegisterDeviceMutation(
-                            device: RegisterDeviceInput(
-                                deviceType: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.deviceType),
-                                modelName: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.modelName),
-                                operatingSystem: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.operatingSystem),
-                                platformId: "ios/\(DeviceIdentificationService.shared.uniquePlatformIdentifier ?? "0")",
-                                pushToken: GraphQLNullable(stringLiteral: "apns/\(deviceToken.hexEncodedString)")
-                            )
+        for session in ModelData.shared.userSessions {
+            do {
+                let graphqlResult = try await session.api.apollo.performAsync(
+                    mutation: RegisterDeviceMutation(
+                        device: RegisterDeviceInput(
+                            deviceType: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.deviceType),
+                            modelName: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.modelName),
+                            operatingSystem: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.operatingSystem),
+                            platformId: "ios/\(DeviceIdentificationService.shared.uniquePlatformIdentifier ?? "0")",
+                            pushToken: GraphQLNullable(stringLiteral: "apns/\(deviceToken.hexEncodedString)")
                         )
                     )
-                    self.currentDeviceId = graphqlResult.data?.device?.id
-                    print(graphqlResult)
-                } catch {
-                    print("Upsala ... \(error.localizedDescription)")
-                }
+                )
+                print(graphqlResult)
+            } catch {
+                print("Upsala ... \(error.localizedDescription)")
             }
         }
     }
     
     func startReceivingNotifications(api: CoreApi) -> Void {
-        self.api = api
         let receiveMessageCategory = UNNotificationCategory(identifier: "receive_message", actions: [], intentIdentifiers: [])
         UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory])
         UNUserNotificationCenter.current().getNotificationSettings { settings in

@@ -102,8 +102,13 @@ enum UserSessionError : Error {
         }
     }
     
-    func loadConversations() async throws -> Void {
-        let result = try await api.apollo.fetchAsync(query: GetConversationsQuery())
+    func loadConversations(forceNetworkRequest: Bool = false) async throws -> Void {
+        let result = try await api.apollo.fetchAsync(
+            query: GetConversationsQuery(),
+            cachePolicy: forceNetworkRequest ?
+                .fetchIgnoringCacheData :
+                .returnCacheDataAndFetch
+        )
         if let conversations =
             result.conversations?.filter({ conversation in
                 conversation != nil

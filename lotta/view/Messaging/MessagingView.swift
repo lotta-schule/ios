@@ -18,7 +18,7 @@ struct MessagingView: View {
         NavigationSplitView(sidebar: {
             ConversationsList()
             .refreshable {
-                try? await userSession.loadConversations()
+                try? await userSession.loadConversations(forceNetworkRequest: true)
             }
             .toolbar {
                 ToolbarItem {

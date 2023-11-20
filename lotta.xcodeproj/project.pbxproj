@@ -62,6 +62,10 @@
 		2E6B04C82ACB55F300A10052 /* RefreshTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */; };
 		2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */; };
 		2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7FB2ABCE079000BB6CF /* User.swift */; };
+		2EA434312B094622000D8666 /* CreateConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434302B094622000D8666 /* CreateConversationView.swift */; };
+		2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434322B096CBF000D8666 /* NewMessageDestination.swift */; };
+		2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434342B096DF7000D8666 /* NewConversationView.swift */; };
+		2EA434372B0BB11A000D8666 /* SearchUserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434362B0BB11A000D8666 /* SearchUserList.swift */; };
 		2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */; };
 		8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 5A360A425FE94FBE9718F5EF /* Sentry */; };
 /* End PBXBuildFile section */
@@ -132,6 +136,10 @@
 		2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenInterceptor.swift; sourceTree = "<group>"; };
 		2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatar.swift; sourceTree = "<group>"; };
 		2E98A7FB2ABCE079000BB6CF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2EA434302B094622000D8666 /* CreateConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConversationView.swift; sourceTree = "<group>"; };
+		2EA434322B096CBF000D8666 /* NewMessageDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageDestination.swift; sourceTree = "<group>"; };
+		2EA434342B096DF7000D8666 /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
+		2EA434362B0BB11A000D8666 /* SearchUserList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserList.swift; sourceTree = "<group>"; };
 		2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EBAC93D2ACC42700062B12B /* lotta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lotta.entitlements; sourceTree = "<group>"; };
 		2EBAC93E2ACC44AF0062B12B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -253,6 +261,7 @@
 				2E98A7FB2ABCE079000BB6CF /* User.swift */,
 				2E2D829F2AC743B800CC3E1F /* Theme.swift */,
 				2E31D7462AF5343800E369CD /* ThemeColor.swift */,
+				2EA434322B096CBF000D8666 /* NewMessageDestination.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -260,6 +269,7 @@
 		2E0268AB2AB903AE00C18681 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				2EA4342F2B094608000D8666 /* CreateConversation */,
 				2EF1825A2AD173D9000ECE00 /* Login */,
 				2E3952F12AC3465D0013465C /* Profile */,
 				2E3952F02AC3464E0013465C /* Messaging */,
@@ -277,6 +287,7 @@
 			children = (
 				2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */,
 				2E54609D2AEE5AC800040149 /* ConversationView.swift */,
+				2EA434342B096DF7000D8666 /* NewConversationView.swift */,
 				2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */,
 				2E12B3F82ABDF74200555B9D /* MessageInput.swift */,
 				2E12B3F42ABDF4F900555B9D /* MessageRow.swift */,
@@ -331,8 +342,17 @@
 				2E5460A12AF123D000040149 /* MessageBubbleFileRow.swift */,
 				2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */,
 				2E12B3F02ABDEBF000555B9D /* MessageList.swift */,
+				2EA434362B0BB11A000D8666 /* SearchUserList.swift */,
 			);
 			path = component;
+			sourceTree = "<group>";
+		};
+		2EA4342F2B094608000D8666 /* CreateConversation */ = {
+			isa = PBXGroup;
+			children = (
+				2EA434302B094622000D8666 /* CreateConversationView.swift */,
+			);
+			path = CreateConversation;
 			sourceTree = "<group>";
 		};
 		2EBAC93A2ACB9D0F0062B12B /* group */ = {
@@ -521,6 +541,7 @@
 				2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */,
 				2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */,
 				2E3952F32AC346810013465C /* MainView.swift in Sources */,
+				2EA434312B094622000D8666 /* CreateConversationView.swift in Sources */,
 				2E4191AC2ACC913000FD0FDA /* DeviceIdentificationService.swift in Sources */,
 				2E12B3E72ABDA5DB00555B9D /* ConversationsList.swift in Sources */,
 				2E4C2E8D2ABEC6C800F846E9 /* ConversationListItem.swift in Sources */,
@@ -535,7 +556,9 @@
 				2E02686C2AB88F4500C18681 /* lottaApp.swift in Sources */,
 				2E12B3E92ABDDF2100555B9D /* Conversation.swift in Sources */,
 				2E5460A02AEF162D00040149 /* RouterData.swift in Sources */,
+				2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */,
 				2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */,
+				2EA434372B0BB11A000D8666 /* SearchUserList.swift in Sources */,
 				2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */,
 				2E54609C2AE254E100040149 /* TenantRootView.swift in Sources */,
 				2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */,
@@ -552,6 +575,7 @@
 				2E02689D2AB8942600C18681 /* CreateLoginSession.swift in Sources */,
 				2E5460982AE250FE00040149 /* UserSession.swift in Sources */,
 				2E12B3F72ABDF56D00555B9D /* MessageBubble.swift in Sources */,
+				2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */,
 				2E02689B2AB8936300C18681 /* CoreApi.swift in Sources */,
 				2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */,
 				2E12B3F12ABDEBF000555B9D /* MessageList.swift in Sources */,

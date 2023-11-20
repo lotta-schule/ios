@@ -27,7 +27,7 @@ struct MessageRow : View {
                     fromCurrentUser: fromCurrentUser
                 )
                 .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
-                Text(formatDate(message.insertedAt))
+                Text("\(fromCurrentUser ? "" : message.user.visibleName + " • ")\(formatDate(message.insertedAt))")
                     .font(.footnote)
                     .foregroundStyle(userSession.theme.disabledColor)
                     .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))

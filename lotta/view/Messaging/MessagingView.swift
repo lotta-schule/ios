@@ -12,26 +12,67 @@ import LottaCoreAPI
 struct MessagingView: View {
     @Environment(UserSession.self) var userSession: UserSession
     @Environment(RouterData.self) var routerData: RouterData
-    @State private var messagePath = [String]()
+    @State private var showNewMessageDialog = false
+    @State private var newMessageDestination: NewMessageDestination? = nil
     
     var body: some View {
-        NavigationSplitView(sidebar: {
-            ConversationsList()
-            .refreshable {
-                try? await userSession.loadConversations(forceNetworkRequest: true)
-            }
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+        NavigationSplitView(
+            sidebar: {
+                ConversationsList(withNewMessageDestination: newMessageDestination)
+                    .refreshable {
+                        try? await userSession.loadConversations(forceNetworkRequest: true)
                     }
+                    .toolbar {
+                        ToolbarItem {
+                            Button(action: { showNewMessageDialog.toggle() }) {
+                                Label("Neue Nachricht schreiben", systemImage: "plus")
+                            }
+                            .popover(isPresented: $showNewMessageDialog, content: {
+                                CreateConversationView(
+                                    onSelect: { destination in
+                                        showNewMessageDialog = false
+                                        switch destination {
+                                            case .group(let group):
+                                                if let conversation = userSession.conversations.first(where: { conversation in
+                                                    conversation.groups.contains(where: { $0.id == group.id })
+                                                }) {
+                                                    routerData.selectedConversationId = conversation.id
+                                                } else {
+                                                    newMessageDestination = destination
+                                                }
+                                            case .user(let user):
+                                                if let conversation = userSession.conversations.first(where: { conversation in
+                                                    conversation.users.contains(where: { $0.id == user.id })
+                                                }) {
+                                                    routerData.selectedConversationId = conversation.id
+                                                } else {
+                                                    newMessageDestination = destination
+                                                }
+                                        }
+                                    }
+                                )
+                            })
+                        }
+                }
+            },
+            detail: {
+                if let conversationId = routerData.selectedConversationId, !conversationId.isEmpty {
+                    ConversationView(conversationId: conversationId)
+                } else if let newMessageDestination = newMessageDestination {
+                    NewConversationView(destination: newMessageDestination)
+                } else {
+                    Text("Unterhaltung wählen")
                 }
             }
-        }, detail: {
-            if let conversationId = routerData.selectedConversationId {
-                ConversationView(conversationId: conversationId)
-            } else {
-                Text("Unterhaltung wählen")
+        )
+        .onChange(of: routerData.selectedConversationId, { _, _ in
+            if routerData.selectedConversationId?.isEmpty != true {
+                newMessageDestination = nil
+            }
+        })
+        .onChange(of: newMessageDestination, { _, _ in
+            if newMessageDestination != nil {
+                routerData.selectedConversationId = ""
             }
         })
     }

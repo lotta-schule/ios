@@ -14,6 +14,8 @@ struct ConversationsList : View {
     
     @State private var currentSelectionId: ID? = nil
     
+    var withNewMessageDestination: NewMessageDestination?
+    
     var body: some View {
         List(userSession.conversations, selection: $currentSelectionId) { conversation in
             ConversationListItem(conversation: conversation, excluding: userSession.user)
@@ -34,4 +36,16 @@ struct ConversationsList : View {
         }
     }
     
+    func getConversations() -> [Conversation] {
+        if let newMessageDestination = withNewMessageDestination {
+            return [
+                newMessageDestination.asConversation(
+                    in: userSession.tenant,
+                    currentUser: userSession.user
+                ),
+            ] + userSession.conversations
+        } else {
+            return userSession.conversations
+        }
+    }
 }

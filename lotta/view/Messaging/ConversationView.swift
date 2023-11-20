@@ -21,7 +21,7 @@ struct ConversationView : View {
                 MessageInput(
                     user: conversation.users.first(where: { $0.id != userSession.user.id }),
                     group: conversation.groups.first
-                ) { message in
+                ) { (message, _) in
                     withAnimation(.bouncy) {
                         self.userSession.addMessage(message, toConversation: conversation)
                     }

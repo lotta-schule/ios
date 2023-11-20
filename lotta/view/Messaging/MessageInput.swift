@@ -13,7 +13,7 @@ struct MessageInput : View {
     @Environment(UserSession.self) var userSession: UserSession
     var user: User?
     var group: Group?
-    var onSent: (Message) -> ()
+    var onSent: ((Message, Conversation)) -> ()
     
     @State var content = ""
     
@@ -43,7 +43,7 @@ struct MessageInput : View {
     
     func sendMessage() async -> Void {
         do {
-            let message: Message? =
+            let result: (Message, Conversation)? =
                 if let user = user {
                     try await userSession.sendMessage(content, to: user)
                 } else if let group = group {
@@ -51,8 +51,8 @@ struct MessageInput : View {
                 } else {
                     nil
                 }
-            if let message = message {
-                onSent(message)
+            if let result = result {
+                onSent(result)
                 content = ""
             }
         } catch {

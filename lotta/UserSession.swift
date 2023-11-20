@@ -49,8 +49,10 @@ enum UserSessionError : Error {
                 self.conversations[i].messages.append(message)
             }
             self.conversations[i].unreadMessages += 1
+            self.conversations[i].updatedAt = Date()
         } else {
-            self.conversations.append(conversation)
+            conversation.updatedAt = Date()
+            self.conversations.insert(conversation, at: 0)
             addMessage(message, toConversation: conversation)
         }
     }
@@ -69,7 +71,8 @@ enum UserSessionError : Error {
     func refetchUserData() async -> AuthenticationResult {
         do {
             let userGraphqlResult = try await api.apollo.fetchAsync(
-                query: GetCurrentUserQuery()
+                query: GetCurrentUserQuery(),
+                cachePolicy: .fetchIgnoringCacheData
             )
             guard let userResult = userGraphqlResult.currentUser else {
                 // self.resetUser()
@@ -119,7 +122,7 @@ enum UserSessionError : Error {
         }
     }
     
-    func sendMessage(_ content: String, to user: User) async throws -> Message {
+    func sendMessage(_ content: String, to user: User) async throws -> (Message, Conversation) {
             let graphqlResult = try await api.apollo.performAsync(
                 mutation: SendMessageMutation(
                     message: LottaCoreAPI.MessageInput(
@@ -132,11 +135,25 @@ enum UserSessionError : Error {
         guard let messageData = graphqlResult.data?.message else {
             throw UserSessionError.generic("Invalid Message")
         }
+        guard let conversationData = graphqlResult.data?.message?.conversation else {
+            throw UserSessionError.generic("Invalid conversation")
+        }
         let message = Message(in: tenant, from: messageData)
-        return message
+        let conversation =
+            conversations.first(where: { $0.id == conversationData.id }) ??
+            Conversation(
+                in: tenant,
+                from: conversationData,
+                withUsers: [user, self.user],
+                andGroups: []
+            )
+        if !conversations.contains(where: { $0.id == conversation.id }) {
+            conversations.append(conversation)
+        }
+        return (message, conversation)
     }
     
-    func sendMessage(_ content: String, to group: Group) async throws -> Message {
+    func sendMessage(_ content: String, to group: Group) async throws -> (Message, Conversation) {
             let graphqlResult = try await api.apollo.performAsync(
                 mutation: SendMessageMutation(
                     message: LottaCoreAPI.MessageInput(
@@ -149,8 +166,22 @@ enum UserSessionError : Error {
         guard let messageData = graphqlResult.data?.message else {
             throw UserSessionError.generic("Invalid Message")
         }
+        guard let conversationData = graphqlResult.data?.message?.conversation else {
+            throw UserSessionError.generic("Invalid conversation")
+        }
         let message = Message(in: tenant, from: messageData)
-        return message
+        let conversation =
+            conversations.first(where: { $0.id == conversationData.id }) ??
+            Conversation(
+                in: tenant,
+                from: conversationData,
+                withUsers: [],
+                andGroups: [group]
+            )
+        if !conversations.contains(where: { $0.id == conversation.id }) {
+            conversations.append(conversation)
+        }
+        return (message, conversation)
     }
     
     func loadConversation(_ conversation: Conversation) async throws -> Void {

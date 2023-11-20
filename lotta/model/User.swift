@@ -22,14 +22,17 @@ final class User {
     
     var email: String?
     
+    var groups: [Group]?
+    
     var avatarImageFileId: LottaFileID?
     
-    init(tenant: Tenant, id: ID, email: String? = nil, name: String? = nil, nickname: String? = nil, avatarImageFileId: LottaFileID? = nil) {
+    init(tenant: Tenant, id: ID, email: String? = nil, name: String? = nil, nickname: String? = nil, groups: [Group]? = nil, avatarImageFileId: LottaFileID? = nil) {
         self.tenant = tenant
         self.id = id
         self.email = email
         self.name = name
         self.nickname = nickname
+        self.groups = groups
         self.avatarImageFileId = avatarImageFileId
     }
     
@@ -40,6 +43,7 @@ final class User {
             email: graphQLResult.email,
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
+            groups: graphQLResult.groups?.map { Group(from: $0!) },
             avatarImageFileId: graphQLResult.avatarImageFile?.id
         )
     }
@@ -65,6 +69,16 @@ final class User {
     }
     
     convenience init(in tenant: Tenant, from graphQLResult: GetConversationQuery.Data.Conversation.Message.User) {
+        self.init(
+            tenant: tenant,
+            id: graphQLResult.id!,
+            name: graphQLResult.name,
+            nickname: graphQLResult.nickname,
+            avatarImageFileId: graphQLResult.avatarImageFile?.id
+        )
+    }
+    
+    convenience init(in tenant: Tenant, from graphQLResult: SearchUsersQuery.Data.User) {
         self.init(
             tenant: tenant,
             id: graphQLResult.id!,

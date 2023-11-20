@@ -70,6 +70,17 @@ import LottaCoreAPI
         )
     }
     
+    convenience init(in tenant: Tenant, from graphQLResult: SendMessageMutation.Data.Message.Conversation, withUsers users: [User], andGroups groups: [Group]) {
+        self.init(
+            tenant: tenant,
+            id: graphQLResult.id!,
+            users: users,
+            groups: groups,
+            messages: [],
+            updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now
+        )
+    }
+    
     func getImageUrl(excluding excludedUser: User?) -> URL? {
         return users
             .filter { $0.id != excludedUser?.id }

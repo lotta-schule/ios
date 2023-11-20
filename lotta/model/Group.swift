@@ -7,7 +7,7 @@
 
 import LottaCoreAPI
 
-class Group {
+final class Group {
     var id: ID
     
     var name: String
@@ -15,6 +15,13 @@ class Group {
     init(id: ID, name: String) {
         self.id = id
         self.name = name
+    }
+    
+    convenience init(from graphQLResult: GetCurrentUserQuery.Data.CurrentUser.Group) {
+        self.init(
+            id: graphQLResult.id!,
+            name: graphQLResult.name!
+        )
     }
     
     convenience init(from graphqlGroupResult: GetConversationsQuery.Data.Conversation.Group) {
@@ -51,3 +58,5 @@ extension Group: Hashable {
     }
 
 }
+
+extension Group : Codable {}

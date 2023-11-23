@@ -2,6 +2,7 @@ query GetConversationQuery($id: ID!) {
   conversation(id: $id) {
     id
     updatedAt
+    unreadMessages
     groups {
       id
       name

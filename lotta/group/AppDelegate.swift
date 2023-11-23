@@ -7,6 +7,7 @@
 
 import ObjectiveC
 import UIKit
+import LottaCoreAPI
 
 class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -23,6 +24,23 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
         switch UIApplication.shared.applicationState {
             case .active:
                 print("notification: \(userInfo)")
+            case .background:
+            if let tenantId = userInfo["tenant_id"] as? Int,
+               let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }),
+               let conversationId = userInfo["conversation_id"] as? String {
+                session.api.apollo.fetch(query: GetConversationQuery(id: conversationId), cachePolicy: .fetchIgnoringCacheData) {
+                    switch $0 {
+                        case .success(let graphQLResult):
+                            let conversation = Conversation(in: session.tenant, from: graphQLResult.data!.conversation!)
+                            session.addConversation(conversation)
+                            ModelData.shared.setApplicationBadgeNumber()
+                            completionHandler(.newData)
+                        case .failure(let error):
+                            print(error)
+                            completionHandler(.failed)
+                    }
+                }
+            }
             default:
                 print("notification: \(userInfo)")
         }

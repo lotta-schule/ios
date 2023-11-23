@@ -82,9 +82,17 @@ enum AuthenticationError: Error {
         }
     }
     
+    func setApplicationBadgeNumber() -> Void {
+        let newBadgeNumber = userSessions.reduce(into: 0) { partialResult, session in
+            partialResult += session.unreadMessageCount
+        }
+        UIApplication.shared.applicationIconBadgeNumber = newBadgeNumber
+    }
+    
     var currentSession: UserSession? {
         get {
             userSessions.first { $0.tenant.id == currentSessionTenantId } ?? userSessions.first
         }
     }
+    
 }

@@ -9,7 +9,8 @@ import SwiftUI
 import Apollo
 
 struct MainView : View {
-    @Environment(UserSession.self) var userSession: UserSession
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(UserSession.self) private var userSession
     
     @State private var cancelMessageSubscription: Cancellable?
     
@@ -31,15 +32,33 @@ struct MainView : View {
                     try? await userSession.loadConversations()
                 }
             }
+            .onChange(of: scenePhase, initial: true, { _, phase in
+                switch scenePhase {
+                    case .active:
+                        if cancelMessageSubscription == nil {
+                            cancelMessageSubscription = userSession.subscribeToMessages()
+                        }
+                    case .inactive, .background:
+                        if let cancelMessageSubscription = cancelMessageSubscription {
+                            cancelMessageSubscription.cancel()
+                            self.cancelMessageSubscription = nil
+                        }
+                    default:
+                        print("Unknown phase \(phase)")
+                }
+            })
             .onAppear {
                 Task {
                     try? await userSession.loadConversations()
                 }
-                cancelMessageSubscription = userSession.subscribeToMessages()
+                if cancelMessageSubscription == nil {
+                    cancelMessageSubscription = userSession.subscribeToMessages()
+                }
             }
             .onDisappear {
                 if let cancelMessageSubscription = cancelMessageSubscription {
                     cancelMessageSubscription.cancel()
+                    self.cancelMessageSubscription = nil
                 }
             }
     }

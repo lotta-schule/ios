@@ -7,7 +7,7 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
   public static let operationName: String = "ReceiveMessage"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"subscription ReceiveMessage { message: receiveMessage { __typename id content insertedAt updatedAt user { __typename id name nickname avatarImageFile { __typename id } } conversation { __typename id updatedAt groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } } } }"#
+      #"subscription ReceiveMessage { message: receiveMessage { __typename id content insertedAt updatedAt user { __typename id name nickname avatarImageFile { __typename id } } conversation { __typename id updatedAt groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } unreadMessages } } }"#
     ))
 
   public init() {}
@@ -100,12 +100,14 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
           .field("updatedAt", LottaCoreAPI.DateTime?.self),
           .field("groups", [Group]?.self),
           .field("users", [User]?.self),
+          .field("unreadMessages", Int?.self),
         ] }
 
         public var id: LottaCoreAPI.ID? { __data["id"] }
         public var updatedAt: LottaCoreAPI.DateTime? { __data["updatedAt"] }
         public var groups: [Group]? { __data["groups"] }
         public var users: [User]? { __data["users"] }
+        public var unreadMessages: Int? { __data["unreadMessages"] }
 
         /// Message.Conversation.Group
         ///

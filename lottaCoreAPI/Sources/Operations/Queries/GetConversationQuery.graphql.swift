@@ -7,7 +7,7 @@ public class GetConversationQuery: GraphQLQuery {
   public static let operationName: String = "GetConversationQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query GetConversationQuery($id: ID!) { conversation(id: $id) { __typename id updatedAt groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } messages { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize } user { __typename id name nickname avatarImageFile { __typename id } } } } }"#
+      #"query GetConversationQuery($id: ID!) { conversation(id: $id) { __typename id updatedAt unreadMessages groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } messages { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize } user { __typename id name nickname avatarImageFile { __typename id } } } } }"#
     ))
 
   public var id: ID
@@ -41,6 +41,7 @@ public class GetConversationQuery: GraphQLQuery {
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID?.self),
         .field("updatedAt", LottaCoreAPI.DateTime?.self),
+        .field("unreadMessages", Int?.self),
         .field("groups", [Group]?.self),
         .field("users", [User]?.self),
         .field("messages", [Message]?.self),
@@ -48,6 +49,7 @@ public class GetConversationQuery: GraphQLQuery {
 
       public var id: LottaCoreAPI.ID? { __data["id"] }
       public var updatedAt: LottaCoreAPI.DateTime? { __data["updatedAt"] }
+      public var unreadMessages: Int? { __data["unreadMessages"] }
       public var groups: [Group]? { __data["groups"] }
       public var users: [User]? { __data["users"] }
       public var messages: [Message]? { __data["messages"] }

@@ -188,12 +188,19 @@ enum UserSessionError : Error {
         let result = try await api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id))
         if let conversationData = result.conversation {
             let loadedConversation = Conversation(in: tenant, from: conversationData)
-            if let i = self.conversations.firstIndex(where: { $0.id == conversation.id }) {
-                self.conversations[i] = loadedConversation
-            } else {
-                self.conversations.append(loadedConversation)
-            }
+            addConversation(loadedConversation)
         }
+    }
+    
+    func addConversation(_ conversation: Conversation) -> Void {
+        if let i = self.conversations.firstIndex(where: { $0.id == conversation.id }) {
+            self.conversations[i] = conversation
+        } else {
+            self.conversations.append(conversation)
+        }
+        self.conversations = conversations.sorted(by: {
+            $0.updatedAt.compare($1.updatedAt) == .orderedDescending
+        })
     }
     
     func subscribeToMessages() -> Cancellable {
@@ -205,6 +212,7 @@ enum UserSessionError : Error {
                     let conversation = Conversation(in: self.tenant, from: graphqlResult.data!.message!.conversation!)
                     let message = Message(in: self.tenant, from: graphqlResult.data!.message!)
                     self.addMessage(message, toConversation: conversation)
+                    ModelData.shared.setApplicationBadgeNumber()
                 case .failure(let error):
                     SentrySDK.capture(error: error)
                     print("Error subscribing: \(error)")

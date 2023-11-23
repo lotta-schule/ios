@@ -27,6 +27,7 @@ subscription ReceiveMessage {
           id
         }
       }
+      unreadMessages
     }
   }
 }

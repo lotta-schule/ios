@@ -14,13 +14,19 @@ struct MessagingView: View {
     @Environment(RouterData.self) var routerData: RouterData
     @State private var showNewMessageDialog = false
     @State private var newMessageDestination: NewMessageDestination? = nil
+    @State private var isAlertViewPresented = false
+    @State private var lastErrorMessage: String?
     
     var body: some View {
         NavigationSplitView(
             sidebar: {
                 ConversationsList(withNewMessageDestination: newMessageDestination)
                     .refreshable {
-                        try? await userSession.loadConversations(forceNetworkRequest: true)
+                        do {
+                            try await userSession.forceLoadConversations()
+                        } catch {
+                            lastErrorMessage = error.localizedDescription
+                        }
                     }
                     .toolbar {
                         ToolbarItem {
@@ -65,6 +71,14 @@ struct MessagingView: View {
                 }
             }
         )
+        .alert(
+            isPresented: $isAlertViewPresented
+        ) {
+            Alert(
+                title: Text("Fehler"),
+                message: Text(lastErrorMessage ?? "Unbekannter Fehler")
+            )
+        }
         .onChange(of: routerData.selectedConversationId, { _, _ in
             if routerData.selectedConversationId?.isEmpty != true {
                 newMessageDestination = nil
@@ -75,6 +89,16 @@ struct MessagingView: View {
                 routerData.selectedConversationId = ""
             }
         })
+        .onChange(of: lastErrorMessage) { _, _ in
+            if (lastErrorMessage != nil) {
+                isAlertViewPresented = true
+            }
+        }
+        .onChange(of: isAlertViewPresented) { _, _ in
+            if !isAlertViewPresented {
+                lastErrorMessage = nil
+            }
+        }
     }
     
     private func addItem() {

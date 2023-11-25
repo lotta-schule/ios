@@ -18,7 +18,7 @@ struct ConversationsList : View {
     
     var body: some View {
         List(userSession.conversations, selection: $currentSelectionId) { conversation in
-            ConversationListItem(conversation: conversation, excluding: userSession.user)
+            ConversationListItem(conversationId: conversation.id, excluding: userSession.user)
         // .onDelete(perform: deleteItems)
         }
         .listStyle(.plain)

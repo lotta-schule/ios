@@ -67,10 +67,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
         
         if (self.loginSession?.accessToken?.expired ?? true) == true {
             // Call an async method to renew the token
-            let tenantHeaders = request.additionalHeaders.filter { (key, _) in
-                key == "Tenant"
-            }
-            self.loginSession?.renew(additionalHeaders: tenantHeaders) { renewResult in
+            self.loginSession?.renew() { renewResult in
                 switch renewResult {
                 case .success(let tokens):
                     // Renewing worked! Add the token and move on

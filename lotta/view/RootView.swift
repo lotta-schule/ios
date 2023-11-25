@@ -30,12 +30,22 @@ struct RootView: View {
             }
         }
         .onChange(of: modelData.currentSession, initial: true) {
-            if modelData.currentSession == nil {
-                isShowLoginView.toggle()
+            if modelData.currentSession == nil && modelData.initialized {
+                isShowLoginView = true
+            }
+        }
+        .onChange(of: modelData.initialized, initial: true) {
+            if modelData.currentSession == nil && modelData.initialized {
+                isShowLoginView = true
             }
         }
         .onChange(of: modelData.userSessions) {
             modelData.setApplicationBadgeNumber()
+        }
+        .onAppear {
+            Task {
+                await modelData.initializeSessions()
+            }
         }
     }
     

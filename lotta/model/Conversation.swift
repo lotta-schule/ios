@@ -17,13 +17,13 @@ import LottaCoreAPI
     
     var groups: [Group]
     
-    var unreadMessages = 0
+    var unreadMessages: Int?
     
     var messages = [Message]()
     
     var updatedAt: Date
     
-    init(tenant: Tenant, id: ID, users: [User], groups: [Group], messages: [Message], updatedAt: Date, unreadMessages: Int = 0) {
+    init(tenant: Tenant, id: ID, users: [User], groups: [Group], messages: [Message], updatedAt: Date, unreadMessages: Int? = nil) {
         self.tenant = tenant
         self.id = id
         self.users = users
@@ -32,7 +32,7 @@ import LottaCoreAPI
             msg1.insertedAt.compare(msg2.insertedAt) == .orderedAscending
         })
         self.updatedAt = updatedAt
-        self.unreadMessages = 0
+        self.unreadMessages = unreadMessages
     }
     
     convenience init(in tenant: Tenant, from graphQLResult: GetConversationsQuery.Data.Conversation) {
@@ -43,7 +43,7 @@ import LottaCoreAPI
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
             messages: [],
             updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now,
-            unreadMessages: graphQLResult.unreadMessages ?? 0
+            unreadMessages: graphQLResult.unreadMessages
         )
     }
     
@@ -55,7 +55,7 @@ import LottaCoreAPI
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
             messages: graphQLResult.messages?.map { Message(in: tenant, from: $0) } ?? [],
             updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now,
-            unreadMessages: graphQLResult.unreadMessages ?? 0
+            unreadMessages: graphQLResult.unreadMessages
         )
     }
     
@@ -67,7 +67,7 @@ import LottaCoreAPI
             groups: graphQLResult.groups?.map { Group(from: $0) } ?? [],
             messages: [],
             updatedAt: graphQLResult.updatedAt?.toDate() ?? Date.now,
-            unreadMessages: graphQLResult.unreadMessages ?? 0
+            unreadMessages: graphQLResult.unreadMessages
         )
     }
     

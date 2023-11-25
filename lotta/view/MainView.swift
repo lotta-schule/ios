@@ -15,51 +15,40 @@ struct MainView : View {
     @State private var cancelMessageSubscription: Cancellable?
     
     var body: some View {
-            TabView {
-                MessagingView()
-                    .badge(userSession.unreadMessageCount)
-                    .tabItem {
-                        Label("Nachrichten", systemImage: "message")
-                    }
-                ProfileView()
-                    .tabItem {
-                        Label("Profil", systemImage: "person")
-                    }
-            }
-            .tint(userSession.theme.primaryColor)
-            .onChange(of: userSession, initial: true) { _, _ in
+        TabView {
+            MessagingView()
+                .badge(userSession.unreadMessageCount)
+                .tabItem {
+                    Label("Nachrichten", systemImage: "message")
+                }
+            ProfileView()
+                .tabItem {
+                    Label("Profil", systemImage: "person")
+                }
+        }
+        .tint(userSession.theme.primaryColor)
+        .onChange(of: userSession, initial: true) { _, _ in
+            userSession.loadConversations()
+        }
+        .onChange(of: scenePhase, initial: true, { _, phase in
+            switch scenePhase {
+            case .active:
                 Task {
-                    try? await userSession.loadConversations()
+                    try? await userSession.subscribeToMessages()
                 }
+            case .background, .inactive:
+                userSession.unsubscribeToMessages()
+            default:
+                print("Unknown phase \(phase)")
             }
-            .onChange(of: scenePhase, initial: true, { _, phase in
-                switch scenePhase {
-                    case .active:
-                        if cancelMessageSubscription == nil {
-                            cancelMessageSubscription = userSession.subscribeToMessages()
-                        }
-                    case .inactive, .background:
-                        if let cancelMessageSubscription = cancelMessageSubscription {
-                            cancelMessageSubscription.cancel()
-                            self.cancelMessageSubscription = nil
-                        }
-                    default:
-                        print("Unknown phase \(phase)")
-                }
-            })
-            .onAppear {
-                Task {
-                    try? await userSession.loadConversations()
-                }
-                if cancelMessageSubscription == nil {
-                    cancelMessageSubscription = userSession.subscribeToMessages()
-                }
+        })
+        .onAppear {
+            Task {
+                try? await userSession.subscribeToMessages()
             }
-            .onDisappear {
-                if let cancelMessageSubscription = cancelMessageSubscription {
-                    cancelMessageSubscription.cancel()
-                    self.cancelMessageSubscription = nil
-                }
-            }
+        }
+        .onDisappear {
+            userSession.unsubscribeToMessages()
+        }
     }
 }

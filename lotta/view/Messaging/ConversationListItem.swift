@@ -6,16 +6,25 @@
 //
 
 import SwiftUI
+import LottaCoreAPI
 
 struct ConversationListItem: View {
-    var conversation: Conversation
+    @Environment(UserSession.self) private var userSession
+    
+    var conversationId: ID
+    
     var excluding: User?
+    
     var body: some View {
-        HStack {
-            Avatar(url: conversation.getImageUrl(excluding: excluding))
-                .scaledToFit()
-            Text(conversation.getName(excluding: excluding))
-                .badge(conversation.unreadMessages)
+        if let conversation = userSession.conversations.first(where: { $0.id == conversationId }) {
+            HStack {
+                Avatar(url: conversation.getImageUrl(excluding: excluding))
+                    .scaledToFit()
+                Text(conversation.getName(excluding: excluding))
+                    .badge(conversation.unreadMessages ?? 0)
+            }
+        } else {
+            EmptyView()
         }
     }
 }

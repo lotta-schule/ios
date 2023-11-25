@@ -13,12 +13,16 @@ import ApolloAPI
 import Foundation
 import ApolloSQLite
 import LottaCoreAPI
+import KeychainSwift
 import ApolloWebSocket
 
 let LOTTA_API_HOST = "core.staging.lotta.schule"
 let USE_SECURE_CONNECTION = true
 let LOTTA_API_HTTP_URL = URL(string: "\(USE_SECURE_CONNECTION ? "https" : "http")://\(LOTTA_API_HOST)")!
 let LOTTA_API_WEBSOCKET_URL = URL(string: "\(USE_SECURE_CONNECTION ? "wss" : "ws")://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
+
+let KEYCHAIN_PREFIX = String(LOTTA_API_HOST.prefix(5) + LOTTA_API_HOST.suffix(5))
+let keychain = KeychainSwift(keyPrefix: KEYCHAIN_PREFIX)
 
 fileprivate func getHttpTransport(loginSession: AuthInfo? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
     var additionalHeaders: [String:String] = [:]
@@ -40,15 +44,37 @@ fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, st
             protocol: .graphql_transport_ws
         ),
         config: WebSocketTransport.Configuration(
-        connectingPayload: [
-            "tid": tid,
-            "token": loginSession.accessToken?.string
-        ]
-    ))
+            connectingPayload: [
+                "tid": tid,
+                "token": loginSession.accessToken?.string
+            ]
+        )
+    )
+}
+
+var baseCacheDirURL: URL {
+    get {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first!
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        
+        return documentsURL.appending(path: LOTTA_API_HOST.replacing(/:\d{4,5}$/, with: ""))
+    }
 }
 
 class CoreApi {
     private(set) var apollo: ApolloClient
+    
+    var cacheUrl: URL?
+    
+    static func getCacheUrl(tenantId: String) -> URL {
+        let sqliteFileURL = baseCacheDirURL.appendingPathComponent("tenant_\(tenantId).sqlite")
+        print(sqliteFileURL)
+        return sqliteFileURL
+    }
     
     init() {
         let store = ApolloStore()
@@ -57,25 +83,17 @@ class CoreApi {
         
         self.apollo = client
     }
+
     init(withTenantSlug slug: String, loginSession: AuthInfo? = nil) {
         let store = ApolloStore()
         let transport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
         self.apollo = ApolloClient(networkTransport: transport, store: store)
     }
-    init(withTenantSlug slug: String, tenantId: String, andLoginSession loginSession: AuthInfo) {
-        // 1. Determine where you would like to store your SQLite file.
-        //    A commonly used location is the user's Documents directory
-        //    within your application's sandbox.
-        let documentsPath = NSSearchPathForDirectoriesInDomains(
-            .documentDirectory,
-            .userDomainMask,
-            true
-        ).first!
-        let documentsURL = URL(fileURLWithPath: documentsPath)
-        let sqliteFileURL = documentsURL.appendingPathComponent("tenant_\(tenantId).sqlite")
 
-        // 2. Use that file URL to instantiate the SQLite cache:
-        let sqliteCache = try! SQLiteNormalizedCache(fileURL: sqliteFileURL)
+    init(withTenantSlug slug: String, tenantId: String, andLoginSession loginSession: AuthInfo) {
+        cacheUrl = CoreApi.getCacheUrl(tenantId: tenantId)
+        
+        let sqliteCache = try! SQLiteNormalizedCache(fileURL: cacheUrl!)
         
         let store = ApolloStore(cache: sqliteCache)
         let httpTransport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
@@ -89,6 +107,12 @@ class CoreApi {
         
         self.apollo = ApolloClient(networkTransport: transport, store: store)
     }
+    
+    func resetCache() -> Void {
+        if let url = cacheUrl {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
 }
 
 extension ApolloClient {
@@ -96,7 +120,6 @@ extension ApolloClient {
         var didFinish = false
         return try await withCheckedThrowingContinuation({ continuation in
             self.fetch(query: query, cachePolicy: cachePolicy, queue: queue) { [weak self] result in
-                print(result)
                 if !didFinish {
                     switch result {
                     case .success(let data):

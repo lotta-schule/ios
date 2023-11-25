@@ -10,9 +10,6 @@ import Apollo
 import SwiftUI
 import JWTDecode
 import LottaCoreAPI
-import KeychainSwift
-
-let keychain = KeychainSwift()
 
 enum AuthenticationResult {
     case success
@@ -26,9 +23,24 @@ enum AuthenticationError: Error {
 @Observable final class ModelData {
     static let shared = ModelData()
     
-    var userSessions = UserSession.readFromDisk()
+    var userSessions = [UserSession]()
+    
+    private(set) var initialized = false
     
     private var currentSessionTenantId: ID?
+    
+    func initializeSessions() async -> Void {
+        if !FileManager.default.fileExists(atPath: baseCacheDirURL.absoluteString) {
+            do {
+                try FileManager.default.createDirectory(at: baseCacheDirURL, withIntermediateDirectories: true)
+            } catch {
+                SentrySDK.capture(error: error)
+                print("Error creating directory: \(error)")
+            }
+        }
+        self.userSessions = await UserSession.readFromDisk()
+        self.initialized = true
+    }
     
     func setSession(byTenantId id: ID) -> Bool {
         if currentSessionTenantId == id {
@@ -66,8 +78,15 @@ enum AuthenticationError: Error {
     
     func remove(session: UserSession) -> Void {
         try? session.removeFromDisk()
+        session.removeFromKeychain()
+        
         self.userSessions.removeAll { existingSession in
             existingSession.tenant.id == session.tenant.id
+        }
+        
+        Task {
+            session.api.resetCache()
+            try? await session.deleteDevice()
         }
     }
     
@@ -86,7 +105,7 @@ enum AuthenticationError: Error {
         let newBadgeNumber = userSessions.reduce(into: 0) { partialResult, session in
             partialResult += session.unreadMessageCount
         }
-        UIApplication.shared.applicationIconBadgeNumber = newBadgeNumber
+        UNUserNotificationCenter.current().setBadgeCount(newBadgeNumber)
     }
     
     var currentSession: UserSession? {

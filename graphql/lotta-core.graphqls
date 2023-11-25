@@ -4,13 +4,9 @@ schema {
   subscription: RootSubscriptionType
 }
 
-"""
-Exposes a URL that specifies the behavior of this scalar.
-"""
+"""Exposes a URL that specifies the behavior of this scalar."""
 directive @specifiedBy(
-  """
-  The URL that specifies the behavior of this scalar.
-  """
+  """The URL that specifies the behavior of this scalar."""
   url: String!
 ) on SCALAR
 
@@ -31,18 +27,12 @@ type Article {
   users: [User]
 }
 
-"""
-Filtering options for the article list
-"""
+"""Filtering options for the article list"""
 input ArticleFilter {
-  """
-  Limit the number of results to return
-  """
+  """Limit the number of results to return"""
   first: Int
 
-  """
-  Return only results updated before than a given date
-  """
+  """Return only results updated before than a given date"""
   updatedBefore: DateTime
 }
 
@@ -244,12 +234,7 @@ enum FileType {
   VIDEO
 }
 
-union FileUsageLocation =
-    FileArticleUsageLocation
-  | FileCategoryUsageLocation
-  | FileContentModuleUsageLocation
-  | FileSystemUsageLocation
-  | FileUserUsageLocation
+union FileUsageLocation = FileArticleUsageLocation | FileCategoryUsageLocation | FileContentModuleUsageLocation | FileSystemUsageLocation | FileUserUsageLocation
 
 type FileUserUsageLocation {
   usage: String
@@ -305,16 +290,13 @@ input RegisterUserParams {
 type RootMutationType {
   createArticle(article: ArticleInput!): Article
   createCategory(category: CreateCategoryInput!): Category
-  createDirectory(
-    isPublic: Boolean
-    name: String!
-    parentDirectoryId: ID
-  ): Directory
+  createDirectory(isPublic: Boolean, name: String!, parentDirectoryId: ID): Directory
   createMessage(message: MessageInput!): Message
   createUserGroup(group: UserGroupInput!): UserGroup
   createWidget(title: String!, type: WidgetType!): Widget
   deleteArticle(id: ID!): Article
   deleteCategory(id: ID!): Category
+  deleteDevice(id: ID!): Device
   deleteDirectory(id: ID!): Directory
   deleteFile(id: ID!): File
   deleteMessage(id: ID!): Message
@@ -365,7 +347,7 @@ type RootQueryType {
   relevantFilesInUsage: [File]
   schedule(date: Date, widgetId: ID!): Json
   search(options: SearchOptions, searchText: String!): [Article]
-  searchUsers(searchtext: String!): [User]
+  searchUsers(groups: [SelectUserGroupInput!], lastSeen: Int, searchtext: String): [User]
   tag(tag: String!): [Article]
   tags: [String!]
   tenant(slug: String): Tenant
@@ -468,9 +450,7 @@ input UpdateUserParams {
   nickname: String
 }
 
-"""
-Represents an uploaded file.
-"""
+"""Represents an uploaded file."""
 scalar Upload
 
 type Usage {
@@ -538,3 +518,4 @@ enum WidgetType {
   SCHEDULE
   TAGCLOUD
 }
+

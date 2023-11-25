@@ -11,10 +11,10 @@ import Apollo
 import JWTDecode
 import Foundation
 import LottaCoreAPI
-import KeychainSwift
 
 enum UserSessionError : Error {
     case generic(String)
+    case isAlreadySubscribing
 }
 
 @Observable class UserSession {
@@ -23,6 +23,7 @@ enum UserSessionError : Error {
     private(set) var user: User
     private(set) var api: CoreApi
     private(set) var conversations = [Conversation]()
+    private(set) var deviceId: ID?
     
     init(tenant: Tenant, authInfo: AuthInfo, user: User) { // TODO: Could default to create user from authToken.accessToken
         self.tenant = tenant
@@ -34,7 +35,7 @@ enum UserSessionError : Error {
     
     var unreadMessageCount: Int {
         return self.conversations.reduce(into: 0) { partialResult, conversation in
-            partialResult += conversation.unreadMessages
+            partialResult += conversation.unreadMessages ?? 0
         }
     }
     
@@ -48,22 +49,19 @@ enum UserSessionError : Error {
             if !self.conversations[i].messages.contains(where: { $0.id == message.id }) {
                 self.conversations[i].messages.append(message)
             }
-            self.conversations[i].unreadMessages += 1
-            self.conversations[i].updatedAt = Date()
+            if let unreadMessages = conversation.unreadMessages {
+                self.conversations[i].unreadMessages = unreadMessages
+            }
+            self.conversations[i].updatedAt = conversation.updatedAt
+            
+            api.apollo.store.withinReadWriteTransaction { transaction in
+                
+            }
+            
         } else {
-            conversation.updatedAt = Date()
             self.conversations.insert(conversation, at: 0)
             addMessage(message, toConversation: conversation)
         }
-    }
-    
-    func reset(keepCurrentTenantSlug: Bool = false) -> Void {
-        if !keepCurrentTenantSlug {
-            UserDefaults.standard.set("", forKey: "lotta-tenant-slug")
-        }
-        // TODO:
-        // self.resetUser()
-        self.api = CoreApi()
     }
     
     // API Helper Functions
@@ -105,12 +103,34 @@ enum UserSessionError : Error {
         }
     }
     
-    func loadConversations(forceNetworkRequest: Bool = false) async throws -> Void {
+    func loadConversations() -> Void {
+        api.apollo.fetch(
+            query: GetConversationsQuery(),
+            cachePolicy: .returnCacheDataAndFetch
+        ) { result in
+            switch result {
+                case .success(let graphqlResult):
+                    if let conversations =
+                        graphqlResult.data?.conversations?.filter({ conversation in
+                            conversation != nil
+                        }).map({ Conversation(in: self.tenant, from: $0!) }) {
+                        self.conversations = conversations.sorted(by: {
+                            $0.updatedAt.compare($1.updatedAt) == .orderedDescending
+                        })
+                    }
+                    if graphqlResult.source == .server {
+                        ModelData.shared.setApplicationBadgeNumber()
+                    }
+                    
+                case .failure(let error):
+                    print(error)
+            }
+        }
+    }
+    func forceLoadConversations() async throws -> Void {
         let result = try await api.apollo.fetchAsync(
             query: GetConversationsQuery(),
-            cachePolicy: forceNetworkRequest ?
-                .fetchIgnoringCacheData :
-                .returnCacheDataAndFetch
+            cachePolicy: .fetchIgnoringCacheData
         )
         if let conversations =
             result.conversations?.filter({ conversation in
@@ -120,6 +140,7 @@ enum UserSessionError : Error {
                 $0.updatedAt.compare($1.updatedAt) == .orderedDescending
             })
         }
+        ModelData.shared.setApplicationBadgeNumber()
     }
     
     func sendMessage(_ content: String, to user: User) async throws -> (Message, Conversation) {
@@ -201,23 +222,70 @@ enum UserSessionError : Error {
         self.conversations = conversations.sorted(by: {
             $0.updatedAt.compare($1.updatedAt) == .orderedDescending
         })
+        ModelData.shared.setApplicationBadgeNumber()
     }
     
-    func subscribeToMessages() -> Cancellable {
-        return api.apollo.subscribe(
+    var isSubscribingToMessages = false
+    var cancelMessageSubscription: Cancellable?
+    func subscribeToMessages() async throws -> Void {
+        if isSubscribingToMessages {
+            throw UserSessionError.isAlreadySubscribing
+        }
+        isSubscribingToMessages = true
+        defer {
+            isSubscribingToMessages = false
+        }
+        if authInfo.needsRenew {
+            _ = try await authInfo.renewAsync()
+        }
+        cancelMessageSubscription = api.apollo.subscribe(
             subscription: ReceiveMessageSubscription()
-        ) {
-                switch $0 {
-                case .success(let graphqlResult):
-                    let conversation = Conversation(in: self.tenant, from: graphqlResult.data!.message!.conversation!)
-                    let message = Message(in: self.tenant, from: graphqlResult.data!.message!)
-                    self.addMessage(message, toConversation: conversation)
-                    ModelData.shared.setApplicationBadgeNumber()
-                case .failure(let error):
-                    SentrySDK.capture(error: error)
-                    print("Error subscribing: \(error)")
-                }
+        ) { response in
+            switch response {
+            case .success(let graphqlResult):
+                let conversation = Conversation(in: self.tenant, from: graphqlResult.data!.message!.conversation!)
+                let message = Message(in: self.tenant, from: graphqlResult.data!.message!)
+                self.addMessage(message, toConversation: conversation)
+                ModelData.shared.setApplicationBadgeNumber()
+            case .failure(let error):
+                SentrySDK.capture(error: error)
+                print("Error subscribing: \(error)")
             }
+        }
+    }
+    
+    func unsubscribeToMessages() -> Void {
+        cancelMessageSubscription?.cancel()
+    }
+    
+    func registerDevice(token: Data) async throws -> Void {
+        let graphqlResult = try await api.apollo.performAsync(
+            mutation: RegisterDeviceMutation(
+                device: RegisterDeviceInput(
+                    deviceType: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.deviceType),
+                    modelName: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.modelName),
+                    operatingSystem: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.operatingSystem),
+                    platformId: "ios/\(DeviceIdentificationService.shared.uniquePlatformIdentifier ?? "0")",
+                    pushToken: GraphQLNullable(stringLiteral: "apns/\(token.hexEncodedString)")
+                )
+            )
+        )
+        
+        deviceId = graphqlResult.data?.device?.id
+    }
+    
+    func deleteDevice() async throws -> Void {
+        if let deviceId = deviceId {
+            let graphqlResult = try await api.apollo.performAsync(
+                mutation: DeleteDeviceMutation(
+                    id: deviceId
+                )
+            )
+            
+            if graphqlResult.data?.device?.id == deviceId {
+                self.deviceId = nil
+            }
+        }
     }
     
     static func createFromCredentials(onTenantSlug slug: String, withUsername username: String, andPassword password: String) async throws -> UserSession {
@@ -261,40 +329,40 @@ enum UserSessionError : Error {
         }
     }
     
-    static func readFromDisk() -> [UserSession] {
+    static func readFromDisk() async -> [UserSession] {
         var results = [UserSession]()
-        let keychain = KeychainSwift()
-        let documentsPath = NSSearchPathForDirectoriesInDomains(
-            .documentDirectory,
-            .userDomainMask,
-            true
-        ).first!
-        let documentsURL = URL(fileURLWithPath: documentsPath)
         
         do {
-            let files = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            let sessionFiles = files.filter { url in
-                let regex = /^usersession-[^-]+-[^-]+\.json$/
-                return url.isFileURL && url.lastPathComponent.wholeMatch(of: regex) != nil
+            let files = try FileManager.default.contentsOfDirectory(at: baseCacheDirURL, includingPropertiesForKeys: nil)
+            let sessionFiles = files.compactMap { url in
+                let regex = /^usersession-([^-]+)-([^-]+)\.json$/
+                guard url.isFileURL else {
+                    return nil as (URL, Substring, Substring)?
+                }
+                guard let matches = url.lastPathComponent.wholeMatch(of: regex) else {
+                    return nil as (URL, Substring, Substring)?
+                }
+                return (url, matches.1, matches.2) as (URL, Substring, Substring)
             }
-            for fileUrl in sessionFiles {
+            for (fileUrl, tid, uid) in sessionFiles {
                 if let userSessionData = try? Data(contentsOf: fileUrl),
                    let persistedUserSession = try? JSONDecoder().decode(PersistedUserSession.self, from: userSessionData),
-                   let refreshToken = keychain.get("\(persistedUserSession.tenant.id)--refresh-token"),
+                   let refreshToken = keychain.get("\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token"),
                    let jwt = try? JWTDecode.decode(jwt: refreshToken),
                    jwt.expired == false {
                     let authInfo = AuthInfo(refreshToken: jwt)
+                    _ = try? await authInfo.renewAsync()
+                    
                     let userSession = UserSession(tenant: persistedUserSession.tenant, authInfo: authInfo, user: persistedUserSession.user)
                     
                     results.append(userSession)
                     
-                    Task {
-                        _ = await userSession.refetchUserData()
-                        _ = await userSession.refetchTenantData()
-                        try? userSession.writeToDisk()
-                    }
+                    _ = await userSession.refetchUserData()
+                    _ = await userSession.refetchTenantData()
+                    try? userSession.writeToDisk()
                 } else {
                     do {
+                        keychain.delete("\(tid)-\(uid)--refresh-token")
                         try FileManager.default.removeItem(at: fileUrl)
                     } catch {
                         print("error writing usersession data: \(error)")
@@ -310,13 +378,7 @@ enum UserSessionError : Error {
     }
     
     func writeToDisk() throws -> Void {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(
-            .documentDirectory,
-            .userDomainMask,
-            true
-        ).first!
-        let documentsURL = URL(fileURLWithPath: documentsPath)
-        let fileURL = documentsURL.appendingPathComponent("usersession-\(tenant.id)-\(user.id).json")
+        let fileURL = baseCacheDirURL.appendingPathComponent("usersession-\(tenant.id)-\(user.id).json")
         
         let persistedUserSession = PersistedUserSession(tenant: tenant, user: user)
         do {
@@ -328,16 +390,15 @@ enum UserSessionError : Error {
     }
     
     func removeFromDisk() throws -> Void {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(
-            .documentDirectory,
-            .userDomainMask,
-            true
-        ).first!
-        let documentsURL = URL(fileURLWithPath: documentsPath)
-        let fileURL = documentsURL.appendingPathComponent("usersession-\(tenant.id)-\(user.id).json")
+        let fileURL = baseCacheDirURL.appendingPathComponent("usersession-\(tenant.id)-\(user.id).json")
         
         try FileManager.default.removeItem(at: fileURL)
     }
+    
+    func removeFromKeychain() -> Void {
+        keychain.delete("usersession-\(tenant.id)-\(user.id).json")
+    }
+    
 }
 
 extension UserSession: Equatable {

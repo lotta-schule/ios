@@ -155,13 +155,7 @@ struct LoginView: View {
     
     func saveTenantDescriptorsToDisk(results: ListTenantsResult) -> Void {
         let resultsData = try? JSONEncoder().encode(results)
-        let documentsPath = NSSearchPathForDirectoriesInDomains(
-            .documentDirectory,
-            .userDomainMask,
-            true
-        ).first!
-        let documentsURL = URL(fileURLWithPath: documentsPath)
-        let jsonFileURL = documentsURL.appendingPathComponent("tenants-list.json")
+        let jsonFileURL = baseCacheDirURL.appendingPathComponent("tenants-list.json")
         
         try? resultsData?.write(to: jsonFileURL)
     }

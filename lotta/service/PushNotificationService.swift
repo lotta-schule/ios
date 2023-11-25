@@ -16,18 +16,7 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: Data) async -> Void {
         for session in ModelData.shared.userSessions {
             do {
-                let graphqlResult = try await session.api.apollo.performAsync(
-                    mutation: RegisterDeviceMutation(
-                        device: RegisterDeviceInput(
-                            deviceType: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.deviceType),
-                            modelName: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.modelName),
-                            operatingSystem: GraphQLNullable(stringLiteral: DeviceIdentificationService.shared.operatingSystem),
-                            platformId: "ios/\(DeviceIdentificationService.shared.uniquePlatformIdentifier ?? "0")",
-                            pushToken: GraphQLNullable(stringLiteral: "apns/\(deviceToken.hexEncodedString)")
-                        )
-                    )
-                )
-                print(graphqlResult)
+                try await session.registerDevice(token: deviceToken)
             } catch {
                 print("Upsala ... \(error.localizedDescription)")
             }

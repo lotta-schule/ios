@@ -28,8 +28,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
             if let tenantId = userInfo["tenant_id"] as? Int,
                let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }),
                let conversationId = userInfo["conversation_id"] as? String {
-                session.api.apollo.fetch(query: GetConversationQuery(id: conversationId), cachePolicy: .fetchIgnoringCacheData) {
-                    switch $0 {
+                session.api.apollo.fetch(query: GetConversationQuery(id: conversationId), cachePolicy: .fetchIgnoringCacheData) { result in
+                    switch result {
                         case .success(let graphQLResult):
                             let conversation = Conversation(in: session.tenant, from: graphQLResult.data!.conversation!)
                             session.addConversation(conversation)

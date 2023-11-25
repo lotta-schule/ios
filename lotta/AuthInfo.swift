@@ -8,7 +8,6 @@ import Sentry
 import Apollo
 import SwiftUI
 import JWTDecode
-import KeychainSwift
 
 class AuthInfo {
     enum RenewError: Error {
@@ -24,10 +23,22 @@ class AuthInfo {
             _refreshToken
         }
         set {
-            if let stringValue = newValue?.string, let tid = newValue?.claim(name: "tid").integer {
-                keychain.set(stringValue, forKey: "\(tid)--refresh-token")
+            if let stringValue = newValue?.string, let tid = newValue?.claim(name: "tid").integer, let uid = newValue?.subject {
+                keychain.set(stringValue, forKey: "\(tid)-\(uid)--refresh-token")
             }
             _refreshToken = newValue
+        }
+    }
+    
+    var needsRenew: Bool {
+        get {
+            if accessToken == nil {
+                return true
+            }
+            guard let refreshToken = refreshToken else {
+                return false
+            }
+            return refreshToken.expired
         }
     }
     
@@ -46,18 +57,20 @@ class AuthInfo {
         return false
     }
     
-    func renew(additionalHeaders: [String:String] = [:], completion: @escaping (Result<TokenPair, RenewError>) -> (Void)) -> Void {
+    func renew(completion: @escaping (Result<TokenPair, RenewError>) -> (Void)) -> Void {
         guard let refreshToken = refreshToken else {
             completion(.failure(.missingToken))
+            return
+        }
+        guard let tid = refreshToken.claim(name: "tid").integer else {
+            completion(.failure(.invalidToken))
             return
         }
         
         let url = LOTTA_API_HTTP_URL.appending(path: "/auth/token/refresh")
             .appending(queryItems: [URLQueryItem(name: "token", value: refreshToken.string)])
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
-        for (key, value) in additionalHeaders {
-            request.setValue(value, forHTTPHeaderField: key)
-        }
+        request.setValue("id:\(tid)", forHTTPHeaderField: "tenant")
         request.httpMethod = "POST"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -83,18 +96,19 @@ class AuthInfo {
         }.resume()
     }
         
-    func renewAsync(additionalHeaders: [String:String] = [:]) async throws -> TokenPair {
+    func renewAsync() async throws -> TokenPair {
         return try await withCheckedThrowingContinuation { continuation in
-            return self.renew(additionalHeaders: additionalHeaders, completion: { result in
+            return self.renew() { result in
                 switch result {
                 case .success(let tokenPair):
                     continuation.resume(returning: tokenPair)
                 case .failure(let failure):
                     continuation.resume(throwing: failure)
                 }
-            })
+            }
         }
     }
+    
     
     struct TokenPair {
         var accessToken: JWT?

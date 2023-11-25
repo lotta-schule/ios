@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import LottaCoreAPI
 
 struct MessageRow : View {
     @Environment(UserSession.self) private var userSession
-    var message: Message
+    var message: GetConversationQuery.Data.Conversation.Message
     var fromCurrentUser: Bool
     
     var body: some View {
@@ -17,9 +18,20 @@ struct MessageRow : View {
             if fromCurrentUser {
                 Spacer()
             } else {
-                UserAvatar(user: message.user)
+                if let imageId = message.user?.avatarImageFile?.id {
+                    Avatar(url:
+                            imageId.getUrl(
+                                for: userSession.tenant,
+                                queryItems: [
+                                    .init(name: "width", value: "100"),
+                                    .init(name: "height", value: "100")
+                                ]
+                            ))
                     .frame(width: 40, height: 40, alignment: .center)
                     .padding(.leading, CGFloat(userSession.theme.borderRadius))
+                } else {
+                    EmptyView()
+                }
             }
             VStack(alignment: fromCurrentUser ? .trailing : .leading) {
                 MessageBubble(
@@ -27,20 +39,49 @@ struct MessageRow : View {
                     fromCurrentUser: fromCurrentUser
                 )
                 .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
-                Text("\(fromCurrentUser ? "" : message.user.visibleName + " • ")\(formatDate(message.insertedAt))")
+                Text(getFormattedDateLine())
                     .font(.footnote)
                     .foregroundStyle(userSession.theme.disabledColor)
                     .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
                     .padding(.top, CGFloat(integerLiteral: userSession.theme.spacing) * -0.75)
             }
             if fromCurrentUser {
-                UserAvatar(user: message.user)
+                if let imageId = message.user?.avatarImageFile?.id {
+                    Avatar(url:
+                            imageId.getUrl(
+                                for: userSession.tenant,
+                                queryItems: [
+                                    .init(name: "width", value: "100"),
+                                    .init(name: "height", value: "100")
+                                ]
+                            ))
                     .frame(width: 40, height: 40, alignment: .center)
                     .padding(.trailing, CGFloat(integerLiteral: userSession.theme.spacing))
+                } else {
+                    EmptyView()
+                }
             } else {
                 Spacer()
             }
         }
+    }
+    
+    func getFormattedDateLine() -> String {
+        let username = if fromCurrentUser {
+            ""
+        } else if let user = message.user {
+            "\(UserUtil.getVisibleName(for: user)) • "
+        } else {
+            ""
+        }
+        
+        let dateString = if let date = message.insertedAt?.toDate() {
+            formatDate(date)
+        } else {
+            ""
+        }
+        
+        return [username, dateString].joined(separator: "")
     }
     
     func formatDate(_ date: Date) -> String {
@@ -51,37 +92,4 @@ struct MessageRow : View {
         dateFormatter.doesRelativeDateFormatting = true
         return dateFormatter.string(from: date)
     }
-}
-
-#Preview {
-    MessageRow(
-        message: Message(
-            tenant: Tenant(
-                id: "0",
-                title: "",
-                slug: "slug"),
-            id: "1",
-            user: User(tenant: Tenant(
-                id: "0",
-                title: "",
-                slug: "slug"), id: "1", name: "Rosa Luxemburg", nickname: nil),
-            content: "Lorem ipsum dolor sit amed bla bla bli blub.",
-            createdAt: Date.now,
-            files: []
-        ),
-        fromCurrentUser: true
-    )
-    .environment(
-        UserSession(
-            tenant: Tenant(
-                id: "0",
-                title: "",
-                slug: "slug"),
-            authInfo: AuthInfo(),
-            user: User(tenant: Tenant(
-                id: "0",
-                title: "",
-                slug: "slug"), id: "0")
-        )
-    )
 }

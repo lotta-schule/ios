@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
-  static let TenantConfiguration = Object(
+  static let TenantConfiguration = ApolloAPI.Object(
     typename: "TenantConfiguration",
     implementedInterfaces: []
   )

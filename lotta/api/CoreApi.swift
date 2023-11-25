@@ -16,8 +16,8 @@ import LottaCoreAPI
 import KeychainSwift
 import ApolloWebSocket
 
-let LOTTA_API_HOST = "core.staging.lotta.schule"
-let USE_SECURE_CONNECTION = true
+let LOTTA_API_HOST = "192.168.2.110:4000"
+let USE_SECURE_CONNECTION = false
 let LOTTA_API_HTTP_URL = URL(string: "\(USE_SECURE_CONNECTION ? "https" : "http")://\(LOTTA_API_HOST)")!
 let LOTTA_API_WEBSOCKET_URL = URL(string: "\(USE_SECURE_CONNECTION ? "wss" : "ws")://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
 
@@ -156,6 +156,14 @@ extension ApolloClient {
                     SentrySDK.capture(error: error)
                     continuation.resume(throwing: error)
                 }
+            }
+        }
+    }
+    
+    func clearCacheAsync() async throws -> Void {
+        return try await withCheckedThrowingContinuation { continuation in
+            clearCache { result in
+                continuation.resume(with: result)
             }
         }
     }

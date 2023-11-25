@@ -114,3 +114,4 @@ extension Conversation: Hashable {
             hasher.combine(id)
         }
 }
+

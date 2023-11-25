@@ -28,7 +28,7 @@
 		2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F22ABDEE9B00555B9D /* Message.swift */; };
 		2E12B3F52ABDF4F900555B9D /* MessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F42ABDF4F900555B9D /* MessageRow.swift */; };
 		2E12B3F72ABDF56D00555B9D /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */; };
-		2E12B3F92ABDF74200555B9D /* MessageInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F82ABDF74200555B9D /* MessageInput.swift */; };
+		2E12B3F92ABDF74200555B9D /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F82ABDF74200555B9D /* MessageInputView.swift */; };
 		2E12B3FB2ABE13AC00555B9D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FA2ABE13AC00555B9D /* RootView.swift */; };
 		2E12B3FD2ABE160500555B9D /* SelectTenantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */; };
 		2E12B3FF2ABE519D00555B9D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FE2ABE519D00555B9D /* ProfileView.swift */; };
@@ -62,6 +62,9 @@
 		2E6B04C82ACB55F300A10052 /* RefreshTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */; };
 		2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */; };
 		2E98A7FC2ABCE079000BB6CF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E98A7FB2ABCE079000BB6CF /* User.swift */; };
+		2E9B01AC2B11AA52005508B3 /* RemoveNullsFromDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9B01AB2B11AA52005508B3 /* RemoveNullsFromDict.swift */; };
+		2E9B01AE2B11F627005508B3 /* ConversationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9B01AD2B11F627005508B3 /* ConversationUtil.swift */; };
+		2E9B01B02B11F7E9005508B3 /* UserUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9B01AF2B11F7E9005508B3 /* UserUtil.swift */; };
 		2EA434312B094622000D8666 /* CreateConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434302B094622000D8666 /* CreateConversationView.swift */; };
 		2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434322B096CBF000D8666 /* NewMessageDestination.swift */; };
 		2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434342B096DF7000D8666 /* NewConversationView.swift */; };
@@ -111,7 +114,7 @@
 		2E12B3F22ABDEE9B00555B9D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2E12B3F42ABDF4F900555B9D /* MessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRow.swift; sourceTree = "<group>"; };
 		2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
-		2E12B3F82ABDF74200555B9D /* MessageInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInput.swift; sourceTree = "<group>"; };
+		2E12B3F82ABDF74200555B9D /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
 		2E12B3FA2ABE13AC00555B9D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTenantView.swift; sourceTree = "<group>"; };
 		2E12B3FE2ABE519D00555B9D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -136,6 +139,9 @@
 		2E6B04C72ACB55F300A10052 /* RefreshTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenInterceptor.swift; sourceTree = "<group>"; };
 		2E98A7F82ABCD49D000BB6CF /* UserAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatar.swift; sourceTree = "<group>"; };
 		2E98A7FB2ABCE079000BB6CF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2E9B01AB2B11AA52005508B3 /* RemoveNullsFromDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveNullsFromDict.swift; sourceTree = "<group>"; };
+		2E9B01AD2B11F627005508B3 /* ConversationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationUtil.swift; sourceTree = "<group>"; };
+		2E9B01AF2B11F7E9005508B3 /* UserUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUtil.swift; sourceTree = "<group>"; };
 		2EA434302B094622000D8666 /* CreateConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConversationView.swift; sourceTree = "<group>"; };
 		2EA434322B096CBF000D8666 /* NewMessageDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageDestination.swift; sourceTree = "<group>"; };
 		2EA434342B096DF7000D8666 /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
@@ -216,6 +222,7 @@
 				2E02686B2AB88F4500C18681 /* lottaApp.swift */,
 				2E0268712AB88F4600C18681 /* Assets.xcassets */,
 				2E0268732AB88F4600C18681 /* Preview Content */,
+				2E9B01AA2B11AA37005508B3 /* util */,
 				2E12B4002ABE532500555B9D /* AuthInfo.swift */,
 				2E0268AE2AB90A2400C18681 /* ModelData.swift */,
 				2E5460972AE250FE00040149 /* UserSession.swift */,
@@ -289,7 +296,7 @@
 				2E54609D2AEE5AC800040149 /* ConversationView.swift */,
 				2EA434342B096DF7000D8666 /* NewConversationView.swift */,
 				2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */,
-				2E12B3F82ABDF74200555B9D /* MessageInput.swift */,
+				2E12B3F82ABDF74200555B9D /* MessageInputView.swift */,
 				2E12B3F42ABDF4F900555B9D /* MessageRow.swift */,
 				2E02686D2AB88F4500C18681 /* MessagingView.swift */,
 			);
@@ -345,6 +352,16 @@
 				2EA434362B0BB11A000D8666 /* SearchUserList.swift */,
 			);
 			path = component;
+			sourceTree = "<group>";
+		};
+		2E9B01AA2B11AA37005508B3 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				2E9B01AB2B11AA52005508B3 /* RemoveNullsFromDict.swift */,
+				2E9B01AD2B11F627005508B3 /* ConversationUtil.swift */,
+				2E9B01AF2B11F7E9005508B3 /* UserUtil.swift */,
+			);
+			path = util;
 			sourceTree = "<group>";
 		};
 		2EA4342F2B094608000D8666 /* CreateConversation */ = {
@@ -538,6 +555,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E9B01AE2B11F627005508B3 /* ConversationUtil.swift in Sources */,
+				2E9B01AC2B11AA52005508B3 /* RemoveNullsFromDict.swift in Sources */,
 				2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */,
 				2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */,
 				2E3952F32AC346810013465C /* MainView.swift in Sources */,
@@ -558,13 +577,14 @@
 				2E5460A02AEF162D00040149 /* RouterData.swift in Sources */,
 				2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */,
 				2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */,
+				2E9B01B02B11F7E9005508B3 /* UserUtil.swift in Sources */,
 				2EA434372B0BB11A000D8666 /* SearchUserList.swift in Sources */,
 				2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */,
 				2E54609C2AE254E100040149 /* TenantRootView.swift in Sources */,
 				2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */,
 				2E4191AA2ACC621F00FD0FDA /* Data+hexString.swift in Sources */,
 				2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */,
-				2E12B3F92ABDF74200555B9D /* MessageInput.swift in Sources */,
+				2E12B3F92ABDF74200555B9D /* MessageInputView.swift in Sources */,
 				2E54609E2AEE5AC800040149 /* ConversationView.swift in Sources */,
 				2E0268A52AB900DC00C18681 /* Tenant.swift in Sources */,
 				2E54609A2AE2538500040149 /* LottaLogoView.swift in Sources */,

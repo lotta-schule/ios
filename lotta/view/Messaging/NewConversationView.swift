@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LottaCoreAPI
 
 struct NewConversationView : View {
     @Environment(UserSession.self) private var userSession
@@ -19,29 +20,28 @@ struct NewConversationView : View {
             Text(getDescription())
             Spacer()
             
-            MessageInput(
-                user: getUser(),
-                group: getGroup()
-            ) { (message, conversation) in
+            MessageInputView(
+                userId: getUser()?.id,
+                groupId: getGroup()?.id
+            ) { message in
                 withAnimation(.bouncy) {
-                    self.routerData.selectedConversationId = conversation.id
-                    userSession.addMessage(message, toConversation: conversation)
+                    self.routerData.selectedConversationId = message.conversation?.id
                 }
             }
         }
-        .navigationTitle(getUser()?.visibleName ?? getGroup()?.name ?? "")
+        .navigationTitle(getNavigationTitle())
     }
     
     func getDescription() -> String {
         switch destination {
             case .user(let user):
-                return "Neue Unterhaltung mit \(user.visibleName)"
+            return "Neue Unterhaltung mit \(UserUtil.getVisibleName(for: user))"
             case .group(let group):
-                return "Neue Unterhaltung in \(group.name)"
+            return "Neue Unterhaltung in \(group.name)"
         }
     }
         
-    func getUser() -> User? {
+    func getUser() -> SearchUsersQuery.Data.User? {
         switch destination {
             case .user(let user):
                 return user
@@ -50,12 +50,23 @@ struct NewConversationView : View {
         }
     }
     
-    func getGroup() -> Group? {
+    func getGroup() -> GetCurrentUserQuery.Data.CurrentUser.Group? {
         switch destination {
             case .group(let group):
-                return group
+            return GetCurrentUserQuery.Data.CurrentUser.Group(_dataDict: DataDict(data: [
+                    "id": group.id,
+                    "name": group.name
+                ], fulfilledFragments: []))
             default:
                 return nil
+        }
+    }
+    
+    func getNavigationTitle() -> String {
+        if let user = getUser() {
+            UserUtil.getVisibleName(for: user)
+        } else {
+            getGroup()?.name ?? ""
         }
     }
 }

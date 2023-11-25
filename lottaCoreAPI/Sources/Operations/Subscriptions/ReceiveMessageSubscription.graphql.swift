@@ -7,7 +7,7 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
   public static let operationName: String = "ReceiveMessage"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"subscription ReceiveMessage { message: receiveMessage { __typename id content insertedAt updatedAt user { __typename id name nickname avatarImageFile { __typename id } } conversation { __typename id updatedAt groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } unreadMessages } } }"#
+      #"subscription ReceiveMessage { message: receiveMessage { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize } user { __typename id name nickname avatarImageFile { __typename id } } conversation { __typename id updatedAt groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } unreadMessages } } }"#
     ))
 
   public init() {}
@@ -37,6 +37,7 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
         .field("content", String?.self),
         .field("insertedAt", LottaCoreAPI.DateTime?.self),
         .field("updatedAt", LottaCoreAPI.DateTime?.self),
+        .field("files", [File?]?.self),
         .field("user", User?.self),
         .field("conversation", Conversation?.self),
       ] }
@@ -45,8 +46,31 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
       public var content: String? { __data["content"] }
       public var insertedAt: LottaCoreAPI.DateTime? { __data["insertedAt"] }
       public var updatedAt: LottaCoreAPI.DateTime? { __data["updatedAt"] }
+      public var files: [File?]? { __data["files"] }
       public var user: User? { __data["user"] }
       public var conversation: Conversation? { __data["conversation"] }
+
+      /// Message.File
+      ///
+      /// Parent Type: `File`
+      public struct File: LottaCoreAPI.SelectionSet {
+        public let __data: DataDict
+        public init(_dataDict: DataDict) { __data = _dataDict }
+
+        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+        public static var __selections: [ApolloAPI.Selection] { [
+          .field("__typename", String.self),
+          .field("id", LottaCoreAPI.ID?.self),
+          .field("filename", String?.self),
+          .field("fileType", GraphQLEnum<LottaCoreAPI.FileType>?.self),
+          .field("filesize", Int?.self),
+        ] }
+
+        public var id: LottaCoreAPI.ID? { __data["id"] }
+        public var filename: String? { __data["filename"] }
+        public var fileType: GraphQLEnum<LottaCoreAPI.FileType>? { __data["fileType"] }
+        public var filesize: Int? { __data["filesize"] }
+      }
 
       /// Message.User
       ///

@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import LottaCoreAPI
 
 struct MessageBubble : View {
     @Environment(UserSession.self) private var userSession: UserSession
     @State private var isSharePresented = false
     
-    var message: Message
+    var message: GetConversationQuery.Data.Conversation.Message
     var fromCurrentUser: Bool
     
     var body: some View {
@@ -19,7 +20,7 @@ struct MessageBubble : View {
             if let content = message.content {
                 Text(content)
             }
-            ForEach(message.files) { file in
+            ForEach(getFiles(), id: \.self.id) { file in
                 MessageBubbleFileRow(file: file)
             }
         }
@@ -43,103 +44,9 @@ struct MessageBubble : View {
         )
         .cornerRadius(CGFloat(userSession.theme.borderRadius))
     }
-}
-
-struct MessageBubble_Previews: PreviewProvider {
-    static var previews: some View {
-        MessageBubble(
-            message: Message(
-                tenant: Tenant(
-                    id: "0",
-                    title: "",
-                    slug: "slug"),
-                id: "1",
-                user: User(tenant: Tenant(
-                    id: "0",
-                    title: "",
-                    slug: "slug"), id: "1", name: "Rosa Luxemburg", nickname: nil),
-                content: "Lorem ipsum dolor sit amed bla bla bli blub.",
-                createdAt: Date.now,
-                files: []
-            ),
-            fromCurrentUser: true
-        )
-        .environment(ModelData())
-        .environment(
-            UserSession(
-                tenant: Tenant(
-                    id: "0",
-                    title: "",
-                    slug: "slug"),
-                authInfo: AuthInfo(),
-                user: User(
-                    tenant: Tenant(
-                        id: "0",
-                        title: "",
-                        slug: "slug"
-                    ),
-                    id: "0"
-                )
-            )
-        )
-        .environment(RouterData())
-        .previewLayout(.sizeThatFits)
-        .previewDisplayName("MessageBubble with text")
-        
-        MessageBubble(
-            message: Message(
-                tenant: Tenant(
-                    id: "0",
-                    title: "",
-                    slug: "slug"),
-                id: "1",
-                user: User(
-                    tenant: Tenant(
-                        id: "0",
-                        title: "",
-                        slug: "slug"
-                    ),
-                    id: "1",
-                    name: "Rosa Luxemburg",
-                    nickname: nil
-                ),
-                content: nil,
-                createdAt: Date.now,
-                files: [
-                    LottaFile(
-                        tenant: Tenant(
-                            id: "0",
-                            title: "",
-                            slug: "slug"
-                        ),
-                        id: "1",
-                        fileName: "test.jpg",
-                        fileType: "IMAGE"
-                    )
-                ]
-            ),
-            fromCurrentUser: true
-        )
-        .environment(ModelData())
-        .environment(
-            UserSession(
-                tenant: Tenant(
-                    id: "0",
-                    title: "",
-                    slug: "slug"),
-                authInfo: AuthInfo(),
-                user: User(
-                    tenant: Tenant(
-                        id: "0",
-                        title: "",
-                        slug: "slug"
-                    ),
-                    id: "0"
-                )
-            )
-        )
-        .environment(RouterData())
-        .previewLayout(.sizeThatFits)
-        .previewDisplayName("MessageBubble with file")
+    
+    func getFiles() -> [GetConversationQuery.Data.Conversation.Message.File] {
+        return message.files?.compactMap { $0 } ?? []
     }
 }
+

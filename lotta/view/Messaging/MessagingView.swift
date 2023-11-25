@@ -5,6 +5,7 @@
 //  Created by Alexis Rinaldoni on 18/09/2023.
 //
 
+import Apollo
 import SwiftUI
 import SwiftData
 import LottaCoreAPI
@@ -12,6 +13,9 @@ import LottaCoreAPI
 struct MessagingView: View {
     @Environment(UserSession.self) var userSession: UserSession
     @Environment(RouterData.self) var routerData: RouterData
+    
+    @State private var cancelConversationsWatcher: Cancellable?
+    @State private var conversations = [GetConversationsQuery.Data.Conversation]()
     @State private var showNewMessageDialog = false
     @State private var newMessageDestination: NewMessageDestination? = nil
     @State private var isAlertViewPresented = false
@@ -34,29 +38,9 @@ struct MessagingView: View {
                                 Label("Neue Nachricht schreiben", systemImage: "plus")
                             }
                             .popover(isPresented: $showNewMessageDialog, content: {
-                                CreateConversationView(
-                                    onSelect: { destination in
-                                        showNewMessageDialog = false
-                                        switch destination {
-                                            case .group(let group):
-                                                if let conversation = userSession.conversations.first(where: { conversation in
-                                                    conversation.groups.contains(where: { $0.id == group.id })
-                                                }) {
-                                                    routerData.selectedConversationId = conversation.id
-                                                } else {
-                                                    newMessageDestination = destination
-                                                }
-                                            case .user(let user):
-                                                if let conversation = userSession.conversations.first(where: { conversation in
-                                                    conversation.users.contains(where: { $0.id == user.id })
-                                                }) {
-                                                    routerData.selectedConversationId = conversation.id
-                                                } else {
-                                                    newMessageDestination = destination
-                                                }
-                                        }
-                                    }
-                                )
+                                CreateConversationView() {
+                                    onCreateNewMessage($0)
+                                }
                             })
                         }
                 }
@@ -66,8 +50,6 @@ struct MessagingView: View {
                     ConversationView(conversationId: conversationId)
                 } else if let newMessageDestination = newMessageDestination {
                     NewConversationView(destination: newMessageDestination)
-                } else {
-                    Text("Unterhaltung wählen")
                 }
             }
         )
@@ -78,6 +60,12 @@ struct MessagingView: View {
                 title: Text("Fehler"),
                 message: Text(lastErrorMessage ?? "Unbekannter Fehler")
             )
+        }
+        .onAppear {
+            watchConversations()
+        }
+        .onDisappear {
+            unwatchConversations()
         }
         .onChange(of: routerData.selectedConversationId, { _, _ in
             if routerData.selectedConversationId?.isEmpty != true {
@@ -101,20 +89,58 @@ struct MessagingView: View {
         }
     }
     
-    private func addItem() {
-        withAnimation {
-            // let newItem = Item(timestamp: Date())
-            // modelContext.insert(newItem)
+    func onCreateNewMessage(_ destination: NewMessageDestination) -> Void {
+        showNewMessageDialog = false
+        switch destination {
+        case .group(let group):
+            userSession.api.apollo.store.withinReadTransaction { transaction in
+                let result = try? transaction.read(query: GetConversationsQuery())
+                let conversation =
+                    result?.conversations?.first(where: { conversation in
+                        conversation?.groups?.contains { $0.id == group.id } ?? false
+                    })
+                if let conversation = conversation {
+                    routerData.selectedConversationId = conversation?.id
+                } else {
+                    newMessageDestination = destination
+                }
+            }
+        case .user(let user):
+            userSession.api.apollo.store.withinReadTransaction { transaction in
+                let result = try? transaction.read(query: GetConversationsQuery())
+                let conversation =
+                    result?.conversations?.first(where: { conversation in
+                        conversation?.users?.contains { $0.id == user.id } ?? false
+                    })
+                if let conversation = conversation {
+                    routerData.selectedConversationId = conversation?.id
+                } else {
+                    newMessageDestination = destination
+                }
+            }
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            // for index in offsets {
-                // modelContext.delete(items[index])
-            // }
-        }
+    
+    func watchConversations() -> Void {
+        cancelConversationsWatcher?.cancel()
+        cancelConversationsWatcher = userSession.api.apollo.watch(
+            query: GetConversationsQuery(),
+            resultHandler: { result in
+                switch result {
+                case .success(let graphqlResult):
+                    if let conversations = graphqlResult.data?.conversations {
+                        self.conversations = conversations.compactMap { $0 }
+                    }
+                case .failure(let error):
+                    self.lastErrorMessage = String(describing: error)
+                }
+            })
     }
+    
+    func unwatchConversations() -> Void {
+        cancelConversationsWatcher?.cancel()
+    }
+    
 }
 
 #Preview {

@@ -15,14 +15,15 @@ struct CreateConversationView: View {
     var body: some View {
         NavigationView {
             List {
-                NavigationLink(destination: 
+                NavigationLink(destination:
                                 VStack {
                     SearchUserList(onSelect: { user in
                         onSelect(.user(user))
                     })
                 }
+                    .navigationTitle("Gruppe wählen")
                 ) {
-                    Text("Nachricht an Nutzer senden")
+                    Text("Nutzer suchen")
                 }
                 
                 NavigationLink(
@@ -34,11 +35,12 @@ struct CreateConversationView: View {
                                 }
                             }
                         }
+                        .navigationTitle("Gruppe wählen")
                 ) {
-                    Text("Nachricht an Gruppe senden")
+                    Text("Gruppe wählen")
                 }
             }
-            .navigationTitle("Neue Nachricht senden")
+            .navigationTitle("Neue Nachricht")
         }
     }
 }

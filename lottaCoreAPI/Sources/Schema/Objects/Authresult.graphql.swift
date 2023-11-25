@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
-  static let Authresult = Object(
+  static let Authresult = ApolloAPI.Object(
     typename: "Authresult",
     implementedInterfaces: []
   )

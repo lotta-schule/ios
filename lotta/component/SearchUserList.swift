@@ -7,14 +7,16 @@
 
 import SwiftUI
 import LottaCoreAPI
+import Apollo
 
 struct SearchUserList: View {
     @Environment(UserSession.self) private var userSession: UserSession
     
-    var onSelect: (User) -> Void;
+    var onSelect: (SearchUsersQuery.Data.User) -> Void;
     
     @State private var searchText: String = ""
-    @State private var searchResults: [User] = []
+    @State private var searchResults: [SearchUsersQuery.Data.User] = []
+    @State private var cancelCurrentSearchQuery: Cancellable?
     
     var body: some View {
         VStack {
@@ -24,13 +26,22 @@ struct SearchUserList: View {
             )
             .padding(.horizontal, CGFloat(userSession.theme.spacing))
             List {
-                ForEach(searchResults) { user in
+                ForEach(searchResults, id: \.self.id) { user in
                     Button(action: {
                         onSelect(user)
                     }) {
                         HStack {
-                            UserAvatar(user: user)
-                            Text(user.visibleName)
+                            if let imageId = user.avatarImageFile?.id {
+                                Avatar(url:
+                                        imageId.getUrl(
+                                            for: userSession.tenant,
+                                            queryItems: [
+                                                .init(name: "width", value: "100"),
+                                                .init(name: "height", value: "100")
+                                            ]
+                                        ))
+                            }
+                            Text(UserUtil.getVisibleName(for: user))
                         }
                     }
                 }
@@ -38,27 +49,22 @@ struct SearchUserList: View {
             .listStyle(.plain)
         }
         .onChange(of: searchText) { _, _ in
-            Task {
-                await runSearch()
-            }
+            runSearch()
         }
     }
     
-    func runSearch() async -> Void {
-        do {
-            let graphqlResult = try await userSession.api.apollo.fetchAsync(
-                query: SearchUsersQuery(searchtext: searchText)
-            )
-            searchResults = graphqlResult.users?.map {
-                User(in: userSession.tenant, from: $0!)
-            } ?? []
-        } catch {
-            // TODO: Better error handling
-            print("error: \(error.localizedDescription)")
+    func runSearch() -> Void {
+        cancelCurrentSearchQuery?.cancel()
+        cancelCurrentSearchQuery = userSession.api.apollo.fetch(
+            query: SearchUsersQuery(searchtext: searchText)
+        ) { result in
+            switch result {
+            case .success(let graphqlResult):
+                self.searchResults = graphqlResult.data?.users?.compactMap { $0 } ?? []
+            case .failure(let error):
+                // TODO: Better error handling
+                print("error: \(error.localizedDescription)")
+            }
         }
     }
-}
-
-#Preview {
-    SearchUserList(onSelect: { print($0) })
 }

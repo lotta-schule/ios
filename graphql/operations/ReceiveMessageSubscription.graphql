@@ -4,6 +4,12 @@ subscription ReceiveMessage {
     content
     insertedAt
     updatedAt
+    files {
+      id
+      filename
+      fileType
+      filesize
+    }
     user {
       id
       name

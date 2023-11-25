@@ -7,17 +7,22 @@
 
 import SwiftUI
 import Apollo
+import LottaCoreAPI
+import Sentry
 
 struct MainView : View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(UserSession.self) private var userSession
     
+    @State private var unreadMessagesCount = 0
+    @State private var isSubscribingToMessages = false
     @State private var cancelMessageSubscription: Cancellable?
+    @State private var cancelConversationsQueryWatch: Cancellable?
     
     var body: some View {
         TabView {
             MessagingView()
-                .badge(userSession.unreadMessageCount)
+                .badge(unreadMessagesCount)
                 .tabItem {
                     Label("Nachrichten", systemImage: "message")
                 }
@@ -34,21 +39,121 @@ struct MainView : View {
             switch scenePhase {
             case .active:
                 Task {
-                    try? await userSession.subscribeToMessages()
+                    try? await subscribeToMessages()
                 }
             case .background, .inactive:
-                userSession.unsubscribeToMessages()
+                unsubscribeToMessages()
             default:
                 print("Unknown phase \(phase)")
             }
         })
         .onAppear {
             Task {
-                try? await userSession.subscribeToMessages()
+                try? await subscribeToMessages()
             }
+            watchUnreadMessagesCount()
         }
         .onDisappear {
-            userSession.unsubscribeToMessages()
+            unsubscribeToMessages()
+            unwatchUnreadMessagesCount()
         }
+    }
+    
+    func subscribeToMessages() async throws -> Void {
+        if isSubscribingToMessages {
+            throw UserSessionError.isAlreadySubscribing
+        }
+        isSubscribingToMessages = true
+        defer {
+            isSubscribingToMessages = false
+        }
+        if userSession.authInfo.needsRenew {
+            _ = try await userSession.authInfo.renewAsync()
+        }
+        cancelMessageSubscription = userSession.api.apollo.subscribe(
+            subscription: ReceiveMessageSubscription()
+        ) { response in
+            switch response {
+            case .success(let graphqlResult):
+                userSession.api.apollo.store.withinReadWriteTransaction { transaction in
+                    do {
+                        if let conversationId = graphqlResult.data?.message?.conversation?.id {
+                            // Add conversation
+                            let getConversationsQueryCache = try transaction.read(query: GetConversationsQuery())
+                            let addConversationCacheMutation = AddConversationLocalCacheMutation()
+                            
+                            guard let _conversationFieldData = graphqlResult.data?.message?.conversation?._fieldData else {
+                                return
+                            }
+                            var newConversation = AddConversationLocalCacheMutation.Data.Conversation(
+                                _fieldData: _conversationFieldData
+                            )
+                            newConversation.messages = [
+                                AddConversationLocalCacheMutation.Data.Conversation.Message(id: graphqlResult.data?.message?.id)
+                            ]
+                            
+                            try transaction.update(addConversationCacheMutation) { (data: inout AddConversationLocalCacheMutation.Data) in
+                                if let i = getConversationsQueryCache.conversations?.firstIndex(where: { $0?.id == conversationId }) {
+                                    // when currently looking at the conversation, we do not want to change the counter
+                                    if RouterData.shared.selectedConversationId != graphqlResult.data?.message?.conversation?.id {
+                                        data.conversations?[i]?.unreadMessages = newConversation.unreadMessages
+                                    }
+                                    data.conversations?[i]?.updatedAt = newConversation.updatedAt
+                                    // data.conversations?[i]?.messages = data.conversations?[i]?.messages?.append(contentsOf: newConversation.messages ?? [])
+                                } else {
+                                    data.conversations?.append(newConversation)
+                                }
+                            }
+                            
+                            // Add Message
+                            let addMessageCacheMutation = AddMessageToConversationLocalCacheMutation(id: conversationId)
+                            
+                            guard let _addMessageFieldData = graphqlResult.data?.message?._fieldData else {
+                                return
+                            }
+                            let newMessage = AddMessageToConversationLocalCacheMutation.Data.Conversation.Message(_fieldData: _addMessageFieldData)
+                            
+                            try transaction.update(addMessageCacheMutation) { (data: inout AddMessageToConversationLocalCacheMutation.Data) in
+                                data.conversation?.messages?.append(newMessage)
+                            }
+                        }
+                    } catch {
+                        print("Fehler: \(String(describing: error))")
+                        throw error
+                    }
+                }
+            case .failure(let error):
+                SentrySDK.capture(error: error)
+                print("Error subscribing: \(error)")
+            }
+        }
+    }
+    
+    func unsubscribeToMessages() -> Void {
+        cancelMessageSubscription?.cancel()
+    }
+    
+    func watchUnreadMessagesCount() -> Void {
+        cancelConversationsQueryWatch?.cancel()
+        cancelConversationsQueryWatch =
+            userSession.api.apollo.watch(
+                query: GetConversationsQuery(
+            )) { result in
+                switch result {
+                case .success(let graphqlResult):
+                    if let conversationsData = graphqlResult.data?.conversations {
+                        self.unreadMessagesCount = conversationsData.reduce(0, { partialResult, conversation in
+                            partialResult + (conversation?.unreadMessages ?? 0)
+                        })
+                    }
+                case .failure(let error):
+                    // TDOO: Fehlerbehandlung
+                    print("ERROR: \(error)")
+                }
+            }
+    }
+    
+    func unwatchUnreadMessagesCount() -> Void {
+        cancelConversationsQueryWatch?.cancel()
     }
 }

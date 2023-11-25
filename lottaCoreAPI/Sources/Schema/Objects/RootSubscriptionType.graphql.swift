@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
-  static let RootSubscriptionType = Object(
+  static let RootSubscriptionType = ApolloAPI.Object(
     typename: "RootSubscriptionType",
     implementedInterfaces: []
   )

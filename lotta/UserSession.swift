@@ -54,10 +54,6 @@ enum UserSessionError : Error {
             }
             self.conversations[i].updatedAt = conversation.updatedAt
             
-            api.apollo.store.withinReadWriteTransaction { transaction in
-                
-            }
-            
         } else {
             self.conversations.insert(conversation, at: 0)
             addMessage(message, toConversation: conversation)
@@ -128,6 +124,7 @@ enum UserSessionError : Error {
         }
     }
     func forceLoadConversations() async throws -> Void {
+        try? await api.apollo.clearCacheAsync()
         let result = try await api.apollo.fetchAsync(
             query: GetConversationsQuery(),
             cachePolicy: .fetchIgnoringCacheData
@@ -143,67 +140,7 @@ enum UserSessionError : Error {
         ModelData.shared.setApplicationBadgeNumber()
     }
     
-    func sendMessage(_ content: String, to user: User) async throws -> (Message, Conversation) {
-            let graphqlResult = try await api.apollo.performAsync(
-                mutation: SendMessageMutation(
-                    message: LottaCoreAPI.MessageInput(
-                        content: GraphQLNullable(stringLiteral: content),
-                        recipientGroup: nil,
-                        recipientUser: GraphQLNullable(SelectUserInput(id: GraphQLNullable(stringLiteral: user.id)))
-                    )
-                )
-            )
-        guard let messageData = graphqlResult.data?.message else {
-            throw UserSessionError.generic("Invalid Message")
-        }
-        guard let conversationData = graphqlResult.data?.message?.conversation else {
-            throw UserSessionError.generic("Invalid conversation")
-        }
-        let message = Message(in: tenant, from: messageData)
-        let conversation =
-            conversations.first(where: { $0.id == conversationData.id }) ??
-            Conversation(
-                in: tenant,
-                from: conversationData,
-                withUsers: [user, self.user],
-                andGroups: []
-            )
-        if !conversations.contains(where: { $0.id == conversation.id }) {
-            conversations.append(conversation)
-        }
-        return (message, conversation)
-    }
     
-    func sendMessage(_ content: String, to group: Group) async throws -> (Message, Conversation) {
-            let graphqlResult = try await api.apollo.performAsync(
-                mutation: SendMessageMutation(
-                    message: LottaCoreAPI.MessageInput(
-                        content: GraphQLNullable(stringLiteral: content),
-                        recipientGroup: GraphQLNullable(SelectUserGroupInput(id: GraphQLNullable(stringLiteral: group.id))),
-                        recipientUser: nil
-                    )
-                )
-            )
-        guard let messageData = graphqlResult.data?.message else {
-            throw UserSessionError.generic("Invalid Message")
-        }
-        guard let conversationData = graphqlResult.data?.message?.conversation else {
-            throw UserSessionError.generic("Invalid conversation")
-        }
-        let message = Message(in: tenant, from: messageData)
-        let conversation =
-            conversations.first(where: { $0.id == conversationData.id }) ??
-            Conversation(
-                in: tenant,
-                from: conversationData,
-                withUsers: [],
-                andGroups: [group]
-            )
-        if !conversations.contains(where: { $0.id == conversation.id }) {
-            conversations.append(conversation)
-        }
-        return (message, conversation)
-    }
     
     func loadConversation(_ conversation: Conversation) async throws -> Void {
         let result = try await api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id))
@@ -225,38 +162,6 @@ enum UserSessionError : Error {
         ModelData.shared.setApplicationBadgeNumber()
     }
     
-    var isSubscribingToMessages = false
-    var cancelMessageSubscription: Cancellable?
-    func subscribeToMessages() async throws -> Void {
-        if isSubscribingToMessages {
-            throw UserSessionError.isAlreadySubscribing
-        }
-        isSubscribingToMessages = true
-        defer {
-            isSubscribingToMessages = false
-        }
-        if authInfo.needsRenew {
-            _ = try await authInfo.renewAsync()
-        }
-        cancelMessageSubscription = api.apollo.subscribe(
-            subscription: ReceiveMessageSubscription()
-        ) { response in
-            switch response {
-            case .success(let graphqlResult):
-                let conversation = Conversation(in: self.tenant, from: graphqlResult.data!.message!.conversation!)
-                let message = Message(in: self.tenant, from: graphqlResult.data!.message!)
-                self.addMessage(message, toConversation: conversation)
-                ModelData.shared.setApplicationBadgeNumber()
-            case .failure(let error):
-                SentrySDK.capture(error: error)
-                print("Error subscribing: \(error)")
-            }
-        }
-    }
-    
-    func unsubscribeToMessages() -> Void {
-        cancelMessageSubscription?.cancel()
-    }
     
     func registerDevice(token: Data) async throws -> Void {
         let graphqlResult = try await api.apollo.performAsync(

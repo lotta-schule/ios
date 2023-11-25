@@ -11,20 +11,23 @@ import LottaCoreAPI
 struct ConversationListItem: View {
     @Environment(UserSession.self) private var userSession
     
-    var conversationId: ID
+    var conversation: GetConversationsQuery.Data.Conversation
     
     var excluding: User?
     
     var body: some View {
-        if let conversation = userSession.conversations.first(where: { $0.id == conversationId }) {
-            HStack {
-                Avatar(url: conversation.getImageUrl(excluding: excluding))
-                    .scaledToFit()
-                Text(conversation.getName(excluding: excluding))
-                    .badge(conversation.unreadMessages ?? 0)
-            }
-        } else {
-            EmptyView()
+        HStack {
+            Avatar(
+                url: ConversationUtil.getImage(
+                    for: conversation,
+                    excludingUserId: userSession.user.id,
+                    in: userSession.tenant
+                )
+            )
+            .scaledToFit()
+            Text(ConversationUtil.getTitle(for: conversation, excludingUserId: userSession.user.id))
+                .badge(conversation.unreadMessages ?? 0)
         }
     }
+    
 }

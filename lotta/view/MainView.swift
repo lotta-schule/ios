@@ -32,9 +32,6 @@ struct MainView : View {
                 }
         }
         .tint(userSession.theme.primaryColor)
-        .onChange(of: userSession, initial: true) { _, _ in
-            userSession.loadConversations()
-        }
         .onChange(of: scenePhase, initial: true, { _, phase in
             switch scenePhase {
             case .active:

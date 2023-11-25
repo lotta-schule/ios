@@ -43,23 +43,6 @@ enum UserSessionError : Error {
         self.tenant.customTheme
     }
     
-    func addMessage(_ message: Message, toConversation conversation: Conversation) -> Void {
-        let conversationIndex = self.conversations.firstIndex(where: { $0.id == conversation.id })
-        if let i = conversationIndex {
-            if !self.conversations[i].messages.contains(where: { $0.id == message.id }) {
-                self.conversations[i].messages.append(message)
-            }
-            if let unreadMessages = conversation.unreadMessages {
-                self.conversations[i].unreadMessages = unreadMessages
-            }
-            self.conversations[i].updatedAt = conversation.updatedAt
-            
-        } else {
-            self.conversations.insert(conversation, at: 0)
-            addMessage(message, toConversation: conversation)
-        }
-    }
-    
     // API Helper Functions
     
     func refetchUserData() async -> AuthenticationResult {
@@ -99,30 +82,6 @@ enum UserSessionError : Error {
         }
     }
     
-    func loadConversations() -> Void {
-        api.apollo.fetch(
-            query: GetConversationsQuery(),
-            cachePolicy: .returnCacheDataAndFetch
-        ) { result in
-            switch result {
-                case .success(let graphqlResult):
-                    if let conversations =
-                        graphqlResult.data?.conversations?.filter({ conversation in
-                            conversation != nil
-                        }).map({ Conversation(in: self.tenant, from: $0!) }) {
-                        self.conversations = conversations.sorted(by: {
-                            $0.updatedAt.compare($1.updatedAt) == .orderedDescending
-                        })
-                    }
-                    if graphqlResult.source == .server {
-                        ModelData.shared.setApplicationBadgeNumber()
-                    }
-                    
-                case .failure(let error):
-                    print(error)
-            }
-        }
-    }
     func forceLoadConversations() async throws -> Void {
         try? await api.apollo.clearCacheAsync()
         let result = try await api.apollo.fetchAsync(
@@ -139,29 +98,6 @@ enum UserSessionError : Error {
         }
         ModelData.shared.setApplicationBadgeNumber()
     }
-    
-    
-    
-    func loadConversation(_ conversation: Conversation) async throws -> Void {
-        let result = try await api.apollo.fetchAsync(query: GetConversationQuery(id: conversation.id))
-        if let conversationData = result.conversation {
-            let loadedConversation = Conversation(in: tenant, from: conversationData)
-            addConversation(loadedConversation)
-        }
-    }
-    
-    func addConversation(_ conversation: Conversation) -> Void {
-        if let i = self.conversations.firstIndex(where: { $0.id == conversation.id }) {
-            self.conversations[i] = conversation
-        } else {
-            self.conversations.append(conversation)
-        }
-        self.conversations = conversations.sorted(by: {
-            $0.updatedAt.compare($1.updatedAt) == .orderedDescending
-        })
-        ModelData.shared.setApplicationBadgeNumber()
-    }
-    
     
     func registerDevice(token: Data) async throws -> Void {
         let graphqlResult = try await api.apollo.performAsync(

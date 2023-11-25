@@ -32,7 +32,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
                     switch result {
                         case .success(let graphQLResult):
                             let conversation = Conversation(in: session.tenant, from: graphQLResult.data!.conversation!)
-                            session.addConversation(conversation)
                             ModelData.shared.setApplicationBadgeNumber()
                             completionHandler(.newData)
                         case .failure(let error):

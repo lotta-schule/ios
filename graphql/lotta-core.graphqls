@@ -334,7 +334,7 @@ type RootQueryType {
   calendar(days: Int, url: String!): [CalendarEvent]
   categories: [Category]
   contentModuleResults(contentModuleId: ID!): [ContentModuleResult]
-  conversation(id: ID!): Conversation
+  conversation(id: ID!, markAsRead: Boolean): Conversation
   conversations: [Conversation]
   currentUser: User
   devices: [Device]

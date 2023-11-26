@@ -39,9 +39,6 @@ struct RootView: View {
                 isShowLoginView = true
             }
         }
-        .onChange(of: modelData.userSessions) {
-            modelData.setApplicationBadgeNumber()
-        }
         .onAppear {
             Task {
                 await modelData.initializeSessions()

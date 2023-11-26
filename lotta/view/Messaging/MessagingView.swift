@@ -43,7 +43,8 @@ struct MessagingView: View {
                                 }
                             })
                         }
-                }
+                    }
+                    .navigationTitle("Lotta - Nachrichten")
             },
             detail: {
                 if let conversationId = routerData.selectedConversationId, !conversationId.isEmpty {

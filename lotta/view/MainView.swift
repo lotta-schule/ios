@@ -32,6 +32,11 @@ struct MainView : View {
                 }
         }
         .tint(userSession.theme.primaryColor)
+        .onChange(of: unreadMessagesCount, { _, _ in
+            Task {
+                await ModelData.shared.setApplicationBadgeNumber()
+            }
+        })
         .onChange(of: scenePhase, initial: true, { _, phase in
             switch scenePhase {
             case .active:
@@ -72,7 +77,7 @@ struct MainView : View {
         ) { response in
             switch response {
             case .success(let graphqlResult):
-                userSession.api.apollo.store.withinReadWriteTransaction { transaction in
+                userSession.api.apollo.store.withinReadWriteTransaction({ transaction in
                     do {
                         if let conversationId = graphqlResult.data?.message?.conversation?.id {
                             // Add conversation
@@ -118,6 +123,7 @@ struct MainView : View {
                         print("Fehler: \(String(describing: error))")
                         throw error
                     }
+                }) { _result in
                 }
             case .failure(let error):
                 SentrySDK.capture(error: error)

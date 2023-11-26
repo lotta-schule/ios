@@ -7,16 +7,24 @@ public class GetConversationQuery: GraphQLQuery {
   public static let operationName: String = "GetConversationQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query GetConversationQuery($id: ID!) { conversation(id: $id) { __typename id updatedAt unreadMessages groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } messages { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize } user { __typename id name nickname avatarImageFile { __typename id } } } } }"#
+      #"query GetConversationQuery($id: ID!, $markAsRead: Boolean) { conversation(id: $id, markAsRead: $markAsRead) { __typename id updatedAt unreadMessages groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id } } messages { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize } user { __typename id name nickname avatarImageFile { __typename id } } } } }"#
     ))
 
   public var id: ID
+  public var markAsRead: GraphQLNullable<Bool>
 
-  public init(id: ID) {
+  public init(
+    id: ID,
+    markAsRead: GraphQLNullable<Bool>
+  ) {
     self.id = id
+    self.markAsRead = markAsRead
   }
 
-  public var __variables: Variables? { ["id": id] }
+  public var __variables: Variables? { [
+    "id": id,
+    "markAsRead": markAsRead
+  ] }
 
   public struct Data: LottaCoreAPI.SelectionSet {
     public let __data: DataDict
@@ -24,7 +32,10 @@ public class GetConversationQuery: GraphQLQuery {
 
     public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("conversation", Conversation?.self, arguments: ["id": .variable("id")]),
+      .field("conversation", Conversation?.self, arguments: [
+        "id": .variable("id"),
+        "markAsRead": .variable("markAsRead")
+      ]),
     ] }
 
     public var conversation: Conversation? { __data["conversation"] }

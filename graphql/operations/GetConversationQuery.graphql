@@ -1,5 +1,5 @@
-query GetConversationQuery($id: ID!) {
-  conversation(id: $id) {
+query GetConversationQuery($id: ID!, $markAsRead: Boolean) {
+  conversation(id: $id, markAsRead: $markAsRead) {
     id
     updatedAt
     unreadMessages

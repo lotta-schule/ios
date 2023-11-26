@@ -33,12 +33,6 @@ enum UserSessionError : Error {
         self.conversations = conversations
     }
     
-    var unreadMessageCount: Int {
-        return self.conversations.reduce(into: 0) { partialResult, conversation in
-            partialResult += conversation.unreadMessages ?? 0
-        }
-    }
-    
     var theme: Theme {
         self.tenant.customTheme
     }
@@ -96,7 +90,6 @@ enum UserSessionError : Error {
                 $0.updatedAt.compare($1.updatedAt) == .orderedDescending
             })
         }
-        ModelData.shared.setApplicationBadgeNumber()
     }
     
     func registerDevice(token: Data) async throws -> Void {
@@ -109,7 +102,7 @@ enum UserSessionError : Error {
                     platformId: "ios/\(DeviceIdentificationService.shared.uniquePlatformIdentifier ?? "0")",
                     pushToken: GraphQLNullable(stringLiteral: "apns/\(token.hexEncodedString)")
                 )
-            )
+            ), queue: .global(qos: .background)
         )
         
         deviceId = graphqlResult.data?.device?.id
@@ -127,6 +120,13 @@ enum UserSessionError : Error {
                 self.deviceId = nil
             }
         }
+    }
+    
+    func getUnreadMessagesCount() async throws -> Int {
+        let data = try await api.apollo.loadAsync(operation: GetConversationsQuery()).data
+        return data?.conversations?.reduce(0, { partialResult, conversation in
+            partialResult + (conversation?.unreadMessages ?? 0)
+        }) ?? 0
     }
     
     static func createFromCredentials(onTenantSlug slug: String, withUsername username: String, andPassword password: String) async throws -> UserSession {

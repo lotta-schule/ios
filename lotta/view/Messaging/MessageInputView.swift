@@ -120,7 +120,7 @@ struct MessageInputView : View {
                     }
                     
                     // Now add conversation details which lists the messages
-                    let getConversationQueryCache = try transaction.read(query: GetConversationQuery(id: conversationId))
+                    let getConversationQueryCache = try transaction.read(query: GetConversationQuery(id: conversationId, markAsRead: true))
                     let getConversationUpdateQuery = AddMessageToConversationLocalCacheMutation(id: conversationId)
                     
                     if getConversationQueryCache.conversation?.messages?.contains(where: { $0.id == messageId }) != true {

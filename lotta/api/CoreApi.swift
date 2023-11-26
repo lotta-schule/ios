@@ -16,8 +16,8 @@ import LottaCoreAPI
 import KeychainSwift
 import ApolloWebSocket
 
-let LOTTA_API_HOST = "192.168.2.110:4000"
-let USE_SECURE_CONNECTION = false
+let LOTTA_API_HOST = "core.staging.lotta.schule"
+let USE_SECURE_CONNECTION = true
 let LOTTA_API_HTTP_URL = URL(string: "\(USE_SECURE_CONNECTION ? "https" : "http")://\(LOTTA_API_HOST)")!
 let LOTTA_API_WEBSOCKET_URL = URL(string: "\(USE_SECURE_CONNECTION ? "wss" : "ws")://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
 
@@ -146,9 +146,9 @@ extension ApolloClient {
         })
       }
   
-    func performAsync<Mutation: GraphQLMutation>(mutation: Mutation) async throws -> GraphQLResult<Mutation.Data> {
+    func performAsync<Mutation: GraphQLMutation>(mutation: Mutation, queue: DispatchQueue = .main) async throws -> GraphQLResult<Mutation.Data> {
         return try await withCheckedThrowingContinuation { continuation in
-            perform(mutation: mutation) { result in
+            perform(mutation: mutation, queue: queue) { result in
                 switch result {
                 case .success(let value):
                     continuation.resume(returning: value)
@@ -163,6 +163,14 @@ extension ApolloClient {
     func clearCacheAsync() async throws -> Void {
         return try await withCheckedThrowingContinuation { continuation in
             clearCache { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    func loadAsync<Operation: GraphQLOperation>(operation: Operation) async throws -> GraphQLResult<Operation.Data> {
+        return try await withCheckedThrowingContinuation { continuation in
+            store.load(operation) { result in
                 continuation.resume(with: result)
             }
         }

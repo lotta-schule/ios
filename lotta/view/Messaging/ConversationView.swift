@@ -42,7 +42,7 @@ struct ConversationView : View {
     func watchConversationQuery(id: ID) -> Void {
         cancelConversationQueryWatch?.cancel()
         cancelConversationQueryWatch = userSession.api.apollo.watch(
-            query: GetConversationQuery(id: id)
+            query: GetConversationQuery(id: id, markAsRead: true)
         ) { result in
                 switch result {
                 case .success(let graphqlResult):

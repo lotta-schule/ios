@@ -101,11 +101,13 @@ enum AuthenticationError: Error {
         }
     }
     
-    func setApplicationBadgeNumber() -> Void {
-        let newBadgeNumber = userSessions.reduce(into: 0) { partialResult, session in
-            partialResult += session.unreadMessageCount
+    func setApplicationBadgeNumber() async -> Void {
+        var newBadgeNumber = 0
+        for session in userSessions {
+            let unreadMessages = (try? await session.getUnreadMessagesCount()) ?? 0
+            newBadgeNumber += unreadMessages
         }
-        UNUserNotificationCenter.current().setBadgeCount(newBadgeNumber)
+        try? await UNUserNotificationCenter.current().setBadgeCount(newBadgeNumber)
     }
     
     var currentSession: UserSession? {

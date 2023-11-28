@@ -29,7 +29,7 @@ import LottaCoreAPI
         self.users = users
         self.groups = groups
         self.messages = messages.sorted(by: { msg1, msg2 in
-            msg1.insertedAt.compare(msg2.insertedAt) == .orderedAscending
+            msg1.insertedAt.compare(msg2.insertedAt) == .orderedDescending
         })
         self.updatedAt = updatedAt
         self.unreadMessages = unreadMessages

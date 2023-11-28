@@ -40,7 +40,7 @@ query GetConversationQuery($id: ID!, $markAsRead: Boolean) {
 
 query AddMessageToConversationLocalCacheMutation($id: ID!)
 @apollo_client_ios_localCacheMutation {
-  conversation(id: $id) {
+  conversation(id: $id, markAsRead: true) {
     id
     updatedAt
     unreadMessages

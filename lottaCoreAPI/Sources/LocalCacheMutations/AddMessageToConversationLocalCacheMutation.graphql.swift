@@ -20,7 +20,10 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
 
     public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("conversation", Conversation?.self, arguments: ["id": .variable("id")]),
+      .field("conversation", Conversation?.self, arguments: [
+        "id": .variable("id"),
+        "markAsRead": true
+      ]),
     ] }
 
     public var conversation: Conversation? {

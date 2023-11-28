@@ -116,7 +116,9 @@ struct MainView : View {
                             let newMessage = AddMessageToConversationLocalCacheMutation.Data.Conversation.Message(_fieldData: _addMessageFieldData)
                             
                             try transaction.update(addMessageCacheMutation) { (data: inout AddMessageToConversationLocalCacheMutation.Data) in
-                                data.conversation?.messages?.append(newMessage)
+                                if data.conversation?.messages?.contains(where: { $0.id == newMessage.id }) != true {
+                                    data.conversation?.messages?.append(newMessage)
+                                }
                             }
                         }
                     } catch {

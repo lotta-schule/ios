@@ -21,7 +21,7 @@ struct CreateConversationView: View {
                         onSelect(.user(user))
                     })
                 }
-                    .navigationTitle("Gruppe wählen")
+                    .navigationTitle("Nutzer wählen")
                 ) {
                     Text("Nutzer suchen")
                 }

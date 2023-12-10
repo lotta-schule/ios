@@ -26,7 +26,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         UNUserNotificationCenter.current().delegate = PushNotificationService.shared
-        PushNotificationService.shared.startReceivingNotifications()
         return true
     }
 }

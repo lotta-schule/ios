@@ -42,12 +42,37 @@ struct ConversationView : View {
     func watchConversationQuery(id: ID) -> Void {
         cancelConversationQueryWatch?.cancel()
         cancelConversationQueryWatch = userSession.api.apollo.watch(
-            query: GetConversationQuery(id: id, markAsRead: true)
+            query: GetConversationQuery(id: id, markAsRead: true),
+            cachePolicy: .returnCacheDataAndFetch
         ) { result in
                 switch result {
                 case .success(let graphqlResult):
                     if let conversationData = graphqlResult.data?.conversation {
                         self.conversation = conversationData
+                        userSession.api.apollo.store.withinReadWriteTransaction { transaction in
+                            // add / update the conversation to the conversations list
+                            let getConversationsQueryCache = try transaction.read(query: GetConversationsQuery())
+                            let addConversationCacheMutation = AddConversationLocalCacheMutation()
+                            
+                            try transaction.update(addConversationCacheMutation) { (data: inout AddConversationLocalCacheMutation.Data) in
+                                let newConversation = AddConversationLocalCacheMutation.Data.Conversation(
+                                    _fieldData: conversationData._fieldData
+                                )
+                                if let i = getConversationsQueryCache.conversations?.firstIndex(where: { $0?.id == conversationId }) {
+                                    // conversation already is in our cache. Just update with the new message
+                                    data.conversations?[i]?.updatedAt = newConversation.updatedAt
+                                    data.conversations?[i]?.unreadMessages = newConversation.unreadMessages
+                                } else {
+                                    // conversation is new, add it to the cache
+                                    data.conversations?.append(newConversation)
+                                    // newConversation.messages = [AddConversationLocalCacheMutation.Data.Conversation.Message(id: messageId)]
+                                }
+                            }
+                            Task {
+                                await ModelData.shared.setApplicationBadgeNumber()
+                            }
+                            
+                        }
                     }
                 case .failure(let error):
                     // TDOO: Fehlerbehandlung

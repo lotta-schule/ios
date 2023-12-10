@@ -22,7 +22,6 @@ enum UserSessionError : Error {
     private(set) var authInfo: AuthInfo
     private(set) var user: User
     private(set) var api: CoreApi
-    private(set) var conversations = [Conversation]()
     private(set) var deviceId: ID?
     
     init(tenant: Tenant, authInfo: AuthInfo, user: User) { // TODO: Could default to create user from authToken.accessToken
@@ -30,7 +29,6 @@ enum UserSessionError : Error {
         self.authInfo = authInfo
         self.user = user
         self.api = CoreApi(withTenantSlug: tenant.slug, tenantId: tenant.id, andLoginSession: authInfo)
-        self.conversations = conversations
     }
     
     var theme: Theme {
@@ -82,14 +80,6 @@ enum UserSessionError : Error {
             query: GetConversationsQuery(),
             cachePolicy: .fetchIgnoringCacheData
         )
-        if let conversations =
-            result.conversations?.filter({ conversation in
-                conversation != nil
-            }).map({ Conversation(in: tenant, from: $0!) }) {
-            self.conversations = conversations.sorted(by: {
-                $0.updatedAt.compare($1.updatedAt) == .orderedDescending
-            })
-        }
     }
     
     func registerDevice(token: Data) async throws -> Void {

@@ -39,6 +39,7 @@ enum AuthenticationError: Error {
             }
         }
         self.userSessions = await UserSession.readFromDisk()
+        PushNotificationService.shared.startReceivingNotifications()
         self.initialized = true
     }
     
@@ -74,6 +75,7 @@ enum AuthenticationError: Error {
         })
         userSessions.append(session)
         _ = self.setSession(byTenantId: session.tenant.id)
+        PushNotificationService.shared.startReceivingNotifications()
     }
     
     func remove(session: UserSession) -> Void {

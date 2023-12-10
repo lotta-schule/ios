@@ -15,6 +15,7 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: Data) async -> Void {
         for session in ModelData.shared.userSessions {
+            print("deviceToken: \(deviceToken.hexEncodedString)")
             do {
                 try await session.registerDevice(token: deviceToken)
             } catch {
@@ -25,21 +26,21 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     
     func startReceivingNotifications() -> Void {
         let receiveMessageCategory = UNNotificationCategory(identifier: "receive_message", actions: [], intentIdentifiers: [])
-        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory])
+        let readConversationCategory = UNNotificationCategory(identifier: "read_conversation", actions: [], intentIdentifiers: [])
+        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory, readConversationCategory])
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
-            case .notDetermined:
+            case .notDetermined, .authorized, .provisional:
                 self.requestPermission()
-            case .authorized, .provisional:
-                // Let's see ...
-                print("OK you are allowed to bother me.")
             default:
+                print("Not asking for permission because authorizationStatus is: \(settings.authorizationStatus)")
                 break
             }
         }
     }
     
     func didReceiveRemoteNotification(userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("Did receive remote notification: \(userInfo)")
         switch UIApplication.shared.applicationState {
         case .active:
             if let tenantId = userInfo["tenant_id"] as? Int,

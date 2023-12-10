@@ -20,12 +20,10 @@
 		2E0268A52AB900DC00C18681 /* Tenant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268A42AB900DC00C18681 /* Tenant.swift */; };
 		2E0268AF2AB90A2400C18681 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268AE2AB90A2400C18681 /* ModelData.swift */; };
 		2E12B3E72ABDA5DB00555B9D /* ConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */; };
-		2E12B3E92ABDDF2100555B9D /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3E82ABDDF2100555B9D /* Conversation.swift */; };
 		2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EA2ABDE05700555B9D /* LottaFile.swift */; };
 		2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EC2ABDE11600555B9D /* Group.swift */; };
 		2E12B3EF2ABDE6A100555B9D /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EE2ABDE6A100555B9D /* Avatar.swift */; };
 		2E12B3F12ABDEBF000555B9D /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F02ABDEBF000555B9D /* MessageList.swift */; };
-		2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F22ABDEE9B00555B9D /* Message.swift */; };
 		2E12B3F52ABDF4F900555B9D /* MessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F42ABDF4F900555B9D /* MessageRow.swift */; };
 		2E12B3F72ABDF56D00555B9D /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */; };
 		2E12B3F92ABDF74200555B9D /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3F82ABDF74200555B9D /* MessageInputView.swift */; };
@@ -40,6 +38,7 @@
 		2E31D74A2AF64D0100E369CD /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		2E31D74B2AF64D0100E369CD /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		2E3952F32AC346810013465C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3952F22AC346810013465C /* MainView.swift */; };
+		2E3C5E1E2B257A7A00B74BD0 /* String+toDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3C5E1D2B257A7A00B74BD0 /* String+toDate.swift */; };
 		2E4191A32ACC5B5800FD0FDA /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191A22ACC5B5800FD0FDA /* Apollo */; };
 		2E4191A52ACC5B5800FD0FDA /* ApolloAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191A42ACC5B5800FD0FDA /* ApolloAPI */; };
 		2E4191A72ACC5B5800FD0FDA /* ApolloWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 2E4191A62ACC5B5800FD0FDA /* ApolloWebSocket */; };
@@ -106,12 +105,10 @@
 		2E0268A42AB900DC00C18681 /* Tenant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tenant.swift; sourceTree = "<group>"; };
 		2E0268AE2AB90A2400C18681 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsList.swift; sourceTree = "<group>"; };
-		2E12B3E82ABDDF2100555B9D /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		2E12B3EA2ABDE05700555B9D /* LottaFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottaFile.swift; sourceTree = "<group>"; };
 		2E12B3EC2ABDE11600555B9D /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		2E12B3EE2ABDE6A100555B9D /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		2E12B3F02ABDEBF000555B9D /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
-		2E12B3F22ABDEE9B00555B9D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2E12B3F42ABDF4F900555B9D /* MessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRow.swift; sourceTree = "<group>"; };
 		2E12B3F62ABDF56D00555B9D /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		2E12B3F82ABDF74200555B9D /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
@@ -124,6 +121,7 @@
 		2E31D7462AF5343800E369CD /* ThemeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
 		2E31D7482AF5627A00E369CD /* PersistedUserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedUserSession.swift; sourceTree = "<group>"; };
 		2E3952F22AC346810013465C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2E3C5E1D2B257A7A00B74BD0 /* String+toDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+toDate.swift"; sourceTree = "<group>"; };
 		2E4191A92ACC621F00FD0FDA /* Data+hexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexString.swift"; sourceTree = "<group>"; };
 		2E4191AB2ACC913000FD0FDA /* DeviceIdentificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIdentificationService.swift; sourceTree = "<group>"; };
 		2E4C2E8C2ABEC6C800F846E9 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
@@ -260,10 +258,8 @@
 		2E0268A62AB900E400C18681 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				2E12B3E82ABDDF2100555B9D /* Conversation.swift */,
 				2E12B3EC2ABDE11600555B9D /* Group.swift */,
 				2E12B3EA2ABDE05700555B9D /* LottaFile.swift */,
-				2E12B3F22ABDEE9B00555B9D /* Message.swift */,
 				2E0268A42AB900DC00C18681 /* Tenant.swift */,
 				2E98A7FB2ABCE079000BB6CF /* User.swift */,
 				2E2D829F2AC743B800CC3E1F /* Theme.swift */,
@@ -315,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				2E4191A92ACC621F00FD0FDA /* Data+hexString.swift */,
+				2E3C5E1D2B257A7A00B74BD0 /* String+toDate.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -559,6 +556,7 @@
 				2E9B01AC2B11AA52005508B3 /* RemoveNullsFromDict.swift in Sources */,
 				2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */,
 				2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */,
+				2E3C5E1E2B257A7A00B74BD0 /* String+toDate.swift in Sources */,
 				2E3952F32AC346810013465C /* MainView.swift in Sources */,
 				2EA434312B094622000D8666 /* CreateConversationView.swift in Sources */,
 				2E4191AC2ACC913000FD0FDA /* DeviceIdentificationService.swift in Sources */,
@@ -573,7 +571,6 @@
 				2E12B3EF2ABDE6A100555B9D /* Avatar.swift in Sources */,
 				2E12B3F52ABDF4F900555B9D /* MessageRow.swift in Sources */,
 				2E02686C2AB88F4500C18681 /* lottaApp.swift in Sources */,
-				2E12B3E92ABDDF2100555B9D /* Conversation.swift in Sources */,
 				2E5460A02AEF162D00040149 /* RouterData.swift in Sources */,
 				2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */,
 				2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */,
@@ -597,7 +594,6 @@
 				2E12B3F72ABDF56D00555B9D /* MessageBubble.swift in Sources */,
 				2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */,
 				2E02689B2AB8936300C18681 /* CoreApi.swift in Sources */,
-				2E12B3F32ABDEE9B00555B9D /* Message.swift in Sources */,
 				2E12B3F12ABDEBF000555B9D /* MessageList.swift in Sources */,
 				2E6B04C82ACB55F300A10052 /* RefreshTokenInterceptor.swift in Sources */,
 				2E6B04C12ACB47AE00A10052 /* AuthorizationInterceptor.swift in Sources */,

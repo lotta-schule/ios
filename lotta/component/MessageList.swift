@@ -17,7 +17,7 @@ struct MessageList : View {
     var body: some View {
         ScrollViewReader { scrollViewReader in
             ScrollView {
-                ForEach(messages, id: \.id.unsafelyUnwrapped) { message in
+                ForEach(sortedMessages(), id: \.id.unsafelyUnwrapped) { message in
                     MessageRow(
                         message: message,
                         fromCurrentUser: message.user?.id == userSession.user.id
@@ -32,6 +32,14 @@ struct MessageList : View {
                 }
             }
         }
+    }
+    
+    func sortedMessages() -> [GetConversationQuery.Data.Conversation.Message] {
+        messages.sorted(by: {
+            let d1 = $0.updatedAt?.toDate() ?? Date()
+            let d2 = $1.updatedAt?.toDate() ?? Date()
+            return d1.compare(d2) == .orderedAscending
+        })
     }
     
 }

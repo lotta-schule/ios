@@ -26,8 +26,8 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     
     func startReceivingNotifications() -> Void {
         let receiveMessageCategory = UNNotificationCategory(identifier: "receive_message", actions: [], intentIdentifiers: [])
-        let readConversationCategory = UNNotificationCategory(identifier: "read_conversation", actions: [], intentIdentifiers: [])
-        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory, readConversationCategory])
+        // let readConversationCategory = UNNotificationCategory(identifier: "read_conversation", actions: [], intentIdentifiers: [])
+        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory/*, readConversationCategory*/])
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
             case .notDetermined, .authorized, .provisional:

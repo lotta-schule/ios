@@ -16,7 +16,7 @@ import LottaCoreAPI
 import KeychainSwift
 import ApolloWebSocket
 
-let LOTTA_API_HOST = "core.staging.lotta.schule"
+let LOTTA_API_HOST = "core.lotta.schule"
 let USE_SECURE_CONNECTION = true
 let LOTTA_API_HTTP_URL = URL(string: "\(USE_SECURE_CONNECTION ? "https" : "http")://\(LOTTA_API_HOST)")!
 let LOTTA_API_WEBSOCKET_URL = URL(string: "\(USE_SECURE_CONNECTION ? "wss" : "ws")://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!

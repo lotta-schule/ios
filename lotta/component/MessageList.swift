@@ -26,9 +26,9 @@ struct MessageList : View {
                     .id(message.id)
                 }
             }
-            .onChange(of: messages.count, initial: true) { _, _  in
+            .onChange(of: sortedMessages().count, initial: true) { _, _  in
                 withAnimation {
-                    scrollViewReader.scrollTo(messages.last?.id)
+                    scrollViewReader.scrollTo(sortedMessages().last?.id)
                 }
             }
         }

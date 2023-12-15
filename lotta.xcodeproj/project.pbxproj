@@ -64,6 +64,7 @@
 		2E9B01AC2B11AA52005508B3 /* RemoveNullsFromDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9B01AB2B11AA52005508B3 /* RemoveNullsFromDict.swift */; };
 		2E9B01AE2B11F627005508B3 /* ConversationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9B01AD2B11F627005508B3 /* ConversationUtil.swift */; };
 		2E9B01B02B11F7E9005508B3 /* UserUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9B01AF2B11F7E9005508B3 /* UserUtil.swift */; };
+		2E9FBD532B2CC83E00D55706 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E9FBD522B2CC83E00D55706 /* LaunchScreen.storyboard */; };
 		2EA434312B094622000D8666 /* CreateConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434302B094622000D8666 /* CreateConversationView.swift */; };
 		2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434322B096CBF000D8666 /* NewMessageDestination.swift */; };
 		2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434342B096DF7000D8666 /* NewConversationView.swift */; };
@@ -140,6 +141,7 @@
 		2E9B01AB2B11AA52005508B3 /* RemoveNullsFromDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveNullsFromDict.swift; sourceTree = "<group>"; };
 		2E9B01AD2B11F627005508B3 /* ConversationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationUtil.swift; sourceTree = "<group>"; };
 		2E9B01AF2B11F7E9005508B3 /* UserUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUtil.swift; sourceTree = "<group>"; };
+		2E9FBD522B2CC83E00D55706 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2EA434302B094622000D8666 /* CreateConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConversationView.swift; sourceTree = "<group>"; };
 		2EA434322B096CBF000D8666 /* NewMessageDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageDestination.swift; sourceTree = "<group>"; };
 		2EA434342B096DF7000D8666 /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 		2E02685F2AB88F4500C18681 = {
 			isa = PBXGroup;
 			children = (
+				2E9FBD522B2CC83E00D55706 /* LaunchScreen.storyboard */,
 				2E02686A2AB88F4500C18681 /* lotta */,
 				2E02687D2AB88F4600C18681 /* lottaTests */,
 				2E0268872AB88F4600C18681 /* lottaUITests */,
@@ -508,6 +511,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E9FBD532B2CC83E00D55706 /* LaunchScreen.storyboard in Resources */,
 				2E0268752AB88F4600C18681 /* Preview Assets.xcassets in Resources */,
 				2E0268722AB88F4600C18681 /* Assets.xcassets in Resources */,
 			);
@@ -761,15 +765,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = lotta/lotta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"lotta/Preview Content\"";
 				DEVELOPMENT_TEAM = VHQ44CA7A4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = lotta/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -777,7 +782,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7;
+				MARKETING_VERSION = 0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = net.einsa.lotta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -793,15 +798,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = lotta/lotta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"lotta/Preview Content\"";
 				DEVELOPMENT_TEAM = VHQ44CA7A4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = lotta/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -809,7 +815,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7;
+				MARKETING_VERSION = 0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = net.einsa.lotta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -10,8 +10,9 @@ import SwiftUI
 struct LottaLogoView: View {
     var body: some View {
         Image(.lottaLogo)
+            .resizable()
             .scaledToFit()
-            .frame(width: 100, height: 100, alignment: .center)
+            .padding(75)
     }
 }
 

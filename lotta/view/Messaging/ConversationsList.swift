@@ -21,7 +21,7 @@ struct ConversationsList : View {
     
     var body: some View {
         List(getConversationsList(), id: \.self.id.unsafelyUnwrapped, selection: $currentSelectionId) { conversation in
-            ConversationListItem(conversation: conversation, excluding: userSession.user)
+            ConversationListItem(conversation: conversation)
         }
         .listStyle(.plain)
         .onChange(of: currentSelectionId, initial: true) {

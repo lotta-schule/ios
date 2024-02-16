@@ -39,6 +39,9 @@ enum AuthenticationError: Error {
             }
         }
         self.userSessions = await UserSession.readFromDisk()
+        if let lastTenantId = UserDefaults.standard.string(forKey: "lotta-tenant-id") {
+            setSession(byTenantId: lastTenantId)
+        }
         PushNotificationService.shared.startReceivingNotifications()
         self.initialized = true
     }

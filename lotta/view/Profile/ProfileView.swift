@@ -22,8 +22,8 @@ struct ProfileView : View {
                             HStack {
                                 UserAvatar(user: userSession.user)
                                 VStack(alignment: .leading) {
-                                    Text(userSession.user.visibleName)
                                     Text(userSession.tenant.title)
+                                    Text(userSession.user.visibleName)
                                         .font(.footnote)
                                 }
                             }

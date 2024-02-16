@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView : View {
     @Environment(ModelData.self) var modelData
+    @Environment(RouterData.self) var routerData
     @State var isShowLoginView = false
     
     var body: some View {
@@ -17,7 +18,9 @@ struct ProfileView : View {
                 Section(header: Text("Angemeldet als")) {
                     ForEach(modelData.userSessions, id: \.tenant.id) { userSession in
                         Button(action: {
-                            _ = modelData.setSession(byTenantId: userSession.tenant.id)
+                            if modelData.setSession(byTenantId: userSession.tenant.id) {
+                                routerData.rootSection = .messaging
+                            }
                         }) {
                             HStack {
                                 UserAvatar(user: userSession.user)

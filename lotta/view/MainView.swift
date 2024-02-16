@@ -13,14 +13,17 @@ import Sentry
 struct MainView : View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(UserSession.self) private var userSession
+    @Environment(RouterData.self) private var routerData
     
     @State private var unreadMessagesCount = 0
     @State private var isSubscribingToMessages = false
     @State private var cancelMessageSubscription: Cancellable?
     @State private var cancelConversationsQueryWatch: Cancellable?
     
+    @State private var viewSelection = 0
+    
     var body: some View {
-        TabView {
+        TabView(selection: $viewSelection) {
             MessagingView()
                 .badge(unreadMessagesCount)
                 .tabItem {
@@ -32,6 +35,24 @@ struct MainView : View {
                 }
         }
         .tint(userSession.theme.primaryColor)
+        .onChange(of: routerData.rootSection, { _, section in
+            switch section {
+                case .messaging:
+                    viewSelection = 0
+                case .profile:
+                    viewSelection = 1
+            }
+        })
+        .onChange(of: viewSelection) {
+            switch viewSelection {
+                case 1:
+                    routerData.rootSection = .profile
+                    return
+                default:
+                    routerData.rootSection = .messaging
+                    return
+            }
+        }
         .onChange(of: unreadMessagesCount, { _, _ in
             Task {
                 await ModelData.shared.setApplicationBadgeNumber()

@@ -19,6 +19,7 @@
 		2E0268A32AB8988400C18681 /* LottaCoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E0268A22AB8988400C18681 /* LottaCoreAPI */; };
 		2E0268A52AB900DC00C18681 /* Tenant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268A42AB900DC00C18681 /* Tenant.swift */; };
 		2E0268AF2AB90A2400C18681 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268AE2AB90A2400C18681 /* ModelData.swift */; };
+		2E0BAFDA2B7FA233009C891B /* UserSessionListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0BAFD92B7FA233009C891B /* UserSessionListItem.swift */; };
 		2E12B3E72ABDA5DB00555B9D /* ConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */; };
 		2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EA2ABDE05700555B9D /* LottaFile.swift */; };
 		2E12B3ED2ABDE11600555B9D /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3EC2ABDE11600555B9D /* Group.swift */; };
@@ -105,6 +106,7 @@
 		2E02689C2AB8942600C18681 /* CreateLoginSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLoginSession.swift; sourceTree = "<group>"; };
 		2E0268A42AB900DC00C18681 /* Tenant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tenant.swift; sourceTree = "<group>"; };
 		2E0268AE2AB90A2400C18681 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		2E0BAFD92B7FA233009C891B /* UserSessionListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionListItem.swift; sourceTree = "<group>"; };
 		2E12B3E62ABDA5DB00555B9D /* ConversationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsList.swift; sourceTree = "<group>"; };
 		2E12B3EA2ABDE05700555B9D /* LottaFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottaFile.swift; sourceTree = "<group>"; };
 		2E12B3EC2ABDE11600555B9D /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 				2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */,
 				2E12B3F02ABDEBF000555B9D /* MessageList.swift */,
 				2EA434362B0BB11A000D8666 /* SearchUserList.swift */,
+				2E0BAFD92B7FA233009C891B /* UserSessionListItem.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -558,6 +561,7 @@
 			files = (
 				2E9B01AE2B11F627005508B3 /* ConversationUtil.swift in Sources */,
 				2E9B01AC2B11AA52005508B3 /* RemoveNullsFromDict.swift in Sources */,
+				2E0BAFDA2B7FA233009C891B /* UserSessionListItem.swift in Sources */,
 				2E6A39D42ACC4EFA0003F447 /* PushNotificationService.swift in Sources */,
 				2E02686E2AB88F4500C18681 /* MessagingView.swift in Sources */,
 				2E3C5E1E2B257A7A00B74BD0 /* String+toDate.swift in Sources */,

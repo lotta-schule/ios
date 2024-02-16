@@ -22,14 +22,7 @@ struct ProfileView : View {
                                 routerData.rootSection = .messaging
                             }
                         }) {
-                            HStack {
-                                UserAvatar(user: userSession.user)
-                                VStack(alignment: .leading) {
-                                    Text(userSession.tenant.title)
-                                    Text(userSession.user.visibleName)
-                                        .font(.footnote)
-                                }
-                            }
+                            UserSessionListItem(userSession: userSession)
                         }
                         .id(userSession.tenant.id)
                     }

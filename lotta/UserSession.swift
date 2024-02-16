@@ -63,7 +63,7 @@ enum UserSessionError : Error {
             )
             guard let tenantResult = tenantGraphqlResult.tenant else {
                 // self.resetUser()
-                return .error(AuthenticationError.invalidResponse("No user in response! \(tenantGraphqlResult)"))
+                return .error(AuthenticationError.invalidResponse("No tenant in response! \(tenantGraphqlResult)"))
             }
             self.tenant = Tenant(from: tenantResult)
             
@@ -74,8 +74,10 @@ enum UserSessionError : Error {
         }
     }
     
-    func forceLoadConversations() async throws -> Void {
-        try? await api.apollo.clearCacheAsync()
+    func forceLoadConversations(clearCache: Bool = false) async throws -> Void {
+        if clearCache {
+            try? await api.apollo.clearCacheAsync()
+        }
         let result = try await api.apollo.fetchAsync(
             query: GetConversationsQuery(),
             cachePolicy: .fetchIgnoringCacheData

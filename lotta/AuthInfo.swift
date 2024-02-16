@@ -13,6 +13,7 @@ class AuthInfo {
     enum RenewError: Error {
         case invalidToken
         case missingToken
+        case connectionError
     }
     
     var accessToken: JWT?
@@ -76,6 +77,7 @@ class AuthInfo {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 SentrySDK.capture(error: error)
+                completion(.failure(.connectionError))
                 return
             }
             guard let data = data, let tokens = try? JSONDecoder().decode(TokenPair.Json.self, from: data) else {

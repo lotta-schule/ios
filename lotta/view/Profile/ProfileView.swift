@@ -32,7 +32,7 @@ struct ProfileView : View {
                     }
                 }
                 Section {
-                    Button("Zusätzliches Benutzerkonto anmelden") {
+                    Button("Benutzerkonto hinzufügen") {
                         isShowLoginView.toggle()
                     }
                 }

@@ -13,8 +13,6 @@ struct ConversationListItem: View {
     
     var conversation: GetConversationsQuery.Data.Conversation
     
-    var excluding: User?
-    
     var body: some View {
         HStack {
             Avatar(

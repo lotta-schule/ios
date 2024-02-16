@@ -71,6 +71,7 @@ enum AuthenticationError: Error {
     
     func add(session: UserSession) {
         userSessions.removeAll(where: {
+            $0.user.id == session.user.id &&
             $0.tenant.id == session.tenant.id
         })
         userSessions.append(session)

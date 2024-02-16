@@ -41,6 +41,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
         response: HTTPResponse<Operation>?,
         completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
     ) {
+        // If the user has neither an access token nor a refresh token, don't bother
         if self.loginSession?.accessToken == nil && self.loginSession?.refreshToken == nil {
             chain.proceedAsync(
                 request: request,
@@ -52,6 +53,8 @@ class AuthorizationInterceptor: ApolloInterceptor {
         }
         
         // If we've gotten here, there is a token!
+        // If we have an expired refresh token, we abort
+        // If the refresh token is valid or there is no refresh token, we continue
         guard (self.loginSession?.refreshToken?.expired ?? false) == false else {
             self.loginSession?.accessToken = nil
             self.loginSession?.refreshToken = nil
@@ -65,6 +68,13 @@ class AuthorizationInterceptor: ApolloInterceptor {
             return
         }
         
+        // We now know we have:
+        //  - either no refreshtoken but some accessToken
+        //  - A valid refresh token and maybe an access token
+        // This means, if:
+        //  - there is no access token or it is not valid, try to renew with the refresh Token
+        // else
+        //  - the access token ssems valid, just use it
         if (self.loginSession?.accessToken?.expired ?? true) == true {
             // Call an async method to renew the token
             self.loginSession?.renew() { renewResult in
@@ -90,7 +100,6 @@ class AuthorizationInterceptor: ApolloInterceptor {
                 }
             }
         } else {
-            // We don't need to wait for renewal, add token and move on
             self.addTokenAndProceed(
                 self.loginSession?.accessToken,
                 to: request,

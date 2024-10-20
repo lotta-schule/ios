@@ -107,6 +107,12 @@ enum AuthenticationError: Error {
         }
     }
     
+    func refreshAllSessions(force: Bool = false) async throws {
+        for session in userSessions {
+            try await session.loadConversations(force: force)
+        }
+    }
+    
     func setApplicationBadgeNumber() async -> Void {
         var newBadgeNumber = 0
         for session in userSessions {

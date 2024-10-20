@@ -38,11 +38,12 @@ fileprivate func getHttpTransport(loginSession: AuthInfo? = nil, tenantSlug slug
 }
 
 fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, store: ApolloStore) -> WebSocketTransport {
-    return WebSocketTransport(
+    let transport = WebSocketTransport(
         websocket: WebSocket(
             url: LOTTA_API_WEBSOCKET_URL,
             protocol: .graphql_transport_ws
         ),
+        store: store,
         config: WebSocketTransport.Configuration(
             connectingPayload: [
                 "tid": tid,
@@ -50,6 +51,7 @@ fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, st
             ]
         )
     )
+    return transport
 }
 
 var baseCacheDirURL: URL {
@@ -67,6 +69,7 @@ var baseCacheDirURL: URL {
 
 class CoreApi {
     private(set) var apollo: ApolloClient
+    private var wsTransport: WebSocketTransport?
     
     var cacheUrl: URL?
     
@@ -97,12 +100,12 @@ class CoreApi {
         
         let store = ApolloStore(cache: sqliteCache)
         let httpTransport = getHttpTransport(loginSession: loginSession, tenantSlug: slug, store: store)
-        let wsTransport = getWSTransport(loginSession: loginSession, tenantId: tenantId, store: store)
+        self.wsTransport = getWSTransport(loginSession: loginSession, tenantId: tenantId, store: store)
         
         let transport =
             SplitNetworkTransport(
                 uploadingNetworkTransport: httpTransport,
-                webSocketNetworkTransport: wsTransport
+                webSocketNetworkTransport: self.wsTransport!
             )
         
         self.apollo = ApolloClient(networkTransport: transport, store: store)
@@ -112,6 +115,10 @@ class CoreApi {
         if let url = cacheUrl {
             try? FileManager.default.removeItem(at: url)
         }
+    }
+    
+    func isWSConnected() -> Bool {
+        return wsTransport?.isConnected() ?? false
     }
 }
 

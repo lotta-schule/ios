@@ -27,13 +27,17 @@ struct MessagingView: View {
                 ConversationsList(withNewMessageDestination: newMessageDestination)
                     .refreshable {
                         do {
-                            try await userSession.forceLoadConversations()
+                            try await userSession.loadConversations(force: true)
                         } catch {
                             lastErrorMessage = error.localizedDescription
                         }
                     }
                     .toolbar {
-                        ToolbarItem {
+                        ToolbarItem(placement: .topBarLeading) {
+                            OnlineBullet(session: userSession)
+                                .scaledToFit()
+                        }
+                        ToolbarItem(placement: .topBarTrailing) {
                             Button(action: { showNewMessageDialog.toggle() }) {
                                 Label("Neue Nachricht schreiben", systemImage: "plus")
                             }
@@ -63,6 +67,9 @@ struct MessagingView: View {
             )
         }
         .onAppear {
+            Task {
+                try? await userSession.loadConversations()
+            }
             watchConversations()
         }
         .onDisappear {
@@ -88,6 +95,13 @@ struct MessagingView: View {
                 lastErrorMessage = nil
             }
         }
+    }
+    
+    func getOnlineBullet() -> String {
+        if (self.userSession.api.isWSConnected()) {
+            return "🟢"
+        }
+        return "🔴"
     }
     
     func onCreateNewMessage(_ destination: NewMessageDestination) -> Void {

@@ -71,6 +71,7 @@
 		2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434342B096DF7000D8666 /* NewConversationView.swift */; };
 		2EA434372B0BB11A000D8666 /* SearchUserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434362B0BB11A000D8666 /* SearchUserList.swift */; };
 		2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */; };
+		2EE3C8BB2CC3A70F000B00C0 /* OnlineBullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */; };
 		8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 5A360A425FE94FBE9718F5EF /* Sentry */; };
 /* End PBXBuildFile section */
 
@@ -151,6 +152,7 @@
 		2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EBAC93D2ACC42700062B12B /* lotta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lotta.entitlements; sourceTree = "<group>"; };
 		2EBAC93E2ACC44AF0062B12B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineBullet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +355,7 @@
 				2E12B3F02ABDEBF000555B9D /* MessageList.swift */,
 				2EA434362B0BB11A000D8666 /* SearchUserList.swift */,
 				2E0BAFD92B7FA233009C891B /* UserSessionListItem.swift */,
+				2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -581,6 +584,7 @@
 				2E02686C2AB88F4500C18681 /* lottaApp.swift in Sources */,
 				2E5460A02AEF162D00040149 /* RouterData.swift in Sources */,
 				2EA434332B096CBF000D8666 /* NewMessageDestination.swift in Sources */,
+				2EE3C8BB2CC3A70F000B00C0 /* OnlineBullet.swift in Sources */,
 				2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */,
 				2E9B01B02B11F7E9005508B3 /* UserUtil.swift in Sources */,
 				2EA434372B0BB11A000D8666 /* SearchUserList.swift in Sources */,

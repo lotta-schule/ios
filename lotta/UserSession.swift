@@ -74,13 +74,13 @@ enum UserSessionError : Error {
         }
     }
     
-    func forceLoadConversations(clearCache: Bool = false) async throws -> Void {
+    func loadConversations(clearCache: Bool = false, force: Bool = false) async throws -> Void {
         if clearCache {
             try? await api.apollo.clearCacheAsync()
         }
-        let result = try await api.apollo.fetchAsync(
+        let _ = try await api.apollo.fetchAsync(
             query: GetConversationsQuery(),
-            cachePolicy: .fetchIgnoringCacheData
+            cachePolicy: force ? .fetchIgnoringCacheData : .returnCacheDataAndFetch
         )
     }
     
@@ -190,9 +190,11 @@ enum UserSessionError : Error {
                     
                     results.append(userSession)
                     
-                    _ = await userSession.refetchUserData()
-                    _ = await userSession.refetchTenantData()
-                    try? userSession.writeToDisk()
+                    Task {
+                        _ = await userSession.refetchUserData()
+                        _ = await userSession.refetchTenantData()
+                        try? userSession.writeToDisk()
+                    }
                 } else {
                     do {
                         keychain.delete("\(tid)-\(uid)--refresh-token")

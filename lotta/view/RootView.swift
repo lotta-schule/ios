@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Sentry
 import LottaCoreAPI
 
 struct RootView: View {
@@ -41,7 +42,16 @@ struct RootView: View {
         }
         .onAppear {
             Task {
-                await modelData.initializeSessions()
+                if (!modelData.initialized) {
+                    await modelData.initializeSessions()
+                } else {
+                    do {
+                        try await ModelData.shared.refreshAllSessions()
+                    } catch {
+                        SentrySDK.capture(error: error)
+                        print("Error refreshing sessions: \(error)")
+                    }
+                }
             }
         }
     }

@@ -16,7 +16,12 @@ struct UserSessionListItem: View {
     
     var body: some View {
         HStack {
-            UserAvatar(user: userSession.user)
+            ZStack {
+                UserAvatar(user: userSession.user)
+                OnlineBullet(session: userSession)
+                    .frame(width: 11, height: 11)
+                    .offset(x: 16.5, y: 16.5)
+            }
             VStack(alignment: .leading) {
                 Text(userSession.tenant.title)
                 Text(userSession.user.visibleName)

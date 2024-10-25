@@ -12,6 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup XCode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Setup Sentry CLI
         uses: matbour/setup-sentry-cli@v1
         with:
@@ -48,6 +53,8 @@ jobs:
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+          cat ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
 
       - name: Build app
         run: |

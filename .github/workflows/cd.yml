@@ -5,13 +5,46 @@ on:
       - main
 
 jobs:
+  bump_version:
+    name: Bump version
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    outputs:
+      commit_hash: ${{ steps.update_commit.outputs.commit_hash }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup XCode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Bump version
+        run: |
+          xcrun agvtool bump
+
+      - name: Commit version bump
+        uses: stefanzweifel/git-auto-commit-action@v5
+        id: update_commit
+        with:
+          commit_message: "Bump version"
+    
   build_with_signing:
     name: Build, sign and upload app
+    needs:
+      - bump_version
     runs-on: macos-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump_version.outputs.commit_hash || github.sha }}
 
       - name: Setup XCode
         uses: maxim-lobanov/setup-xcode@v1

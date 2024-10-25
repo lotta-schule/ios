@@ -12,11 +12,15 @@ import SwiftData
 
 @main
 struct lottaApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    var modelData = ModelData.shared
+    
     init() {
         SentrySDK.start { options in
             options.dsn = "https://5beb3826272f086c5b8cde2d02cc503d@o282982.ingest.sentry.io/4505983794806784"
             options.debug = false
-            options.enableTracing = true 
+            options.tracesSampleRate = 0.1
 
             options.attachScreenshot = true // This adds a screenshot to the error events
             options.attachViewHierarchy = true // This adds the view hierarchy to the error events
@@ -34,7 +38,6 @@ struct lottaApp: App {
     //        fatalError("Could not create ModelContainer: \(error)")
     //    }
     //}()
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
         WindowGroup {

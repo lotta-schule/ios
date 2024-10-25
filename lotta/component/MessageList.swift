@@ -14,32 +14,39 @@ struct MessageList : View {
     
     var messages: [GetConversationQuery.Data.Conversation.Message]
     
+    @State private var sortedMessages: [GetConversationQuery.Data.Conversation.Message] = []
+    
     var body: some View {
         ScrollViewReader { scrollViewReader in
             ScrollView {
-                ForEach(sortedMessages(), id: \.id.unsafelyUnwrapped) { message in
-                    MessageRow(
-                        message: message,
-                        fromCurrentUser: message.user?.id == userSession.user.id
-                    )
-                    .padding(.horizontal, CGFloat(userSession.theme.spacing))
-                    .id(message.id)
+                LazyVStack {
+                    ForEach(sortedMessages, id: \.id.unsafelyUnwrapped) { message in
+                        MessageRow(
+                            message: message,
+                            fromCurrentUser: message.user?.id == userSession.user.id
+                        )
+                        .padding(.horizontal, CGFloat(userSession.theme.spacing))
+                        .id(message.id)
+                    }
                 }
             }
-            .onChange(of: sortedMessages().count, initial: true) { _, _  in
-                withAnimation {
-                    scrollViewReader.scrollTo(sortedMessages().last?.id)
+            .onChange(of: sortedMessages.last, initial: true) { oldLastElement, newLastElement  in
+                if oldLastElement == nil {
+                    scrollViewReader.scrollTo(newLastElement?.id)
+                } else {
+                    withAnimation {
+                        scrollViewReader.scrollTo(newLastElement?.id)
+                    }
                 }
             }
         }
-    }
-    
-    func sortedMessages() -> [GetConversationQuery.Data.Conversation.Message] {
-        messages.sorted(by: {
-            let d1 = $0.updatedAt?.toDate() ?? Date()
-            let d2 = $1.updatedAt?.toDate() ?? Date()
-            return d1.compare(d2) == .orderedAscending
-        })
+        .onChange(of: messages, initial: true) {
+            sortedMessages = messages.sorted(by: {
+                let d1 = $0.updatedAt?.toDate() ?? Date()
+                let d2 = $1.updatedAt?.toDate() ?? Date()
+                return d1.compare(d2) == .orderedAscending
+            })
+        }
     }
     
 }

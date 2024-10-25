@@ -17,10 +17,13 @@ struct RootView: View {
     var body: some View {
         ZStack {
             LottaLogoView()
-            if let session = modelData.currentSession {
-                TenantRootView()
-                    .environment(session)
-                    .environment(RouterData.shared)
+            
+            if modelData.initialized {
+                if let session = modelData.currentSession {
+                    TenantRootView()
+                        .environment(session)
+                        .environment(RouterData.shared)
+                }
             }
         }
         .preferredColorScheme(.light)

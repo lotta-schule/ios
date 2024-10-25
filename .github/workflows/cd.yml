@@ -6,6 +6,7 @@ on:
 
 jobs:
   build_with_signing:
+    name: Build, sign and upload app
     runs-on: macos-latest
 
     steps:
@@ -30,7 +31,6 @@ jobs:
           SIGNING_CERTIFICATE_PASSWORD: ${{ secrets.SIGNING_CERTIFICATE_PASSWORD }}
           MOBILE_PROVISIONING_PROFILE: ${{ secrets.MOBILE_PROVISIONING_PROFILE }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          EXPORT_OPTIONS_PLIST: ${{ vars.EXPORT_OPTIONS_PLIST }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -66,7 +66,7 @@ jobs:
           <plist version="1.0">
           <dict>
             <key>method</key>
-            <string>app-store</string>
+            <string>app-store-connect</string>
             <key>teamID</key>
             <string>$TEAM_ID</string>
             <key>uploadBitcode</key>
@@ -87,23 +87,9 @@ jobs:
           </dict>
           </plist>
           EOF
-
-          echo "provisioning profile situation:"
-          ls -lsa ~/Library/MobileDevice/Provisioning\ Profiles
-
-          echo "export options plist:"
-          cat ~/export-options.plist
-
       - name: Build app
         run: |
           xcodebuild -scheme "lotta" clean archive -archivePath "archive" -configuration "Release"
-
-          echo "provisioning profile situation:"
-          ls -lsa ~/Library/MobileDevice/Provisioning\ Profiles
-
-          echo "export options plist:"
-          cat ~/export-options.plist
-
           xcodebuild -exportArchive \
             -archivePath "$GITHUB_WORKSPACE/archive.xcarchive" \
             -exportOptionsPlist ~/export-options.plist \
@@ -113,14 +99,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lotta.ipa
-          path: $RUNNER_TEMP/export
+          path: ${{ runner.temp }}/export
           if-no-files-found: 'error'
 
       - name: Upload build
         env:
+          API_KEY: ${{ secrets.APPSTORECONNECT_APIKEY }}
           KEY_ID: ${{ secrets.APPSTORECONNECT_KEYID }}
+          KEY_ISSUER: ${{ secrets.APPSTORECONNECT_KEY_ISSUER }}
         run: |
+          ls -lsa $RUNNER_TEMP/export
           mkdir -p ~/private_keys
           echo -n $API_KEY | base64 --decode --output ~/private_keys/AuthKey_$KEY_ID.p8
-          xcrun altool --validate-app -f $RUNNER_TEMP/export/Release.ip -t ios --apiKey $KEY_ID
-          xcrun altool --upload-app -f $RUNNER_TEMP/export/Release.ip -t ios --apiKey $KEY_ID
+          IPA_FILE=$(ls $RUNNER_TEMP/export/*.ipa)
+          xcrun altool --validate-app -f $IPA_FILE -t ios --apiKey $KEY_ID --apiIssuer $KEY_ISSUER
+          xcrun altool --upload-app -f $IPA_FILE -t ios --apiKey $KEY_ID --apiIssuer $KEY_ISSUER

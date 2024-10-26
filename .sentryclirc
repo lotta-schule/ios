@@ -1,0 +1,6 @@
+[defaults]
+org=lotta
+project=lotta-ios
+
+[log]
+level=debug

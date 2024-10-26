@@ -40,48 +40,56 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     }
     
     func didReceiveRemoteNotification(userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        let appState = UIApplication.shared.applicationState
-        Task {
-            if !ModelData.shared.initialized {
-                await ModelData.shared.initializeSessions()
-            }
+        let crumb = Breadcrumb(level: .info, category: "PushNotification")
+        crumb.message = "Received push notification: \(userInfo)"
+        SentrySDK.addBreadcrumb(crumb)
+        guard let tenantId = userInfo["tenant_id"] as? Int else {
+            SentrySDK.capture(message: "Received push notification without tenant_id")
+            completionHandler(.failed)
+            return
+        }
+        switch UIApplication.shared.applicationState {
+        case .active:
             let crumb = Breadcrumb(level: .info, category: "PushNotification")
-            crumb.message = "Received push notification: \(userInfo)"
+            crumb.message = "Application is active"
             SentrySDK.addBreadcrumb(crumb)
-            guard let tenantId = userInfo["tenant_id"] as? Int else {
-                SentrySDK.capture(message: "Received push notification without tenant_id")
-                completionHandler(.failed)
-                return
-            }
-            guard let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }) else {
-                SentrySDK.capture(message: "Received push notification for unknown tenant \(tenantId)")
-                completionHandler(.failed)
-                return
-            }
-            switch appState {
-            case .active:
-                let crumb = Breadcrumb(level: .info, category: "PushNotification")
-                crumb.message = "Application is active"
-                SentrySDK.addBreadcrumb(crumb)
-                Task {
-                    do {
-                        try await session.loadConversations(force: true)
-                        completionHandler(.newData)
-                    } catch {
-                        SentrySDK.capture(error: error)
-                        completionHandler(.failed)
-                    }
+            Task {
+                if !ModelData.shared.initialized {
+                    await ModelData.shared.initializeSessions()
                 }
-                
-            case .background:
-                let crumb = Breadcrumb(level: .info, category: "PushNotification")
-                crumb.message = "Application is in background"
-                SentrySDK.addBreadcrumb(crumb)
-                guard let conversationId = userInfo["conversation_id"] as? String else {
-                    SentrySDK.capture(message: "Received push notification for unknown conversation \(tenantId)")
+                guard let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }) else {
+                    SentrySDK.capture(message: "Received push notification for unknown tenant \(tenantId)")
                     completionHandler(.failed)
                     return
                 }
+                do {
+                    try await session.loadConversations(force: true)
+                    completionHandler(.newData)
+                } catch {
+                    SentrySDK.capture(error: error)
+                    completionHandler(.failed)
+                }
+            }
+            
+        case .background:
+            let crumb = Breadcrumb(level: .info, category: "PushNotification")
+            crumb.message = "Application is in background"
+            SentrySDK.addBreadcrumb(crumb)
+            guard let conversationId = userInfo["conversation_id"] as? String else {
+                SentrySDK.capture(message: "Received push notification for unknown conversation \(tenantId)")
+                completionHandler(.failed)
+                return
+            }
+            Task {
+                if !ModelData.shared.initialized {
+                    await ModelData.shared.initializeSessions()
+                }
+                guard let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }) else {
+                    SentrySDK.capture(message: "Received push notification for unknown tenant \(tenantId)")
+                    completionHandler(.failed)
+                    return
+                }
+                
                 session.api.apollo.fetch(query: GetConversationQuery(id: conversationId, markAsRead: false), cachePolicy: .fetchIgnoringCacheData) { result in
                     switch result {
                     case .success(let graphqlResult):
@@ -117,10 +125,10 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
                         completionHandler(.failed)
                     }
                 }
-            default:
-                print("notification: \(userInfo)")
-                completionHandler(.noData)
             }
+        default:
+            print("notification: \(userInfo)")
+            completionHandler(.noData)
         }
     }
     
@@ -129,7 +137,9 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
             if let error = error {
                 SentrySDK.capture(error: error)
             } else {
-                UIApplication.shared.registerForRemoteNotifications()
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
             }
         }
     }

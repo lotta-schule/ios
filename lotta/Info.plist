@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>ITSEncryptionExportComplianceCode</key>
-	<string>NO</string>
+  <false/>
 	<key>NSAllowsLocalNetworking</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

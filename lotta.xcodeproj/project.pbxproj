@@ -73,6 +73,7 @@
 		2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */; };
 		2ECE56EC2CD3E3880094A72F /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2ECE56EB2CD3E3880094A72F /* CachedAsyncImage */; };
 		2ECE56EE2CD3E3970094A72F /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE56ED2CD3E3920094A72F /* URLCache.swift */; };
+		2ECE56F22CD3E5BB0094A72F /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE56F12CD3E5BB0094A72F /* FeedbackView.swift */; };
 		2EE3C8BB2CC3A70F000B00C0 /* OnlineBullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */; };
 		8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 5A360A425FE94FBE9718F5EF /* Sentry */; };
 /* End PBXBuildFile section */
@@ -155,6 +156,7 @@
 		2EBAC93D2ACC42700062B12B /* lotta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lotta.entitlements; sourceTree = "<group>"; };
 		2EBAC93E2ACC44AF0062B12B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2ECE56ED2CD3E3920094A72F /* URLCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLCache.swift; sourceTree = "<group>"; };
+		2ECE56F12CD3E5BB0094A72F /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineBullet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -283,6 +285,7 @@
 		2E0268AB2AB903AE00C18681 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				2ECE56F02CD3E5AC0094A72F /* Feedback */,
 				2EA4342F2B094608000D8666 /* CreateConversation */,
 				2EF1825A2AD173D9000ECE00 /* Login */,
 				2E3952F12AC3465D0013465C /* Profile */,
@@ -389,6 +392,14 @@
 				2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */,
 			);
 			path = group;
+			sourceTree = "<group>";
+		};
+		2ECE56F02CD3E5AC0094A72F /* Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				2ECE56F12CD3E5BB0094A72F /* FeedbackView.swift */,
+			);
+			path = Feedback;
 			sourceTree = "<group>";
 		};
 		2EF1825A2AD173D9000ECE00 /* Login */ = {
@@ -622,6 +633,7 @@
 				2E6B04C12ACB47AE00A10052 /* AuthorizationInterceptor.swift in Sources */,
 				2E12B3FF2ABE519D00555B9D /* ProfileView.swift in Sources */,
 				2E98A7F92ABCD49D000BB6CF /* UserAvatar.swift in Sources */,
+				2ECE56F22CD3E5BB0094A72F /* FeedbackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

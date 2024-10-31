@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LottaButton: View {
-    @Environment(ModelData.self) private var modelData
     var theme: Theme = Theme.Default
     
     var text: String

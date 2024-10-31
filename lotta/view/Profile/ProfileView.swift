@@ -11,7 +11,8 @@ struct ProfileView : View {
     @Environment(ModelData.self) var modelData
     @Environment(RouterData.self) var routerData
     @State var isShowLoginView = false
-    
+    @State var isShowFeedbackView = false
+
     var body: some View {
         VStack {
             List(selection: .constant(modelData.currentSession?.tenant.id)) {
@@ -33,6 +34,11 @@ struct ProfileView : View {
                     }
                 }
                 Section {
+                    Button("Feedback") {
+                        isShowFeedbackView.toggle()
+                    }
+                }
+                Section {
                     Button("Abmelden") {
                         modelData.removeCurrentSession()
                     }
@@ -48,7 +54,12 @@ struct ProfileView : View {
                     isShowLoginView.toggle()
                 }
             }
-            
+            .sheet(isPresented: $isShowFeedbackView) {
+                FeedbackView(name: modelData.currentSession?.user.name ?? "", email: modelData.currentSession?.user.email ?? "") {
+                    isShowFeedbackView.toggle()
+                }
+            }
+
         }
     }
 }

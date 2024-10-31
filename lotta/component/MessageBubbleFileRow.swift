@@ -7,6 +7,7 @@
 
 import SwiftUI
 import LottaCoreAPI
+import CachedAsyncImage
 
 struct MessageBubbleFileRow: View {
     @Environment(UserSession.self) private var userSession
@@ -31,8 +32,9 @@ struct MessageBubbleFileRow: View {
         } label: {
             HStack {
                 if file.fileType == FileType.image {
-                    AsyncImage(
+                    CachedAsyncImage(
                         url: getPreviewFileUrl(file: file),
+                        urlCache: .imageCache,
                         transaction: Transaction(animation: .easeInOut)
                     ) { phase in
                         switch phase {

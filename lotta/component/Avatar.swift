@@ -5,6 +5,7 @@
 //  Created by Alexis Rinaldoni on 22/09/2023.
 //
 
+import CachedAsyncImage
 import LottaCoreAPI
 import SwiftUI
 
@@ -14,12 +15,13 @@ struct Avatar: View {
     
     var body: some View {
         if let url = url {
-            AsyncImage(
+            CachedAsyncImage(
                 url: url.appending(queryItems: [
                     .init(name: "aspectRatio", value: "1"),
                     .init(name: "resize", value: "cover"),
                     .init(name: "width", value: String(size * 2))
                 ]),
+                urlCache: .imageCache,
                 transaction: Transaction(animation: .easeInOut)
             ) { phase in
                 switch phase {

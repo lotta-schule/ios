@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct TenantRootView: View {
     @Environment(UserSession.self) private var userSession
@@ -16,7 +17,7 @@ struct TenantRootView: View {
             ZStack {
                 userSession.theme.pageBackgroundColor.toColor()
                 if let url = userSession.tenant.backgroundImageFileId?.getUrl(for: userSession.tenant) {
-                    AsyncImage(url: url)
+                    CachedAsyncImage(url: url, urlCache: .imageCache)
                         .scaledToFill()
                         .opacity(0.25)
                         .ignoresSafeArea(.all)

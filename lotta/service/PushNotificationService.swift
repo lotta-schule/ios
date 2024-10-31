@@ -144,6 +144,7 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
+    @MainActor
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         let crumb = Breadcrumb(level: .info, category: "PushNotication")
         crumb.message = "Received push notification"

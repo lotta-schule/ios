@@ -555,7 +555,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ $CONFIGURATION == \"XXX\" ]]; then\n# if [[ $CONFIGURATION == \"Release\" ]]; then\n    echo \"Uploading Debug symbols to sentry\"\n    if which sentry-cli >/dev/null; then\n        ERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\n        if [ ! $? -eq 0 ]; then\n            echo \"warning: sentry-cli - $ERROR\"\n        fi\n    else\n        echo \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\n    fi\nfi\n";
+			shellScript = "if [[ $CONFIGURATION == \"Release\" ]]; then\n    echo \"Uploading Debug symbols to sentry\"\n    if which sentry-cli >/dev/null; then\n        ERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\n        if [ ! $? -eq 0 ]; then\n            echo \"warning: sentry-cli - $ERROR\"\n        fi\n    else\n        echo \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\n    fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

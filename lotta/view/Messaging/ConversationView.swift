@@ -21,7 +21,10 @@ struct ConversationView : View {
         VStack {
             if let conversation = conversation {
                 VStack {
-                    MessageList(messages: conversation.messages ?? [])
+                    MessageList(
+                        messages: conversation.messages ?? [],
+                        isGroupChat: conversation.groups?.isEmpty == false
+                    )
                     
                     MessageInputView(
                         userId: conversation.users?.first(where: { $0.id != userSession.user.id })?.id,
@@ -29,6 +32,13 @@ struct ConversationView : View {
                     )
                 }
                 .navigationTitle(ConversationUtil.getTitle(for: conversation, excludingUserId: userSession.user.id))
+                .toolbar {
+                    if let user = conversation.users?.first(where: { $0.id != userSession.user.id }) {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Avatar(url: user.avatarImageFile?.id?.getUrl(for: userSession.user.tenant))
+                        }
+                    }
+                }
             }
         }
         .onChange(of: conversationId, initial: true) { _, _ in

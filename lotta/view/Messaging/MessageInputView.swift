@@ -39,7 +39,7 @@ struct MessageInputView : View {
                     .foregroundStyle(.primary)
             })
         }
-        .padding(.horizontal, CGFloat(userSession.theme.spacing))
+        .padding([.horizontal, .bottom], CGFloat(userSession.theme.spacing))
     }
     
     func sendMessage() async -> Void {

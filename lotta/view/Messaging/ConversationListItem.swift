@@ -20,12 +20,26 @@ struct ConversationListItem: View {
                     for: conversation,
                     excludingUserId: userSession.user.id,
                     in: userSession.tenant
-                )
+                ),
+                size: 34
             )
             .scaledToFit()
-            Text(ConversationUtil.getTitle(for: conversation, excludingUserId: userSession.user.id))
+            VStack(alignment: .leading) {
+                Text(ConversationUtil.getTitle(for: conversation, excludingUserId: userSession.user.id))
+                if let updated = conversation.updatedAt?.toDate() {
+                    Text(timeElapsed(since: updated))
+                        .foregroundStyle(.secondary)
+                        .font(.footnote)
+                }
+            }
                 .badge(conversation.unreadMessages ?? 0)
         }
+    }
+    
+    private func timeElapsed(since date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .spellOut
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
     
 }

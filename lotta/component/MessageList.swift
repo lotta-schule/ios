@@ -13,6 +13,7 @@ struct MessageList : View {
     @Environment(UserSession.self) private var userSession: UserSession
     
     var messages: [GetConversationQuery.Data.Conversation.Message]
+    var isGroupChat: Bool
     
     @State private var sortedMessages: [GetConversationQuery.Data.Conversation.Message] = []
     
@@ -23,7 +24,8 @@ struct MessageList : View {
                     ForEach(sortedMessages, id: \.id.unsafelyUnwrapped) { message in
                         MessageRow(
                             message: message,
-                            fromCurrentUser: message.user?.id == userSession.user.id
+                            fromCurrentUser: message.user?.id == userSession.user.id,
+                            isGroupChat: isGroupChat
                         )
                         .padding(.horizontal, CGFloat(userSession.theme.spacing))
                         .id(message.id)

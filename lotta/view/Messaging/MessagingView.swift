@@ -34,8 +34,13 @@ struct MessagingView: View {
                     }
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
-                            OnlineBullet(session: userSession)
-                                .scaledToFit()
+                            ZStack {
+                                UserAvatar(user: userSession.user)
+                                OnlineBullet(session: userSession)
+                                    .frame(width: 11, height: 11)
+                                    .offset(x: 16.5, y: 16.5)
+                            }
+                            .padding(.vertical)
                         }
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(action: { showNewMessageDialog.toggle() }) {
@@ -48,7 +53,7 @@ struct MessagingView: View {
                             })
                         }
                     }
-                    .navigationTitle("Lotta - Nachrichten")
+                    .navigationTitle("Nachrichten")
             },
             detail: {
                 if let conversationId = routerData.selectedConversationId, !conversationId.isEmpty {

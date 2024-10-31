@@ -14,11 +14,13 @@ struct MessageBubble : View {
     
     var message: GetConversationQuery.Data.Conversation.Message
     var fromCurrentUser: Bool
+    var isGroupChat: Bool
     
     var body: some View {
         VStack {
             if let content = message.content {
                 Text(content)
+                    .lineLimit(.none)
             }
             ForEach(getFiles(), id: \.self.id) { file in
                 MessageBubbleFileRow(file: file)
@@ -32,8 +34,11 @@ struct MessageBubble : View {
             : userSession.theme.disabledColor.opacity(0.08)
         )
         .overlay(
-            RoundedRectangle(
-                cornerRadius: CGFloat(userSession.theme.borderRadius)
+            UnevenRoundedRectangle(
+                topLeadingRadius: CGFloat(userSession.theme.borderRadius),
+                bottomLeadingRadius: fromCurrentUser ? CGFloat(userSession.theme.borderRadius) : 0,
+                bottomTrailingRadius: fromCurrentUser ? 0 : CGFloat(userSession.theme.borderRadius),
+                topTrailingRadius: CGFloat(userSession.theme.borderRadius)
             )
             .stroke(
                 fromCurrentUser
@@ -42,7 +47,12 @@ struct MessageBubble : View {
                 lineWidth: 1
             )
         )
-        .cornerRadius(CGFloat(userSession.theme.borderRadius))
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(
+            maxWidth: UIScreen.main.bounds.size.width * 0.7,
+            alignment: fromCurrentUser ? .trailing : .leading
+        )
+
     }
     
     func getFiles() -> [GetConversationQuery.Data.Conversation.Message.File] {

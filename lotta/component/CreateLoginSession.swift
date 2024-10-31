@@ -38,6 +38,7 @@ struct LoginView: View {
     @State private var lastErrorMessage = ""
     
     var disablingTenantSlugs: [String] = []
+    var defaultLoginMail: String = ""
     var onLogin: (UserSession) -> Void
     
     var body: some View {
@@ -115,6 +116,9 @@ struct LoginView: View {
         }
         .preferredColorScheme(.light)
         .animation(.spring(), value: selectedTenantDescriptor)
+        .onAppear() {
+            email = defaultLoginMail
+        }
     }
     
     func fetchPossibleTenants() -> Void {

@@ -40,7 +40,10 @@ struct ProfileView : View {
             }
 
             .sheet(isPresented: $isShowLoginView) {
-                LoginView(disablingTenantSlugs: modelData.userSessions.map { $0.tenant.slug }) { userSession in
+                LoginView(
+                    disablingTenantSlugs: modelData.userSessions.map { $0.tenant.slug },
+                    defaultLoginMail: modelData.userSessions.first?.user.email ?? ""
+                ) { userSession in
                     modelData.add(session: userSession)
                     isShowLoginView.toggle()
                 }

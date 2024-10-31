@@ -56,14 +56,15 @@ fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, st
 
 var baseCacheDirURL: URL {
     get {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(
-            .documentDirectory,
-            .userDomainMask,
-            true
-        ).first!
-        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let applicationSupportPath = try! FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        let lottaAppSupportPath = applicationSupportPath.appendingPathComponent("lotta")
         
-        return documentsURL.appending(path: LOTTA_API_HOST.replacing(/:\d{4,5}$/, with: ""))
+        return lottaAppSupportPath.appending(path: LOTTA_API_HOST.replacing(/:\d{4,5}$/, with: ""))
     }
 }
 
@@ -126,7 +127,7 @@ extension ApolloClient {
     func fetchAsync<Query: GraphQLQuery>(query: Query, cachePolicy: CachePolicy = .returnCacheDataAndFetch, queue: DispatchQueue = .main) async throws -> Query.Data {
         var didFinish = false
         return try await withCheckedThrowingContinuation({ continuation in
-            self.fetch(query: query, cachePolicy: cachePolicy, queue: queue) { [weak self] result in
+            self.fetch(query: query, cachePolicy: cachePolicy, queue: queue) { result in
                 if !didFinish {
                     switch result {
                     case .success(let data):

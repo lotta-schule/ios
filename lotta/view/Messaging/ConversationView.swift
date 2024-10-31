@@ -43,6 +43,9 @@ struct ConversationView : View {
         }
         .onChange(of: conversationId, initial: true) { _, _ in
             watchConversationQuery(id: conversationId)
+            Task {
+                await PushNotificationService.shared.removeNotificationsFor(conversationId: conversationId)
+            }
         }
         .onDisappear {
             unwatchConversationQuery()

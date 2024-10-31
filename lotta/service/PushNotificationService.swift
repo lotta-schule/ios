@@ -26,8 +26,7 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     
     func startReceivingNotifications() -> Void {
         let receiveMessageCategory = UNNotificationCategory(identifier: "receive_message", actions: [], intentIdentifiers: [])
-        // let readConversationCategory = UNNotificationCategory(identifier: "read_conversation", actions: [], intentIdentifiers: [])
-        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory/*, readConversationCategory*/])
+        UNUserNotificationCenter.current().setNotificationCategories([receiveMessageCategory])
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
             case .notDetermined, .authorized, .provisional:
@@ -39,6 +38,17 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
+    func removeNotificationsFor(conversationId: String) async -> Void {
+        let notifications = await UNUserNotificationCenter.current().deliveredNotifications()
+        let notificationsToDelete = notifications.filter { notification in
+            notification.request.content.threadIdentifier.hasSuffix("/\(conversationId)")
+        }
+        if !notificationsToDelete.isEmpty {
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: notificationsToDelete.map(\.request.identifier))
+        }
+    }
+    
+    @MainActor
     func didReceiveRemoteNotification(userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let crumb = Breadcrumb(level: .info, category: "PushNotification")
         crumb.message = "Received push notification: \(userInfo)"
@@ -48,15 +58,15 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
             completionHandler(.failed)
             return
         }
-        switch UIApplication.shared.applicationState {
-        case .active:
-            let crumb = Breadcrumb(level: .info, category: "PushNotification")
-            crumb.message = "Application is active"
-            SentrySDK.addBreadcrumb(crumb)
-            Task {
-                if !ModelData.shared.initialized {
-                    await ModelData.shared.initializeSessions()
-                }
+        Task {
+            if !ModelData.shared.initialized {
+                await ModelData.shared.initializeSessions()
+            }
+            switch UIApplication.shared.applicationState {
+            case .active:
+                let crumb = Breadcrumb(level: .info, category: "PushNotification")
+                crumb.message = "Application is active"
+                SentrySDK.addBreadcrumb(crumb)
                 guard let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }) else {
                     SentrySDK.capture(message: "Received push notification for unknown tenant \(tenantId)")
                     completionHandler(.failed)
@@ -69,20 +79,15 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
                     SentrySDK.capture(error: error)
                     completionHandler(.failed)
                 }
-            }
-            
-        case .background:
-            let crumb = Breadcrumb(level: .info, category: "PushNotification")
-            crumb.message = "Application is in background"
-            SentrySDK.addBreadcrumb(crumb)
-            guard let conversationId = userInfo["conversation_id"] as? String else {
-                SentrySDK.capture(message: "Received push notification for unknown conversation \(tenantId)")
-                completionHandler(.failed)
-                return
-            }
-            Task {
-                if !ModelData.shared.initialized {
-                    await ModelData.shared.initializeSessions()
+                
+            case .background:
+                let crumb = Breadcrumb(level: .info, category: "PushNotification")
+                crumb.message = "Application is in background"
+                SentrySDK.addBreadcrumb(crumb)
+                guard let conversationId = userInfo["conversation_id"] as? String else {
+                    SentrySDK.capture(message: "Received push notification for unknown conversation \(tenantId)")
+                    completionHandler(.failed)
+                    return
                 }
                 guard let session = ModelData.shared.userSessions.first(where: { $0.tenant.id == tenantId.formatted(.number) }) else {
                     SentrySDK.capture(message: "Received push notification for unknown tenant \(tenantId)")
@@ -90,6 +95,11 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
                     return
                 }
                 
+                // if this was a "read_conversation" type of message, remove the delivered notifications of this conversation from the notification center
+                if let aps = userInfo["aps"] as? [String: Any], let category = aps["category"] as? String, category == "read_conversation" {
+                    await removeNotificationsFor(conversationId: conversationId)
+                }
+
                 session.api.apollo.fetch(query: GetConversationQuery(id: conversationId, markAsRead: false), cachePolicy: .fetchIgnoringCacheData) { result in
                     switch result {
                     case .success(let graphqlResult):
@@ -125,10 +135,10 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
                         completionHandler(.failed)
                     }
                 }
+            default:
+                print("notification: \(userInfo)")
+                completionHandler(.noData)
             }
-        default:
-            print("notification: \(userInfo)")
-            completionHandler(.noData)
         }
     }
     

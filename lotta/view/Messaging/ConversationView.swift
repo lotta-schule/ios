@@ -48,12 +48,12 @@ struct ConversationView : View {
             }
         }
         .onDisappear {
-            unwatchConversationQuery()
+            mayUnwatchConversationQuery()
         }
     }
     
     func watchConversationQuery(id: ID) -> Void {
-        cancelConversationQueryWatch?.cancel()
+        mayUnwatchConversationQuery()
         cancelConversationQueryWatch = userSession.api.apollo.watch(
             query: GetConversationQuery(id: id, markAsRead: true),
             cachePolicy: .returnCacheDataAndFetch
@@ -94,7 +94,8 @@ struct ConversationView : View {
             }
     }
     
-    func unwatchConversationQuery() -> Void {
+    func mayUnwatchConversationQuery() -> Void {
         cancelConversationQueryWatch?.cancel()
+        cancelConversationQueryWatch = nil
     }
 }

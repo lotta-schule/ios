@@ -78,7 +78,7 @@ struct MessagingView: View {
             watchConversations()
         }
         .onDisappear {
-            unwatchConversations()
+            mayUnwatchConversations()
         }
         .onChange(of: routerData.selectedConversationId, { _, _ in
             if routerData.selectedConversationId?.isEmpty != true {
@@ -157,8 +157,9 @@ struct MessagingView: View {
             })
     }
     
-    func unwatchConversations() -> Void {
+    func mayUnwatchConversations() -> Void {
         cancelConversationsWatcher?.cancel()
+        cancelConversationsWatcher = nil
     }
     
 }

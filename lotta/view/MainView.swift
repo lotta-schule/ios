@@ -65,7 +65,7 @@ struct MainView : View {
                     try? await subscribeToMessages()
                 }
             case .background, .inactive:
-                unsubscribeToMessages()
+                maybeUnsubscribeToMessages()
             default:
                 print("Unknown phase \(phase)")
             }
@@ -77,8 +77,8 @@ struct MainView : View {
             watchUnreadMessagesCount()
         }
         .onDisappear {
-            unsubscribeToMessages()
-            unwatchUnreadMessagesCount()
+            maybeUnsubscribeToMessages()
+            mayUnwatchUnreadMessagesCount()
         }
     }
     
@@ -93,6 +93,7 @@ struct MainView : View {
         if userSession.authInfo.needsRenew {
             _ = try await userSession.authInfo.renewAsync()
         }
+        maybeUnsubscribeToMessages()
         cancelMessageSubscription = userSession.api.apollo.subscribe(
             subscription: ReceiveMessageSubscription()
         ) { response in
@@ -155,12 +156,13 @@ struct MainView : View {
         }
     }
     
-    func unsubscribeToMessages() -> Void {
+    func maybeUnsubscribeToMessages() -> Void {
         cancelMessageSubscription?.cancel()
+        cancelMessageSubscription = nil
     }
     
     func watchUnreadMessagesCount() -> Void {
-        cancelConversationsQueryWatch?.cancel()
+        mayUnwatchUnreadMessagesCount()
         cancelConversationsQueryWatch =
             userSession.api.apollo.watch(
                 query: GetConversationsQuery(
@@ -173,13 +175,14 @@ struct MainView : View {
                         })
                     }
                 case .failure(let error):
-                    // TDOO: Fehlerbehandlung
+                    SentrySDK.capture(error: error)
                     print("ERROR: \(error)")
                 }
             }
     }
     
-    func unwatchUnreadMessagesCount() -> Void {
+    func mayUnwatchUnreadMessagesCount() -> Void {
         cancelConversationsQueryWatch?.cancel()
+        cancelConversationsQueryWatch = nil
     }
 }

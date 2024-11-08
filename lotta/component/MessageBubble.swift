@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import QuickLook
 import LottaCoreAPI
 
 struct MessageBubble : View {
@@ -22,8 +23,8 @@ struct MessageBubble : View {
                 Text(content)
                     .lineLimit(.none)
             }
-            ForEach(getFiles(), id: \.self.id) { file in
-                MessageBubbleFileRow(file: file)
+            ForEach(getFiles().indices, id: \.self) { index in
+                MessageBubbleFileRow(file: getFiles()[index], index: index, dataSource: getFilesPreviewDataSource())
             }
         }
         .padding(CGFloat(userSession.theme.spacing))
@@ -57,6 +58,10 @@ struct MessageBubble : View {
     
     func getFiles() -> [GetConversationQuery.Data.Conversation.Message.File] {
         return message.files?.compactMap { $0 } ?? []
+    }
+    
+    func getFilesPreviewDataSource() -> MessageQLPreviewDataSource {
+        return MessageQLPreviewDataSource(session: userSession, files: getFiles())
     }
 }
 

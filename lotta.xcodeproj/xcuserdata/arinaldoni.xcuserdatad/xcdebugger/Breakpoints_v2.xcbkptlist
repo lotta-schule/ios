@@ -3,4 +3,52 @@
    uuid = "922F3BE8-59C7-4B9C-926E-EB2BC21205CD"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F12B4263-CA23-4BDC-BC91-F166EEDB3757"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lotta/component/MessageQLPreviewDataSource.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "loadFiles(completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F12B4263-CA23-4BDC-BC91-F166EEDB3757 - 87f81e71f437c423"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "lotta.MessageQLPreviewDataSource.loadFiles(completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "lotta.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/component/MessageQLPreviewDataSource.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "36"
+                  endingLineNumber = "36">
+               </Location>
+               <Location
+                  uuid = "F12B4263-CA23-4BDC-BC91-F166EEDB3757 - 993383d86a7557dc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.URL&gt;) -&gt; () in lotta.MessageQLPreviewDataSource.loadFiles(completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "lotta.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/arinaldoni/development/lotta/ios/lotta/component/MessageQLPreviewDataSource.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "36"
+                  endingLineNumber = "36">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

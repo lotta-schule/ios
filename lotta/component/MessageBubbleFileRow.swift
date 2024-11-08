@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import QuickLook
 import LottaCoreAPI
 import CachedAsyncImage
 
@@ -13,22 +14,28 @@ struct MessageBubbleFileRow: View {
     @Environment(UserSession.self) private var userSession
     
     var file: GetConversationQuery.Data.Conversation.Message.File
+    var index: Int
+    var dataSource: MessageQLPreviewDataSource
     
+    @State var isLoading = false
+
     var body: some View {
         Button {
-            guard let fileUrl = getFileUrl(file: file) else {
-                return
-            }
-            
             guard let vc = UIApplication.shared.connectedScenes.compactMap({$0 as? UIWindowScene}).first?.windows.first?.rootViewController else {
                 return
             }
             
-            let shareActivity = UIActivityViewController(activityItems: [fileUrl], applicationActivities: nil)
-            shareActivity.popoverPresentationController?.sourceView = vc.view
-            shareActivity.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height, width: 0, height: 0)
-            shareActivity.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.down
-            vc.present(shareActivity, animated: true, completion: nil)
+            let previewController = QLPreviewController()
+            previewController.currentPreviewItemIndex = index
+            previewController.dataSource = dataSource
+            
+            isLoading = true
+            dataSource.loadFiles {
+                isLoading = false
+                DispatchQueue.main.sync {
+                    vc.present(previewController, animated: true)
+                }
+            }
         } label: {
             HStack {
                 if file.fileType == FileType.image {
@@ -55,6 +62,7 @@ struct MessageBubbleFileRow: View {
                     Text(fileName)
                 }
             }
+            .opacity(isLoading ? 0.5 : 1.0)
         }
     }
     

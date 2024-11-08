@@ -460,8 +460,8 @@
 				2E0268642AB88F4500C18681 /* Sources */,
 				2E0268652AB88F4500C18681 /* Frameworks */,
 				2E0268662AB88F4500C18681 /* Resources */,
-				029126A4BF6D48E790C22320 /* Upload Debug Symbols to Sentry */,
 				2E1A7BE52CDEAC8500D4A0F7 /* Embed Foundation Extensions */,
+				029126A4BF6D48E790C22320 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -32,6 +32,7 @@
 		2E12B3FD2ABE160500555B9D /* SelectTenantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */; };
 		2E12B3FF2ABE519D00555B9D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B3FE2ABE519D00555B9D /* ProfileView.swift */; };
 		2E12B4012ABE532500555B9D /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E12B4002ABE532500555B9D /* AuthInfo.swift */; };
+		2E1A7BE42CDEAC8500D4A0F7 /* LottaNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2E1A7BDD2CDEAC8500D4A0F7 /* LottaNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D829F2AC743B800CC3E1F /* Theme.swift */; };
 		2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */; };
 		2E31D7472AF5343800E369CD /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E31D7462AF5343800E369CD /* ThemeColor.swift */; };
@@ -93,7 +94,28 @@
 			remoteGlobalIDString = 2E0268672AB88F4500C18681;
 			remoteInfo = lotta;
 		};
+		2E1A7BE22CDEAC8500D4A0F7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E0268602AB88F4500C18681 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E1A7BDC2CDEAC8500D4A0F7;
+			remoteInfo = LottaNotificationService;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2E1A7BE52CDEAC8500D4A0F7 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2E1A7BE42CDEAC8500D4A0F7 /* LottaNotificationService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2E0268682AB88F4500C18681 /* lotta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lotta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +145,7 @@
 		2E12B3FC2ABE160500555B9D /* SelectTenantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTenantView.swift; sourceTree = "<group>"; };
 		2E12B3FE2ABE519D00555B9D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		2E12B4002ABE532500555B9D /* AuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInfo.swift; sourceTree = "<group>"; };
+		2E1A7BDD2CDEAC8500D4A0F7 /* LottaNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LottaNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E2D829F2AC743B800CC3E1F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottaButton.swift; sourceTree = "<group>"; };
 		2E31D7462AF5343800E369CD /* ThemeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
@@ -160,6 +183,20 @@
 		2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineBullet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2E1A7BE82CDEAC8500D4A0F7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2E1A7BDC2CDEAC8500D4A0F7 /* LottaNotificationService */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2E1A7BDE2CDEAC8500D4A0F7 /* LottaNotificationService */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2E1A7BE82CDEAC8500D4A0F7 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = LottaNotificationService; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		2E0268652AB88F4500C18681 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -194,6 +231,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E1A7BDA2CDEAC8500D4A0F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -204,6 +248,7 @@
 				2E02686A2AB88F4500C18681 /* lotta */,
 				2E02687D2AB88F4600C18681 /* lottaTests */,
 				2E0268872AB88F4600C18681 /* lottaUITests */,
+				2E1A7BDE2CDEAC8500D4A0F7 /* LottaNotificationService */,
 				2E0268692AB88F4500C18681 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -214,6 +259,7 @@
 				2E0268682AB88F4500C18681 /* lotta.app */,
 				2E02687A2AB88F4600C18681 /* lottaTests.xctest */,
 				2E0268842AB88F4600C18681 /* lottaUITests.xctest */,
+				2E1A7BDD2CDEAC8500D4A0F7 /* LottaNotificationService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -287,7 +333,6 @@
 			children = (
 				2ECE56F02CD3E5AC0094A72F /* Feedback */,
 				2EA4342F2B094608000D8666 /* CreateConversation */,
-				2EF1825A2AD173D9000ECE00 /* Login */,
 				2E3952F12AC3465D0013465C /* Profile */,
 				2E3952F02AC3464E0013465C /* Messaging */,
 				2E12B3FA2ABE13AC00555B9D /* RootView.swift */,
@@ -402,13 +447,6 @@
 			path = Feedback;
 			sourceTree = "<group>";
 		};
-		2EF1825A2AD173D9000ECE00 /* Login */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Login;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -420,10 +458,12 @@
 				2E0268652AB88F4500C18681 /* Frameworks */,
 				2E0268662AB88F4500C18681 /* Resources */,
 				029126A4BF6D48E790C22320 /* Upload Debug Symbols to Sentry */,
+				2E1A7BE52CDEAC8500D4A0F7 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2E1A7BE32CDEAC8500D4A0F7 /* PBXTargetDependency */,
 			);
 			name = lotta;
 			packageProductDependencies = (
@@ -478,6 +518,28 @@
 			productReference = 2E0268842AB88F4600C18681 /* lottaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		2E1A7BDC2CDEAC8500D4A0F7 /* LottaNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E1A7BE92CDEAC8500D4A0F7 /* Build configuration list for PBXNativeTarget "LottaNotificationService" */;
+			buildPhases = (
+				2E1A7BD92CDEAC8500D4A0F7 /* Sources */,
+				2E1A7BDA2CDEAC8500D4A0F7 /* Frameworks */,
+				2E1A7BDB2CDEAC8500D4A0F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2E1A7BDE2CDEAC8500D4A0F7 /* LottaNotificationService */,
+			);
+			name = LottaNotificationService;
+			packageProductDependencies = (
+			);
+			productName = LottaNotificationService;
+			productReference = 2E1A7BDD2CDEAC8500D4A0F7 /* LottaNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -485,7 +547,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					2E0268672AB88F4500C18681 = {
@@ -498,6 +560,9 @@
 					2E0268832AB88F4600C18681 = {
 						CreatedOnToolsVersion = 15.0;
 						TestTargetID = 2E0268672AB88F4500C18681;
+					};
+					2E1A7BDC2CDEAC8500D4A0F7 = {
+						CreatedOnToolsVersion = 16.1;
 					};
 				};
 			};
@@ -526,6 +591,7 @@
 				2E0268672AB88F4500C18681 /* lotta */,
 				2E0268792AB88F4600C18681 /* lottaTests */,
 				2E0268832AB88F4600C18681 /* lottaUITests */,
+				2E1A7BDC2CDEAC8500D4A0F7 /* LottaNotificationService */,
 			);
 		};
 /* End PBXProject section */
@@ -549,6 +615,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2E0268822AB88F4600C18681 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E1A7BDB2CDEAC8500D4A0F7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -654,6 +727,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E1A7BD92CDEAC8500D4A0F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -666,6 +746,11 @@
 			isa = PBXTargetDependency;
 			target = 2E0268672AB88F4500C18681 /* lotta */;
 			targetProxy = 2E0268852AB88F4600C18681 /* PBXContainerItemProxy */;
+		};
+		2E1A7BE32CDEAC8500D4A0F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E1A7BDC2CDEAC8500D4A0F7 /* LottaNotificationService */;
+			targetProxy = 2E1A7BE22CDEAC8500D4A0F7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -937,6 +1022,58 @@
 			};
 			name = Release;
 		};
+		2E1A7BE62CDEAC8500D4A0F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VHQ44CA7A4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LottaNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LottaNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.einsa.lotta.LottaNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2E1A7BE72CDEAC8500D4A0F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LottaNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LottaNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.einsa.lotta.LottaNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -972,6 +1109,15 @@
 			buildConfigurations = (
 				2E0268952AB88F4600C18681 /* Debug */,
 				2E0268962AB88F4600C18681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E1A7BE92CDEAC8500D4A0F7 /* Build configuration list for PBXNativeTarget "LottaNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E1A7BE62CDEAC8500D4A0F7 /* Debug */,
+				2E1A7BE72CDEAC8500D4A0F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

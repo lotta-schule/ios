@@ -10,6 +10,7 @@ import Apollo
 import SwiftUI
 import JWTDecode
 import LottaCoreAPI
+import Combine
 
 enum AuthenticationResult {
     case success
@@ -20,7 +21,7 @@ enum AuthenticationError: Error {
     case invalidResponse(String)
 }
 
-@Observable final class ModelData {
+@MainActor @Observable final class ModelData {
     static let shared = ModelData()
     
     var userSessions = [UserSession]()
@@ -28,6 +29,12 @@ enum AuthenticationError: Error {
     private(set) var initialized = false
     
     private var currentSessionTenantId: ID?
+    
+    func ensureInitialized() async -> Void {
+        if !self.initialized {
+            await initializeSessions()
+        }
+    }
     
     func initializeSessions() async -> Void {
         if !FileManager.default.fileExists(atPath: baseCacheDirURL.absoluteString) {
@@ -38,12 +45,15 @@ enum AuthenticationError: Error {
                 print("Error creating directory: \(error)")
             }
         }
-        self.userSessions = await UserSession.readFromDisk()
-        if let lastTenantId = UserDefaults.standard.string(forKey: "lotta-tenant-id") {
-            _ = setSession(byTenantId: lastTenantId)
+        let userSessions = await UserSession.readFromDisk()
+        await MainActor.run {
+            self.userSessions = userSessions
+            if let lastTenantId = UserDefaults.standard.string(forKey: "lotta-tenant-id") {
+                _ = setSession(byTenantId: lastTenantId)
+            }
+            PushNotificationService.shared.startReceivingNotifications()
+            self.initialized = true
         }
-        PushNotificationService.shared.startReceivingNotifications()
-        self.initialized = true
     }
     
     func setSession(byTenantId id: ID) -> Bool {

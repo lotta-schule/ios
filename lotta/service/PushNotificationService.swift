@@ -14,7 +14,8 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
     static let shared = PushNotificationService()
     
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: Data) async -> Void {
-        for session in ModelData.shared.userSessions {
+        await ModelData.shared.ensureInitialized()
+        for session in await ModelData.shared.userSessions {
             print("deviceToken: \(deviceToken.hexEncodedString)")
             do {
                 try await session.registerDevice(token: deviceToken)
@@ -108,7 +109,13 @@ class PushNotificationService: NSObject, UNUserNotificationCenterDelegate {
                                 // add / update the conversation to the conversations list
                                 let getConversationsQueryCache = try transaction.read(query: GetConversationsQuery())
                                 let addConversationCacheMutation = AddConversationLocalCacheMutation()
+                                let addMessageToConversationCacheMutation = AddMessageToConversationLocalCacheMutation(id: conversationId)
                                 
+                                try? transaction.update(addMessageToConversationCacheMutation) { (data: inout AddMessageToConversationLocalCacheMutation.Data) in
+                                    let conversation = AddMessageToConversationLocalCacheMutation.Data.Conversation(_fieldData: conversationData._fieldData)
+                                    data.conversation = conversation
+                                }
+
                                 try transaction.update(addConversationCacheMutation) { (data: inout AddConversationLocalCacheMutation.Data) in
                                     let newConversation = AddConversationLocalCacheMutation.Data.Conversation(
                                         _fieldData: conversationData._fieldData

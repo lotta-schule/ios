@@ -5,7 +5,6 @@
 //  Created by Alexis Rinaldoni on 22/09/2023.
 //
 
-import CachedAsyncImage
 import LottaCoreAPI
 import SwiftUI
 import NukeUI

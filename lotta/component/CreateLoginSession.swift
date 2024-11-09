@@ -8,7 +8,6 @@
 import Sentry
 import SwiftUI
 import LottaCoreAPI
-import CachedAsyncImage
 import NukeUI
 
 struct TenantDescriptor: Codable, Hashable {

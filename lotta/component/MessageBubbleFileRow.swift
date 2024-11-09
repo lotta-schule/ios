@@ -8,7 +8,6 @@
 import SwiftUI
 import QuickLook
 import LottaCoreAPI
-import CachedAsyncImage
 import NukeUI
 
 struct MessageBubbleFileRow: View {

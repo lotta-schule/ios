@@ -17,7 +17,7 @@ enum UserSessionError : Error {
     case isAlreadySubscribing
 }
 
-@Observable class UserSession {
+@MainActor @Observable class UserSession {
     private(set) var tenant: Tenant
     private(set) var authInfo: AuthInfo
     private(set) var user: User

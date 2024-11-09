@@ -10,6 +10,8 @@ import SwiftUI
 struct ProfileView : View {
     @Environment(ModelData.self) var modelData
     @Environment(RouterData.self) var routerData
+    @Environment(\.openURL) var openURL
+    
     @State var isShowLoginView = false
     @State var isShowFeedbackView = false
 
@@ -23,24 +25,39 @@ struct ProfileView : View {
                                 routerData.rootSection = .messaging
                             }
                         }) {
-                            UserSessionListItem(userSession: userSession)
+                            HStack {
+                                UserSessionListItem(userSession: userSession)
+                            }
                         }
                         .id(userSession.tenant.id)
                     }
+                    Button(
+                        modelData.userSessions.count > 1 ? "Aktuelles Benutzerkonto abmelden" : "Abmelden",
+                        systemImage: "door.left.hand.open") {
+                        modelData.removeCurrentSession()
+                    }
                 }
                 Section {
-                    Button("Benutzerkonto hinzufügen") {
+                    Button("Benutzerkonto hinzufügen", systemImage: "person.crop.circle.badge.plus") {
                         isShowLoginView.toggle()
                     }
                 }
-                Section {
-                    Button("Feedback") {
+                Section(header: Text("Lotta")) {
+                    HStack {
+                        Text("Version:")
+                        Spacer()
+                        Text(getAppVersion())
+                    }
+                    HStack {
+                        Text("API Endpunkt:")
+                        Spacer()
+                        Text(LOTTA_API_HOST)
+                    }
+                    Button("Feedback senden") {
                         isShowFeedbackView.toggle()
                     }
-                }
-                Section {
-                    Button("Abmelden") {
-                        modelData.removeCurrentSession()
+                    Button("Quelltext anzeigen") {
+                        openURL(URL(string: "https://github.com/lotta-schule/ios")!)
                     }
                 }
             }
@@ -61,6 +78,20 @@ struct ProfileView : View {
             }
 
         }
+    }
+    
+    func getAppVersion() -> String {
+        let shortVersion = getInfo("CFBundleShortVersionString")
+        let buildVersion = getInfo("CFBundleVersion")
+        
+        return "\(shortVersion) (\(buildVersion))"
+    }
+    
+    func getInfo(_ key: String) -> String {
+        guard let infoDict = Bundle.main.infoDictionary else {
+            return ""
+        }
+        return infoDict[key] as? String ?? ""
     }
 }
 

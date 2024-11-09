@@ -130,7 +130,6 @@ jobs:
           </plist>
           EOF
 
-          cat ~/export-options.plist
       - name: Build app
         run: |
           xcodebuild -scheme "lotta" clean archive -archivePath "archive" -configuration "Release"

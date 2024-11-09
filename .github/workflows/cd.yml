@@ -63,16 +63,19 @@ jobs:
           SIGNING_CERTIFICATE: ${{ secrets.SIGNING_CERTIFICATE }}
           SIGNING_CERTIFICATE_PASSWORD: ${{ secrets.SIGNING_CERTIFICATE_PASSWORD }}
           MOBILE_PROVISIONING_PROFILE: ${{ secrets.MOBILE_PROVISIONING_PROFILE }}
+          PN_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.PN_EXTENSION_PROVISIONING_PROFILE }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          PNEXT_PP_PATH=$RUNNER_TEMP/build_pp_pnext.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
           echo -n "$SIGNING_CERTIFICATE" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$MOBILE_PROVISIONING_PROFILE" | base64 --decode -o $PP_PATH
+          echo -n "$PN_EXTENSION_PROVISIONING_PROFILE" | base64 --decode -o $PNEXT_PP_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -86,8 +89,12 @@ jobs:
 
           # apply provisioning profile
           PP_UUID=$(cat $PP_PATH | grep -A 1 -a UUID | grep "string" | sed -E "s/.*>([^<]*)<.*/\1/g")
+          PNEXT_PP_UUID=$(cat $PNEXT_PP_PATH | grep -A 1 -a UUID | grep "string" | sed -E "s/.*>([^<]*)<.*/\1/g")
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PP_UUID.mobileprovision
+          cp $PNEXT_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PNEXT_PP_UUID.mobileprovision
+
+          ls -l ~/Library/MobileDevice/Provisioning\ Profiles
 
           # Setup export options plist
           IDENTITY_NAME=$(security find-identity -v -p codesigning | grep "iPhone Distribution" | head -n 1 | cut -d'"' -f2)
@@ -116,10 +123,14 @@ jobs:
             <dict>
               <key>net.einsa.lotta</key>
               <string>$PP_UUID</string>
+              <key>net.einsa.lotta.NotificationService</key>
+              <string>$PNEXT_PP_UUID</string>
             </dict>
           </dict>
           </plist>
           EOF
+
+          cat ~/export-options.plist
       - name: Build app
         run: |
           xcodebuild -scheme "lotta" clean archive -archivePath "archive" -configuration "Release"

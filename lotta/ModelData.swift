@@ -41,11 +41,14 @@ enum AuthenticationError: Error {
             do {
                 try FileManager.default.createDirectory(at: baseCacheDirURL, withIntermediateDirectories: true)
             } catch {
-                SentrySDK.capture(error: error)
                 print("Error creating directory: \(error)")
+                SentrySDK.capture(error: error)
             }
         }
         let userSessions = await UserSession.readFromDisk()
+        if userSessions.isEmpty {
+            SentrySDK.capture(message: "Empty user sessions")
+        }
         await MainActor.run {
             self.userSessions = userSessions
             if let lastTenantId = UserDefaults.standard.string(forKey: "lotta-tenant-id") {

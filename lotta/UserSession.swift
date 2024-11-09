@@ -49,7 +49,7 @@ enum UserSessionError : Error {
             }
             self.user = User(in: tenant, from: userResult)
             
-            await UIApplication.shared.registerForRemoteNotifications()
+            UIApplication.shared.registerForRemoteNotifications()
             return .success
         } catch {
             return .error(error)
@@ -67,7 +67,7 @@ enum UserSessionError : Error {
             }
             self.tenant = Tenant(from: tenantResult)
             
-            await UIApplication.shared.registerForRemoteNotifications()
+            UIApplication.shared.registerForRemoteNotifications()
             return .success
         } catch {
             return .error(error)
@@ -168,8 +168,26 @@ enum UserSessionError : Error {
     static func readFromDisk() async -> [UserSession] {
         var results = [UserSession]()
         
+        func onSessionInitError(session: (fileUrl: URL, tid: String, uid: String)) -> Void {
+            let removeItemCrumb = Breadcrumb(level: .info, category: "UserSession")
+            removeItemCrumb.message = "Deleting stale user session. Something went wrong when reading the user session data."
+            removeItemCrumb.data = ["fileUrl": session.fileUrl.absoluteString, "tid": session.tid, "uid": session.uid]
+            SentrySDK.capture(message: "Deleting stale user session. Something went wrong when reading the user session data.")
+            do {
+                keychain.delete("\(session.tid)-\(session.uid)--refresh-token")
+                try FileManager.default.removeItem(at: session.fileUrl)
+            } catch {
+                SentrySDK.capture(error: error)
+                print("error writing usersession data: \(error)")
+            }
+        }
+        
         do {
             let files = try FileManager.default.contentsOfDirectory(at: baseCacheDirURL, includingPropertiesForKeys: nil)
+            let filesCrumb = Breadcrumb(level: .info, category: "UserSession#init")
+            filesCrumb.message = "Read from baseCacheDirURL: \(baseCacheDirURL.path)"
+            filesCrumb.data = ["files": files]
+            SentrySDK.addBreadcrumb(filesCrumb)
             let sessionFiles = files.compactMap { url in
                 let regex = /^usersession-([^-]+)-([^-]+)\.json$/
                 guard url.isFileURL else {
@@ -180,36 +198,73 @@ enum UserSessionError : Error {
                 }
                 return (url, matches.1, matches.2) as (URL, Substring, Substring)
             }
+            let sessionFilesCrumb = Breadcrumb(level: .info, category: "UserSession#init")
+            sessionFilesCrumb.message = "relevant sessionFiles have been filtered"
+            sessionFilesCrumb.data = ["files": sessionFiles]
+            SentrySDK.addBreadcrumb(sessionFilesCrumb)
             for (fileUrl, tid, uid) in sessionFiles {
-                if let userSessionData = try? Data(contentsOf: fileUrl),
-                   let persistedUserSession = try? JSONDecoder().decode(PersistedUserSession.self, from: userSessionData),
-                   let refreshToken = keychain.get("\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token"),
-                   let jwt = try? JWTDecode.decode(jwt: refreshToken),
-                   jwt.expired == false {
-                    let authInfo = AuthInfo(refreshToken: jwt)
-                    _ = try? await authInfo.renewAsync()
-                    
-                    let userSession = UserSession(tenant: persistedUserSession.tenant, authInfo: authInfo, user: persistedUserSession.user)
-                    
-                    results.append(userSession)
-                    
-                    Task {
-                        _ = await userSession.refetchUserData()
-                        _ = await userSession.refetchTenantData()
-                        try? userSession.writeToDisk()
-                    }
-                } else {
-                    do {
-                        keychain.delete("\(tid)-\(uid)--refresh-token")
-                        try FileManager.default.removeItem(at: fileUrl)
-                    } catch {
-                        print("error writing usersession data: \(error)")
-                    }
+                guard let userSessionData = try? Data(contentsOf: fileUrl) else {
+                    let crumb = Breadcrumb(level: .info, category: "UserSession#init")
+                    crumb.message = "the fileUrl could not be read. Skipping ..."
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid]
+                    SentrySDK.addBreadcrumb(crumb)
+                    onSessionInitError(session: (fileUrl, String(tid), String(uid)))
+                    continue
                 }
+                guard let persistedUserSession = try? JSONDecoder().decode(PersistedUserSession.self, from: userSessionData) else {
+                    let crumb = Breadcrumb(level: .info, category: "UserSession#init")
+                    crumb.message = "the userSessionData could not be decoded. Skipping ..."
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData]
+                    SentrySDK.addBreadcrumb(crumb)
+                    onSessionInitError(session: (fileUrl, String(tid), String(uid)))
+                    continue
+                }
+                guard let refreshToken = keychain.get("\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token") else {
+                    let crumb = Breadcrumb(level: .info, category: "UserSession#init")
+                    crumb.message = "Refreshtoken could not be retrieved from Keychain. Skipping .."
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token"]
+                    SentrySDK.addBreadcrumb(crumb)
+                    onSessionInitError(session: (fileUrl, String(tid), String(uid)))
+                    continue
+                }
+                guard let jwt = try? JWTDecode.decode(jwt: refreshToken) else {
+                    let crumb = Breadcrumb(level: .info, category: "UserSession#init")
+                    crumb.message = "JWT could not be decoded. Skipping ..."
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token", "jwt": refreshToken]
+                    SentrySDK.addBreadcrumb(crumb)
+                    onSessionInitError(session: (fileUrl, String(tid), String(uid)))
+                    continue
+                }
+                guard jwt.expired == false else {
+                    let crumb = Breadcrumb(level: .info, category: "UserSession#init")
+                    crumb.message = "JWT is expired. Skipping ..."
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token", "jwt": refreshToken]
+                    SentrySDK.addBreadcrumb(crumb)
+                    onSessionInitError(session: (fileUrl, String(tid), String(uid)))
+                    continue
+                }
+                
+                let authInfo = AuthInfo(refreshToken: jwt)
+                _ = try? await authInfo.renewAsync()
+                
+                let userSession = UserSession(tenant: persistedUserSession.tenant, authInfo: authInfo, user: persistedUserSession.user)
+                
+                results.append(userSession)
+                let appendedCrumb = Breadcrumb(level: .info, category: "UserSession#init")
+                appendedCrumb.message = "UserSession initialized successfully."
+                appendedCrumb.data = ["userSession": userSession]
+                SentrySDK.addBreadcrumb(appendedCrumb)
+
+                Task {
+                    _ = await userSession.refetchUserData()
+                    _ = await userSession.refetchTenantData()
+                    try? userSession.writeToDisk()
+                }
+
             }
         } catch {
-            SentrySDK.capture(error: error)
             print("Error reading files: \(error)")
+            SentrySDK.capture(error: error)
         }
         
         return results

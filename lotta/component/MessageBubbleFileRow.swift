@@ -13,29 +13,13 @@ import CachedAsyncImage
 struct MessageBubbleFileRow: View {
     @Environment(UserSession.self) private var userSession
     
+    @State private var isShowingPreview = false
+
     var file: GetConversationQuery.Data.Conversation.Message.File
-    var index: Int
-    var dataSource: MessageQLPreviewDataSource
-    
-    @State var isLoading = false
 
     var body: some View {
         Button {
-            guard let vc = UIApplication.shared.connectedScenes.compactMap({$0 as? UIWindowScene}).first?.windows.first?.rootViewController else {
-                return
-            }
-            
-            let previewController = QLPreviewController()
-            previewController.currentPreviewItemIndex = index
-            previewController.dataSource = dataSource
-            
-            isLoading = true
-            dataSource.loadFiles {
-                isLoading = false
-                DispatchQueue.main.sync {
-                    vc.present(previewController, animated: true)
-                }
-            }
+            isShowingPreview = true
         } label: {
             HStack {
                 if file.fileType == FileType.image {
@@ -62,8 +46,13 @@ struct MessageBubbleFileRow: View {
                     Text(fileName)
                 }
             }
-            .opacity(isLoading ? 0.5 : 1.0)
         }
+        .sheet(isPresented: $isShowingPreview) {
+            FilePreview(file: file) {
+                isShowingPreview = false
+            }
+        }
+        .frame(minHeight: 0.3, maxHeight: 0.8)
     }
     
     func getFileUrl(file: GetConversationQuery.Data.Conversation.Message.File) -> URL? {

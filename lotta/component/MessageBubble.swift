@@ -23,8 +23,8 @@ struct MessageBubble : View {
                 Text(content)
                     .lineLimit(.none)
             }
-            ForEach(getFiles().indices, id: \.self) { index in
-                MessageBubbleFileRow(file: getFiles()[index], index: index, dataSource: getFilesPreviewDataSource())
+            ForEach(getFiles(), id: \.self.id) { file in
+                MessageBubbleFileRow(file: file)
             }
         }
         .padding(CGFloat(userSession.theme.spacing))
@@ -58,10 +58,6 @@ struct MessageBubble : View {
     
     func getFiles() -> [GetConversationQuery.Data.Conversation.Message.File] {
         return message.files?.compactMap { $0 } ?? []
-    }
-    
-    func getFilesPreviewDataSource() -> MessageQLPreviewDataSource {
-        return MessageQLPreviewDataSource(session: userSession, files: getFiles())
     }
 }
 

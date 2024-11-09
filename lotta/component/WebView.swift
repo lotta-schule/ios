@@ -1,0 +1,22 @@
+//
+//  WebView.swift
+//  lotta
+//
+//  Created by Alexis Rinaldoni on 09/11/2024.
+//
+
+import SwiftUI
+import WebKit
+
+struct WebView: UIViewRepresentable {
+    let url: URL
+
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+    
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
+}

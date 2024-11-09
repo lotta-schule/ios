@@ -9,50 +9,63 @@ import SwiftUI
 import QuickLook
 import LottaCoreAPI
 import CachedAsyncImage
+import NukeUI
 
 struct MessageBubbleFileRow: View {
     @Environment(UserSession.self) private var userSession
     
     @State private var isShowingPreview = false
 
-    var file: GetConversationQuery.Data.Conversation.Message.File
+    var files: [GetConversationQuery.Data.Conversation.Message.File]
 
     var body: some View {
-        Button {
-            isShowingPreview = true
-        } label: {
-            HStack {
-                if file.fileType == FileType.image {
-                    CachedAsyncImage(
-                        url: getPreviewFileUrl(file: file),
-                        urlCache: .imageCache,
-                        transaction: Transaction(animation: .easeInOut)
-                    ) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                        case .failure:
-                            Image(systemName: "wifi.slash")
-                        @unknown default:
-                            EmptyView()
+        if files.isEmpty {
+            EmptyView()
+        } else {
+            Button {
+                isShowingPreview = true
+            } label: {
+                HStack {
+                    ForEach(files, id: \.id) { file in
+                        VStack(alignment: .leading) {
+                            if file.fileType == FileType.image {
+                                LazyImage(
+                                    url: getPreviewFileUrl(file: file),
+                                    transaction: Transaction(animation: .easeIn)
+                                ) { state in
+                                    if let image = state.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                    } else if let _ = state.error {
+                                        Image(systemName: "wifi.slash")
+                                            .scaledToFit()
+                                    } else if state.isLoading {
+                                        ProgressView()
+                                            .scaledToFit()
+                                    } else {
+                                        EmptyView()
+                                            .scaledToFill()
+                                    }
+                                }
+                            } else {
+                                Image(systemName: "doc")
+                                    .scaledToFit()
+                            }
                         }
+                        .frame(height: 150)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .id(file.id)
                     }
                 }
-                if let fileName = file.filename {
-                    Text(fileName)
+                .background(Color.red.opacity(1))
+            }
+            .sheet(isPresented: $isShowingPreview) {
+                FilePreview(file: files[0]) {
+                    isShowingPreview = false
                 }
             }
         }
-        .sheet(isPresented: $isShowingPreview) {
-            FilePreview(file: file) {
-                isShowingPreview = false
-            }
-        }
-        .frame(minHeight: 0.3, maxHeight: 0.8)
     }
     
     func getFileUrl(file: GetConversationQuery.Data.Conversation.Message.File) -> URL? {
@@ -62,7 +75,7 @@ struct MessageBubbleFileRow: View {
     func getPreviewFileUrl(file: GetConversationQuery.Data.Conversation.Message.File) -> URL? {
         return file.id?
             .getUrl(for: userSession.tenant, queryItems: [
-                .init(name: "width", value: "150"),
+                .init(name: "height", value: "150"),
                 .init(name: "resize", value: "contain")
             ])
     }

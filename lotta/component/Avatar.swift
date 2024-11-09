@@ -8,6 +8,7 @@
 import CachedAsyncImage
 import LottaCoreAPI
 import SwiftUI
+import NukeUI
 
 struct Avatar: View {
     var url: URL?
@@ -15,25 +16,19 @@ struct Avatar: View {
     
     var body: some View {
         if let url = url {
-            CachedAsyncImage(
+            LazyImage(
                 url: url.appending(queryItems: [
                     .init(name: "aspectRatio", value: "1"),
                     .init(name: "resize", value: "cover"),
                     .init(name: "width", value: String(size * 2))
-                ]),
-                urlCache: .imageCache,
-                transaction: Transaction(animation: .easeInOut)
-            ) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                case .failure:
+                    ]),
+                transaction: Transaction(animation: .easeIn)
+            ) { state in
+                if let image = state.image {
+                    image.resizable().scaledToFill()
+                } else if let error = state.error {
                     Image(systemName: "wifi.slash")
-                @unknown default:
+                } else {
                     EmptyView()
                 }
             }

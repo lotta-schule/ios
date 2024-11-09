@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CachedAsyncImage
+import NukeUI
 
 struct TenantRootView: View {
     @Environment(UserSession.self) private var userSession
@@ -16,11 +17,12 @@ struct TenantRootView: View {
         .background {
             ZStack {
                 userSession.theme.pageBackgroundColor.toColor()
-                if let url = userSession.tenant.backgroundImageFileId?.getUrl(for: userSession.tenant) {
-                    CachedAsyncImage(url: url, urlCache: .imageCache)
-                        .scaledToFill()
+                if let url = userSession.tenant.backgroundImageFileId?.getUrl(for: userSession.tenant)?.appending(queryItems: [.init(name: "height", value: "800")]) {
+                    LazyImage(url: url)
+                        .scaledToFit()
                         .opacity(0.25)
                         .ignoresSafeArea(.all)
+                        .blur(radius: 10)
                     
                 } else {
                     EmptyView()

@@ -9,6 +9,7 @@ import Sentry
 import SwiftUI
 import LottaCoreAPI
 import CachedAsyncImage
+import NukeUI
 
 struct TenantDescriptor: Codable, Hashable {
     let id: Int
@@ -57,7 +58,7 @@ struct LoginView: View {
                 URLQueryItem(name: "width", value: "200"),
                 URLQueryItem(name: "height", value: "100")
                ]) {
-                CachedAsyncImage(url: url, urlCache: .imageCache)
+                LazyImage(url: url)
                     .padding(8)
                     .frame(width: 200, height: 100)
             }

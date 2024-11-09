@@ -23,9 +23,7 @@ struct MessageBubble : View {
                 Text(content)
                     .lineLimit(.none)
             }
-            ForEach(getFiles(), id: \.self.id) { file in
-                MessageBubbleFileRow(file: file)
-            }
+            MessageBubbleFileRow(files: getFiles())
         }
         .padding(CGFloat(userSession.theme.spacing))
         .foregroundColor(userSession.theme.textColor.toColor())

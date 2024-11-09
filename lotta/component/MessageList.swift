@@ -32,12 +32,14 @@ struct MessageList : View {
                     }
                 }
             }
+            .defaultScrollAnchor(.bottom)
             .onChange(of: sortedMessages.last, initial: true) { oldLastElement, newLastElement  in
+                guard let newLastElement = newLastElement else { return }
                 if oldLastElement == nil {
-                    scrollViewReader.scrollTo(newLastElement?.id)
+                    scrollViewReader.scrollTo(newLastElement.id, anchor: .bottomTrailing)
                 } else {
                     withAnimation {
-                        scrollViewReader.scrollTo(newLastElement?.id)
+                        scrollViewReader.scrollTo(newLastElement.id, anchor: .bottomTrailing)
                     }
                 }
             }

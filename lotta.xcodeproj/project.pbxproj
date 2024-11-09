@@ -35,6 +35,9 @@
 		2E1A7BE42CDEAC8500D4A0F7 /* LottaNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2E1A7BDD2CDEAC8500D4A0F7 /* LottaNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2E2429D02CDF22E900706183 /* FilePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2429CF2CDF22E900706183 /* FilePreview.swift */; };
 		2E2429D22CDF247900706183 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2429D12CDF247700706183 /* WebView.swift */; };
+		2E2429D92CDFA44A00706183 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 2E2429D82CDFA44A00706183 /* Nuke */; };
+		2E2429DB2CDFA44A00706183 /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 2E2429DA2CDFA44A00706183 /* NukeExtensions */; };
+		2E2429DD2CDFA44A00706183 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2E2429DC2CDFA44A00706183 /* NukeUI */; };
 		2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D829F2AC743B800CC3E1F /* Theme.swift */; };
 		2E2D82A22AC7551F00CC3E1F /* LottaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D82A12AC7551F00CC3E1F /* LottaButton.swift */; };
 		2E31D7472AF5343800E369CD /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E31D7462AF5343800E369CD /* ThemeColor.swift */; };
@@ -74,8 +77,6 @@
 		2EA434352B096DF7000D8666 /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434342B096DF7000D8666 /* NewConversationView.swift */; };
 		2EA434372B0BB11A000D8666 /* SearchUserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA434362B0BB11A000D8666 /* SearchUserList.swift */; };
 		2EBAC93C2ACB9D1D0062B12B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */; };
-		2ECE56EC2CD3E3880094A72F /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2ECE56EB2CD3E3880094A72F /* CachedAsyncImage */; };
-		2ECE56EE2CD3E3970094A72F /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE56ED2CD3E3920094A72F /* URLCache.swift */; };
 		2ECE56F22CD3E5BB0094A72F /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE56F12CD3E5BB0094A72F /* FeedbackView.swift */; };
 		2EE3C8BB2CC3A70F000B00C0 /* OnlineBullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */; };
 		8F771D6F369D4F6AA57B14F7 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 5A360A425FE94FBE9718F5EF /* Sentry */; };
@@ -183,7 +184,6 @@
 		2EBAC93B2ACB9D1D0062B12B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EBAC93D2ACC42700062B12B /* lotta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lotta.entitlements; sourceTree = "<group>"; };
 		2EBAC93E2ACC44AF0062B12B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2ECE56ED2CD3E3920094A72F /* URLCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLCache.swift; sourceTree = "<group>"; };
 		2ECE56F12CD3E5BB0094A72F /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		2EE3C8BA2CC3A70F000B00C0 /* OnlineBullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineBullet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -207,10 +207,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E2429DD2CDFA44A00706183 /* NukeUI in Frameworks */,
 				2E6B04C62ACB4CA900A10052 /* JWTDecode in Frameworks */,
-				2ECE56EC2CD3E3880094A72F /* CachedAsyncImage in Frameworks */,
 				2E4191A72ACC5B5800FD0FDA /* ApolloWebSocket in Frameworks */,
 				2E4191A32ACC5B5800FD0FDA /* Apollo in Frameworks */,
+				2E2429D92CDFA44A00706183 /* Nuke in Frameworks */,
+				2E2429DB2CDFA44A00706183 /* NukeExtensions in Frameworks */,
 				2E6B04BE2ACB357900A10052 /* KeychainSwift in Frameworks */,
 				2E4191B12ACC946200FD0FDA /* DeviceKit in Frameworks */,
 				2E5460A82AF17DAB00040149 /* ApolloSQLite in Frameworks */,
@@ -375,7 +377,6 @@
 		2E4191A82ACC620700FD0FDA /* extension */ = {
 			isa = PBXGroup;
 			children = (
-				2ECE56ED2CD3E3920094A72F /* URLCache.swift */,
 				2E4191A92ACC621F00FD0FDA /* Data+hexString.swift */,
 				2E3C5E1D2B257A7A00B74BD0 /* String+toDate.swift */,
 			);
@@ -484,7 +485,9 @@
 				2E4191B02ACC946200FD0FDA /* DeviceKit */,
 				2E5460A72AF17DAB00040149 /* ApolloSQLite */,
 				5A360A425FE94FBE9718F5EF /* Sentry */,
-				2ECE56EB2CD3E3880094A72F /* CachedAsyncImage */,
+				2E2429D82CDFA44A00706183 /* Nuke */,
+				2E2429DA2CDFA44A00706183 /* NukeExtensions */,
+				2E2429DC2CDFA44A00706183 /* NukeUI */,
 			);
 			productName = lotta;
 			productReference = 2E0268682AB88F4500C18681 /* lotta.app */;
@@ -590,7 +593,7 @@
 				2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */,
 				2E4191AF2ACC946200FD0FDA /* XCRemoteSwiftPackageReference "DeviceKit" */,
 				0CC4D2DE368B48D09B8A24DD /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
-				2ECE56EA2CD3E35D0094A72F /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				2E2429D72CDFA44A00706183 /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = 2E0268692AB88F4500C18681 /* Products */;
 			projectDirPath = "";
@@ -694,7 +697,6 @@
 				2E54609C2AE254E100040149 /* TenantRootView.swift in Sources */,
 				2E2D82A02AC743B800CC3E1F /* Theme.swift in Sources */,
 				2E4191AA2ACC621F00FD0FDA /* Data+hexString.swift in Sources */,
-				2ECE56EE2CD3E3970094A72F /* URLCache.swift in Sources */,
 				2E12B3EB2ABDE05700555B9D /* LottaFile.swift in Sources */,
 				2E12B3F92ABDF74200555B9D /* MessageInputView.swift in Sources */,
 				2E54609E2AEE5AC800040149 /* ConversationView.swift in Sources */,
@@ -1154,6 +1156,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		2E2429D72CDFA44A00706183 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
 		2E4191A12ACC5B5800FD0FDA /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apollographql/apollo-ios.git";
@@ -1186,20 +1196,27 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		2ECE56EA2CD3E35D0094A72F /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		2E0268A22AB8988400C18681 /* LottaCoreAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LottaCoreAPI;
+		};
+		2E2429D82CDFA44A00706183 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E2429D72CDFA44A00706183 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		2E2429DA2CDFA44A00706183 /* NukeExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E2429D72CDFA44A00706183 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeExtensions;
+		};
+		2E2429DC2CDFA44A00706183 /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E2429D72CDFA44A00706183 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
 		};
 		2E4191A22ACC5B5800FD0FDA /* Apollo */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1235,11 +1252,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2E6B04C42ACB4CA900A10052 /* XCRemoteSwiftPackageReference "JWTDecode" */;
 			productName = JWTDecode;
-		};
-		2ECE56EB2CD3E3880094A72F /* CachedAsyncImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2ECE56EA2CD3E35D0094A72F /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
-			productName = CachedAsyncImage;
 		};
 		5A360A425FE94FBE9718F5EF /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;

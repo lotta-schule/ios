@@ -114,10 +114,13 @@ enum UserSessionError : Error {
         }
     }
     
-    func getUnreadMessagesCount() async throws -> Int {
+    func getUnreadMessagesCount(skippingConversationId: ID? = nil) async throws -> Int {
         let data = try await api.apollo.loadAsync(operation: GetConversationsQuery()).data
         return data?.conversations?.reduce(0, { partialResult, conversation in
-            partialResult + (conversation?.unreadMessages ?? 0)
+            if let skippingConversationId = skippingConversationId, conversation?.id == skippingConversationId {
+                return partialResult
+            }
+            return partialResult + (conversation?.unreadMessages ?? 0)
         }) ?? 0
     }
     

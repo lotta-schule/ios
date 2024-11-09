@@ -12,10 +12,12 @@ import Sentry
 
 struct MainView : View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(ModelData.self) private var modelData
     @Environment(UserSession.self) private var userSession
     @Environment(RouterData.self) private var routerData
     
     @State private var unreadMessagesCount = 0
+    @State private var otherUnreadMessagesCount = 0
     @State private var isSubscribingToMessages = false
     @State private var cancelMessageSubscription: Cancellable?
     @State private var cancelConversationsQueryWatch: Cancellable?
@@ -30,6 +32,7 @@ struct MainView : View {
                     Label("Nachrichten", systemImage: "message")
                 }
             ProfileView()
+                .badge(otherUnreadMessagesCount)
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }
@@ -53,32 +56,50 @@ struct MainView : View {
                     return
             }
         }
-        .onChange(of: unreadMessagesCount, { _, _ in
-            Task {
-                await ModelData.shared.setApplicationBadgeNumber()
-            }
-        })
         .onChange(of: scenePhase, initial: true, { _, phase in
             switch scenePhase {
             case .active:
                 Task {
                     try? await subscribeToMessages()
                 }
+                updateUnreadMessagesCounts()
             case .background, .inactive:
                 maybeUnsubscribeToMessages()
             default:
                 print("Unknown phase \(phase)")
             }
         })
+        .onChange(of: routerData.selectedConversationId) {
+            updateUnreadMessagesCounts()
+        }
+        .onChange(of: modelData.currentSession, initial: true) { _, _ in
+            updateUnreadMessagesCounts()
+        }
         .onAppear {
             Task {
                 try? await subscribeToMessages()
             }
             watchUnreadMessagesCount()
+            updateUnreadMessagesCounts()
         }
         .onDisappear {
             maybeUnsubscribeToMessages()
             mayUnwatchUnreadMessagesCount()
+        }
+    }
+    
+    func updateUnreadMessagesCounts() -> Void {
+        Task {
+            unreadMessagesCount = (try? await userSession.getUnreadMessagesCount(skippingConversationId: routerData.selectedConversationId)) ?? 0
+            let otherSessions = modelData.userSessions
+                .filter { $0.tenant.id != userSession.tenant.id || $0.user.id != userSession.user.id }
+            var count = 0
+            for session in otherSessions {
+                count += (try? await session.getUnreadMessagesCount()) ?? 0
+            }
+            otherUnreadMessagesCount = count
+            
+            await ModelData.shared.setApplicationBadgeNumber()
         }
     }
     
@@ -165,15 +186,11 @@ struct MainView : View {
         mayUnwatchUnreadMessagesCount()
         cancelConversationsQueryWatch =
             userSession.api.apollo.watch(
-                query: GetConversationsQuery(
-            )) { result in
+                query: GetConversationsQuery()
+            ) { result in
                 switch result {
                 case .success(let graphqlResult):
-                    if let conversationsData = graphqlResult.data?.conversations {
-                        self.unreadMessagesCount = conversationsData.reduce(0, { partialResult, conversation in
-                            partialResult + (conversation?.unreadMessages ?? 0)
-                        })
-                    }
+                    updateUnreadMessagesCounts()
                 case .failure(let error):
                     SentrySDK.capture(error: error)
                     print("ERROR: \(error)")

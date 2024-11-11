@@ -123,7 +123,17 @@ class AuthInfo {
             SentrySDK.capture(message: "Could not save refreshToken to keychain because it does not contain a tenantId (subject) claim.")
             return
         }
-        keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token")
+        let crumb = Breadcrumb(level: .info, category: "AuthInfo#saveToKeychain")
+        crumb.message = "Saving refreshToken to keychain."
+        crumb.data = [
+            "refreshToken": refreshToken.string,
+            "tenantId": tenantId,
+            "userId": userId
+        ]
+        let keychainWriteResult = keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token")
+        if !keychainWriteResult {
+            SentrySDK.capture(message: "Could not save refreshToken to keychain.")
+        }
     }
     
     struct TokenPair {

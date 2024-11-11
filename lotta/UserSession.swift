@@ -294,7 +294,7 @@ enum UserSessionError : Error {
     
 }
 
-extension UserSession: Equatable {
+extension UserSession: @preconcurrency Equatable {
     static func == (lhs: UserSession, rhs: UserSession) -> Bool {
         return lhs.tenant.id == rhs.tenant.id
     }

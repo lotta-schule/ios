@@ -17,19 +17,7 @@ class AuthInfo {
     }
     
     var accessToken: JWT?
-    var _refreshToken: JWT?
-    
-    var refreshToken: JWT? {
-        get {
-            _refreshToken
-        }
-        set {
-            if let stringValue = newValue?.string, let tid = newValue?.claim(name: "tid").integer, let uid = newValue?.subject {
-                keychain.set(stringValue, forKey: "\(tid)-\(uid)--refresh-token")
-            }
-            _refreshToken = newValue
-        }
-    }
+    var refreshToken: JWT?
     
     var needsRenew: Bool {
         get {
@@ -59,11 +47,18 @@ class AuthInfo {
     }
     
     func renew(completion: @escaping (Result<TokenPair, RenewError>) -> (Void)) -> Void {
+        let crumb = Breadcrumb(level: .info, category: "AuthInfo#renew")
+        crumb.message = "Renewing access token"
+        crumb.data = ["refreshToken": refreshToken?.string ?? "(nil)"]
+        SentrySDK.addBreadcrumb(crumb)
+        
         guard let refreshToken = refreshToken else {
+            SentrySDK.capture(message: "AuthInfo#renew: missing refreshToken")
             completion(.failure(.missingToken))
             return
         }
         guard let tid = refreshToken.claim(name: "tid").integer else {
+            SentrySDK.capture(message: "AuthInfo#renew: Token not valid because it doesn't contain a tid")
             completion(.failure(.invalidToken))
             return
         }
@@ -81,18 +76,22 @@ class AuthInfo {
                 return
             }
             guard let data = data, let tokens = try? JSONDecoder().decode(TokenPair.Json.self, from: data) else {
+                SentrySDK.capture(message: "Renewal failed: invalid response data (\(data?.base64EncodedString() ?? "(nil)")")
                 completion(.failure(.invalidToken))
                 return
             }
             
             let tokenPair = tokens.asPair()
             guard let accessToken = tokenPair.accessToken, let refreshToken = tokenPair.refreshToken else {
+                SentrySDK.capture(message: "Invalid token from tokenPair: \(tokenPair)")
                 completion(.failure(.invalidToken))
                 return
             }
             
             self.accessToken = accessToken
             self.refreshToken = refreshToken
+            
+            self.saveToKeychain()
             
             completion(.success(tokenPair))
         }.resume()
@@ -111,6 +110,21 @@ class AuthInfo {
         }
     }
     
+    func saveToKeychain() -> Void {
+        guard let refreshToken = refreshToken else {
+            SentrySDK.capture(message: "Could not save refreshToken to keychain because refreshToken is (nil).")
+            return
+        }
+        guard let tenantId = refreshToken.claim(name: "tid").integer else {
+            SentrySDK.capture(message: "Could not save refreshToken to keychain because it does not contain a uid claim.")
+            return
+        }
+        guard let userId = refreshToken.subject else {
+            SentrySDK.capture(message: "Could not save refreshToken to keychain because it does not contain a tenantId (subject) claim.")
+            return
+        }
+        keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token")
+    }
     
     struct TokenPair {
         var accessToken: JWT?

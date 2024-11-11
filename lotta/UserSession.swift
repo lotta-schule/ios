@@ -222,7 +222,14 @@ enum UserSessionError : Error {
                 guard let refreshToken = keychain.get("\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token") else {
                     let crumb = Breadcrumb(level: .info, category: "UserSession#init")
                     crumb.message = "Refreshtoken could not be retrieved from Keychain. Skipping .."
-                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token"]
+                    crumb.data = [
+                        "fileUrl": fileUrl.absoluteString,
+                        "tid": tid,
+                        "uid": uid,
+                        "userSessionData": userSessionData,
+                        "availableKeys": keychain.allKeys.joined(separator: ","),
+                        "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token",
+                    ]
                     SentrySDK.addBreadcrumb(crumb)
                     onSessionInitError(session: (fileUrl, String(tid), String(uid)))
                     continue

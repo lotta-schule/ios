@@ -8,6 +8,7 @@ import Sentry
 import Apollo
 import SwiftUI
 import JWTDecode
+import KeychainSwift
 
 class AuthInfo {
     enum RenewError: Error {
@@ -15,10 +16,10 @@ class AuthInfo {
         case missingToken
         case connectionError
     }
-    
+
     var accessToken: JWT?
     var refreshToken: JWT?
-    
+
     var needsRenew: Bool {
         get {
             if accessToken == nil {
@@ -30,12 +31,14 @@ class AuthInfo {
             return refreshToken.expired
         }
     }
-    
+
+    let keychain = KeychainSwift()
+
     init(accessToken: JWT? = nil, refreshToken: JWT? = nil) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }
-    
+
     var isLoggedIn: Bool {
         if let accessToken = self.accessToken {
             return accessToken.expired == false
@@ -45,13 +48,13 @@ class AuthInfo {
         }
         return false
     }
-    
+
     func renew(completion: @escaping (Result<TokenPair, RenewError>) -> (Void)) -> Void {
         let crumb = Breadcrumb(level: .info, category: "AuthInfo#renew")
         crumb.message = "Renewing access token"
         crumb.data = ["refreshToken": refreshToken?.string ?? "(nil)"]
         SentrySDK.addBreadcrumb(crumb)
-        
+
         guard let refreshToken = refreshToken else {
             SentrySDK.capture(message: "AuthInfo#renew: missing refreshToken")
             completion(.failure(.missingToken))
@@ -62,13 +65,13 @@ class AuthInfo {
             completion(.failure(.invalidToken))
             return
         }
-        
+
         let url = LOTTA_API_HTTP_URL.appending(path: "/auth/token/refresh")
             .appending(queryItems: [URLQueryItem(name: "token", value: refreshToken.string)])
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         request.setValue("id:\(tid)", forHTTPHeaderField: "tenant")
         request.httpMethod = "POST"
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 SentrySDK.capture(error: error)
@@ -80,23 +83,23 @@ class AuthInfo {
                 completion(.failure(.invalidToken))
                 return
             }
-            
+
             let tokenPair = tokens.asPair()
             guard let accessToken = tokenPair.accessToken, let refreshToken = tokenPair.refreshToken else {
                 SentrySDK.capture(message: "Invalid token from tokenPair: \(tokenPair)")
                 completion(.failure(.invalidToken))
                 return
             }
-            
+
             self.accessToken = accessToken
             self.refreshToken = refreshToken
-            
+
             self.saveToKeychain()
-            
+
             completion(.success(tokenPair))
         }.resume()
     }
-        
+
     func renewAsync() async throws -> TokenPair {
         return try await withCheckedThrowingContinuation { continuation in
             return self.renew() { result in
@@ -109,7 +112,7 @@ class AuthInfo {
             }
         }
     }
-    
+
     func saveToKeychain() -> Void {
         guard let refreshToken = refreshToken else {
             SentrySDK.capture(message: "Could not save refreshToken to keychain because refreshToken is (nil).")
@@ -130,24 +133,33 @@ class AuthInfo {
             "tenantId": tenantId,
             "userId": userId
         ]
-        let keychainWriteResult = keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token")
-        if !keychainWriteResult {
+
+        if !keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token") {
+            let bc = Breadcrumb(level: .fatal, category: "AuthInfo#saveToKeychain")
+            bc.message = "Could not save refreshToken to keychain. Returned false with error code \(keychain.lastResultCode)"
+            bc.data = [
+                "refreshToken": refreshToken.string,
+                "tenantId": tenantId,
+                "userId": userId,
+                "key": "\(tenantId)-\(userId)--refresh-token",
+                "errorCode": keychain.lastResultCode,
+            ]
             SentrySDK.capture(message: "Could not save refreshToken to keychain.")
         }
     }
-    
+
     struct TokenPair {
         var accessToken: JWT?
         var refreshToken: JWT?
-        
+
         struct Json: Codable {
             var accessToken: String?
             var refreshToken: String?
-            
+
             func asPair() -> TokenPair {
                 let accessToken: JWT? = self.accessToken != nil ? try? decode(jwt: self.accessToken!) : nil
                 let refreshToken: JWT? = self.refreshToken != nil ? try? decode(jwt: self.refreshToken!) : nil
-                
+
                 return TokenPair(
                     accessToken: accessToken,
                     refreshToken: refreshToken

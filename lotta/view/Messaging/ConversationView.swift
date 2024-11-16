@@ -89,7 +89,6 @@ struct ConversationView : View {
                         }
                     }
                 case .failure(let error):
-                    // TDOO: Fehlerbehandlung
                     print("ERROR: \(error)")
                 }
             }

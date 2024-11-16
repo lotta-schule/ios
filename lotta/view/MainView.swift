@@ -189,10 +189,9 @@ struct MainView : View {
                 query: GetConversationsQuery()
             ) { result in
                 switch result {
-                case .success(let graphqlResult):
+                case .success(_):
                     updateUnreadMessagesCounts()
                 case .failure(let error):
-                    SentrySDK.capture(error: error)
                     print("ERROR: \(error)")
                 }
             }

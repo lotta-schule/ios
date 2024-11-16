@@ -19,13 +19,14 @@ struct SearchUserList: View {
     @State private var cancelCurrentSearchQuery: Cancellable?
     
     var body: some View {
-        VStack {
-            TextField("Nutzer suchen",
-                      text: $searchText,
-                      prompt: Text("Nutzer suchen")
-            )
-            .padding(.horizontal, CGFloat(userSession.theme.spacing))
-            List {
+        List {
+            Section(header: Text("Nutzer suchen:")) {
+                TextField("Mäxchen",
+                          text: $searchText,
+                          prompt: Text("Mäxchen")
+                )
+            }
+            Section(header: Text("Ergebnisse")) {
                 ForEach(searchResults, id: \.self.id) { user in
                     Button(action: {
                         onSelect(user)
@@ -46,7 +47,7 @@ struct SearchUserList: View {
                     }
                 }
             }
-            .listStyle(.plain)
+            .opacity(searchResults.count > 0 ? 1 : 0)
         }
         .onChange(of: searchText) { _, _ in
             runSearch()

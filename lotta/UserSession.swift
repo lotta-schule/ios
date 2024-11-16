@@ -219,7 +219,7 @@ enum UserSessionError : Error {
                     onSessionInitError(session: (fileUrl, String(tid), String(uid)))
                     continue
                 }
-                guard let refreshToken = keychain.get("\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token") else {
+                guard let refreshToken = AuthInfo.loadFromKeychain(forUserId: persistedUserSession.user.id, onTenantId: persistedUserSession.tenant.id) else {
                     let crumb = Breadcrumb(level: .info, category: "UserSession#init")
                     crumb.message = "Refreshtoken could not be retrieved from Keychain. Skipping .."
                     crumb.data = [

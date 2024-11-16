@@ -8,7 +8,9 @@ import Sentry
 import Apollo
 import SwiftUI
 import JWTDecode
-import KeychainSwift
+import LottaCoreAPI
+
+
 
 class AuthInfo {
     enum RenewError: Error {
@@ -31,8 +33,6 @@ class AuthInfo {
             return refreshToken.expired
         }
     }
-
-    let keychain = KeychainSwift()
 
     init(accessToken: JWT? = nil, refreshToken: JWT? = nil) {
         self.accessToken = accessToken
@@ -146,6 +146,10 @@ class AuthInfo {
             ]
             SentrySDK.capture(message: "Could not save refreshToken to keychain.")
         }
+    }
+    
+    static func loadFromKeychain(forUserId userId: ID, onTenantId tenantId: ID) -> String? {
+        return keychain.get("\(tenantId)-\(userId)--refresh-token")
     }
 
     struct TokenPair {

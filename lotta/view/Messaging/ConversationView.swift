@@ -42,10 +42,11 @@ struct ConversationView : View {
             }
         }
         .onChange(of: conversationId, initial: true) { _, _ in
-            watchConversationQuery(id: conversationId)
             Task {
+                let _ = try? await userSession.api.apollo.fetchAsync(query: GetConversationQuery(id: conversationId, markAsRead: true), cachePolicy: .returnCacheDataAndFetch)
                 await PushNotificationService.shared.removeNotificationsFor(conversationId: conversationId)
             }
+            watchConversationQuery(id: conversationId)
         }
         .onDisappear {
             mayUnwatchConversationQuery()

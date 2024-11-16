@@ -12,8 +12,8 @@ struct ProfileView : View {
     @Environment(RouterData.self) var routerData
     @Environment(\.openURL) var openURL
     
-    @State var isShowLoginView = false
-    @State var isShowFeedbackView = false
+    @State private var isShowLoginView = false
+    @State private var isShowFeedbackView = false
 
     var body: some View {
         VStack {

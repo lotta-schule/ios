@@ -27,7 +27,7 @@ struct RootView: View {
             }
         }
         .preferredColorScheme(.light)
-        .fullScreenCover(isPresented: $isShowLoginView) {
+        .sheet(isPresented: $isShowLoginView) {
             LoginView() { userSession in
                 modelData.add(session: userSession)
                 isShowLoginView.toggle()

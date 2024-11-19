@@ -144,6 +144,7 @@ class AuthInfo {
                 "key": "\(tenantId)-\(userId)--refresh-token",
                 "errorCode": keychain.lastResultCode,
             ]
+            SentrySDK.addBreadcrumb(bc)
             SentrySDK.capture(message: "Could not save refreshToken to keychain.")
         }
     }

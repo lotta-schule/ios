@@ -134,7 +134,7 @@ class AuthInfo {
             "userId": userId
         ]
 
-        if !keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token") {
+        if !keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token", withAccess: .accessibleAfterFirstUnlock) {
             let bc = Breadcrumb(level: .fatal, category: "AuthInfo#saveToKeychain")
             bc.message = "Could not save refreshToken to keychain. Returned false with error code \(keychain.lastResultCode)"
             bc.data = [

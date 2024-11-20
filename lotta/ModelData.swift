@@ -96,16 +96,12 @@ enum AuthenticationError: Error {
     }
     
     func remove(session: UserSession) -> Void {
-        try? session.removeFromDisk()
-        session.removeFromKeychain()
-        
-        self.userSessions.removeAll { existingSession in
-            existingSession.tenant.id == session.tenant.id
-        }
-        
         Task {
-            session.api.resetCache()
             try? await session.deleteDevice()
+            try? session.removeFromDisk()
+            session.removeFromKeychain()
+            
+            session.api.resetCache()
         }
     }
     

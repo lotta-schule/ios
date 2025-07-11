@@ -24,11 +24,11 @@ struct FilePreview: View {
                     onDismiss()
                 }
             }
-            .navigationTitle(file.filename ?? "")
+            .navigationTitle(file.filename)
         }
     }
     
     func getFileUrl(file: GetConversationQuery.Data.Conversation.Message.File) -> URL? {
-        return file.id?.getUrl(for: userSession.tenant)
+        return URL(string: "https://\(self.userSession.tenant.slug).lotta.dev/api/v1/files/\(file.id)")
     }
 }

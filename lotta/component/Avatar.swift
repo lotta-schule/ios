@@ -16,16 +16,12 @@ struct Avatar: View {
     var body: some View {
         if let url = url {
             LazyImage(
-                url: url.appending(queryItems: [
-                    .init(name: "aspectRatio", value: "1"),
-                    .init(name: "resize", value: "cover"),
-                    .init(name: "width", value: String(size * 2))
-                    ]),
+                url: url,
                 transaction: Transaction(animation: .easeIn)
             ) { state in
                 if let image = state.image {
                     image.resizable().scaledToFill()
-                } else if let error = state.error {
+                } else if let _error = state.error {
                     Image(systemName: "wifi.slash")
                 } else {
                     EmptyView()

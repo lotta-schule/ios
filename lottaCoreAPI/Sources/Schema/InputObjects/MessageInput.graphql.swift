@@ -12,7 +12,7 @@ public struct MessageInput: InputObject {
 
   public init(
     content: GraphQLNullable<String> = nil,
-    files: GraphQLNullable<[SelectFileInput?]> = nil,
+    files: GraphQLNullable<[SelectFileInput]> = nil,
     recipientGroup: GraphQLNullable<SelectUserGroupInput> = nil,
     recipientUser: GraphQLNullable<SelectUserInput> = nil
   ) {
@@ -29,7 +29,7 @@ public struct MessageInput: InputObject {
     set { __data["content"] = newValue }
   }
 
-  public var files: GraphQLNullable<[SelectFileInput?]> {
+  public var files: GraphQLNullable<[SelectFileInput]> {
     get { __data["files"] }
     set { __data["files"] = newValue }
   }

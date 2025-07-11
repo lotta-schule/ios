@@ -53,10 +53,7 @@ struct LoginView: View {
                 id: String(selectedTenantDescriptor!.id),
                 title: selectedTenantDescriptor!.title,
                 slug: selectedTenantDescriptor!.slug
-               ), queryItems: [
-                URLQueryItem(name: "width", value: "200"),
-                URLQueryItem(name: "height", value: "100")
-               ]) {
+               ), format: "logo_600") {
                 LazyImage(url: url)
                     .padding(8)
                     .frame(width: 200, height: 100)

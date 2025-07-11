@@ -119,6 +119,14 @@ type Authresult {
   refreshToken: String
 }
 
+type AvailableFormat {
+  availability: FormatAvailability!
+  mimeType: String!
+  name: ConversionFormat!
+  type: FileType!
+  url: String!
+}
+
 type BreakdownMetrics {
   metrics: [MetricResult!]!
   property: String!
@@ -245,6 +253,51 @@ type Conversation {
   users: [User!]
 }
 
+enum ConversionFormat {
+  ARTICLEPREVIEW_165
+  ARTICLEPREVIEW_330
+  ARTICLEPREVIEW_660
+  ARTICLEPREVIEW_99
+  ARTICLEPREVIEW_990
+  AUDIOPLAY_AAC
+  AUDIOPLAY_OGG
+  AVATAR_100
+  AVATAR_1000
+  AVATAR_250
+  AVATAR_50
+  AVATAR_500
+  BANNER_1320
+  BANNER_330
+  BANNER_660
+  BANNER_990
+  ICON_128
+  ICON_256
+  ICON_64
+  LOGO_300
+  LOGO_600
+  ORIGINAL
+  PAGEBG_1024
+  PAGEBG_1280
+  PAGEBG_1920
+  PAGEBG_2560
+  POSTER_1080P
+  PRESENT_1200
+  PRESENT_1600
+  PRESENT_2400
+  PRESENT_3200
+  PREVIEW_200
+  PREVIEW_400
+  PREVIEW_800
+  VIDEOPLAY_1080P_MP4
+  VIDEOPLAY_1080P_WEBM
+  VIDEOPLAY_200P_MP4
+  VIDEOPLAY_200P_WEBM
+  VIDEOPLAY_480P_MP4
+  VIDEOPLAY_480P_WEBM
+  VIDEOPLAY_720P_MP4
+  VIDEOPLAY_720P_WEBM
+}
+
 input CreateCategoryInput {
   category: SelectCategoryInput
   isSidenav: Boolean = false
@@ -328,13 +381,20 @@ type Feedback {
 }
 
 type File {
-  fileConversions: [FileConversion!]!
   fileType: FileType!
   filename: String!
   filesize: Int!
+  formats(
+    """Return only formats with this availability status"""
+    availability: FormatAvailabilityStatus
+
+    """Return only formats for this category"""
+    category: String
+  ): [AvailableFormat!]!
   id: ID!
   insertedAt: DateTime!
-  mimeType: String!
+  metadata: Json
+  mimeType: String
   parentDirectory: Directory
   path: [Directory!]!
   remoteLocation: String!
@@ -360,21 +420,13 @@ type FileContentModuleUsageLocation {
   usage: String!
 }
 
-type FileConversion {
-  format: String!
-  id: ID!
-  insertedAt: DateTime!
-  mimeType: String!
-  remoteLocation: String!
-  updatedAt: DateTime!
-}
-
 type FileSystemUsageLocation {
   usage: String!
 }
 
 enum FileType {
   AUDIO
+  BINARY
   IMAGE
   MISC
   PDF
@@ -386,6 +438,20 @@ union FileUsageLocation = FileArticleUsageLocation | FileCategoryUsageLocation |
 type FileUserUsageLocation {
   usage: String!
   user: User!
+}
+
+type FormatAvailability {
+  error: String
+  progress: Int
+  status: FormatAvailabilityStatus!
+}
+
+enum FormatAvailabilityStatus {
+  AVAILABLE
+  FAILED
+  PROCESSING
+  READY
+  REQUESTABLE
 }
 
 """
@@ -475,6 +541,7 @@ type RootMutationType {
   reactToArticle(articleId: ID!, type: ArticleReactionType!): Article
   register(groupKey: String, user: RegisterUserParams!): Boolean
   registerDevice(device: RegisterDeviceInput!): Device
+  requestFileConversion(category: String!, id: ID!): Boolean
   requestHisecToken(password: String): String
   requestPasswordReset(email: String!): Boolean
   resetPassword(email: String!, password: String!, token: String!): Authresult
@@ -544,6 +611,7 @@ type RootQueryType {
 
 type RootSubscriptionType {
   articleIsUpdated(id: ID!): Article
+  conversionProgress(fileId: ID!): File
   receiveMessage: Message
 }
 
@@ -578,16 +646,16 @@ type StorageUsage {
 
 type Tenant {
   backgroundImageFile: File
-  configuration: TenantConfiguration
-  customDomains: [CustomDomain]
-  host: String
-  id: ID
+  configuration: TenantConfiguration!
+  customDomains: [CustomDomain!]!
+  host: String!
+  id: ID!
   identifier: String!
-  insertedAt: DateTime
+  insertedAt: DateTime!
   logoImageFile: File
-  slug: String
+  slug: String!
   stats: TenantStats
-  title: String
+  title: String!
 }
 
 type TenantConfiguration {
@@ -643,7 +711,7 @@ input UpdateDeviceInput {
 input UpdateUserParams {
   avatarImageFile: SelectFileInput
   class: String
-  enrollmentTokens: [String]
+  enrollmentTokens: [String!]
   hideFullName: Boolean
   name: String
   nickname: String
@@ -691,7 +759,7 @@ type UserGroup {
 
 input UserGroupInput {
   canReadFullName: Boolean
-  enrollmentTokens: [String!]
+  enrollmentTokens: [String!]!
   isAdminGroup: Boolean
   name: String!
   sortKey: Int

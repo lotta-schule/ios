@@ -68,7 +68,7 @@ struct MessageInputView : View {
                 message: LottaCoreAPI.MessageInput(
                     content: GraphQLNullable(stringLiteral: content),
                     recipientGroup: nil,
-                    recipientUser: GraphQLNullable(SelectUserInput(id: GraphQLNullable(stringLiteral: userId)))
+                    recipientUser: GraphQLNullable(SelectUserInput(id: userId))
                 )
             )
         )
@@ -84,7 +84,7 @@ struct MessageInputView : View {
             mutation: SendMessageMutation(
                 message: LottaCoreAPI.MessageInput(
                     content: GraphQLNullable(stringLiteral: content),
-                    recipientGroup: GraphQLNullable(SelectUserGroupInput(id: GraphQLNullable(stringLiteral: groupId))),
+                    recipientGroup: GraphQLNullable(SelectUserGroupInput(id: groupId)),
                     recipientUser: nil
                 )
             )
@@ -100,7 +100,7 @@ struct MessageInputView : View {
         if let message = graphqlResult.message, let conversation = graphqlResult.message?.conversation {
             
             userSession.api.apollo.store.withinReadWriteTransaction { transaction in
-                if let conversationId = conversation.id, let messageId = message.id {
+                if let conversationId = conversation.id {
                     // add / update the conversation to the conversations list
                     let getConversationsQueryCache = try transaction.read(query: GetConversationsQuery())
                     let addConversationCacheMutation = AddConversationLocalCacheMutation()
@@ -123,7 +123,7 @@ struct MessageInputView : View {
                     let getConversationQueryCache = try transaction.read(query: GetConversationQuery(id: conversationId, markAsRead: true))
                     let getConversationUpdateQuery = AddMessageToConversationLocalCacheMutation(id: conversationId)
                     
-                    if getConversationQueryCache.conversation?.messages?.contains(where: { $0.id == messageId }) != true {
+                    if getConversationQueryCache.conversation?.messages?.contains(where: { $0.id == message.id }) != true {
                         var newConversation = AddMessageToConversationLocalCacheMutation.Data.Conversation(_fieldData: graphqlResult.message?.conversation._fieldData)
                         let newMessage = AddMessageToConversationLocalCacheMutation.Data.Conversation.Message(
                             _fieldData: message._fieldData

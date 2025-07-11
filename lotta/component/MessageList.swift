@@ -21,15 +21,7 @@ struct MessageList : View {
         ScrollViewReader { scrollViewReader in
             ScrollView {
                 LazyVStack {
-                    ForEach(sortedMessages, id: \.id.unsafelyUnwrapped) { message in
-                        MessageRow(
-                            message: message,
-                            fromCurrentUser: message.user?.id == userSession.user.id,
-                            isGroupChat: isGroupChat
-                        )
-                        .padding(.horizontal, CGFloat(userSession.theme.spacing))
-                        .id(message.id)
-                    }
+                    ForEach(sortedMessages, id: \.id.description) { msg in renderMessage(msg); }
                 }
             }
             .defaultScrollAnchor(.bottom)
@@ -46,11 +38,22 @@ struct MessageList : View {
         }
         .onChange(of: messages, initial: true) {
             sortedMessages = messages.sorted(by: {
-                let d1 = $0.updatedAt?.toDate() ?? Date()
-                let d2 = $1.updatedAt?.toDate() ?? Date()
+                let d1 = $0.updatedAt.toDate()
+                let d2 = $1.updatedAt.toDate()
                 return d1.compare(d2) == .orderedAscending
             })
         }
+    }
+    
+    private func renderMessage(_ message: GetConversationQuery.Data.Conversation.Message) -> some View {
+        
+        MessageRow(
+            message: message,
+            fromCurrentUser: message.user?.id == userSession.user.id,
+            isGroupChat: isGroupChat
+        )
+        .padding(.horizontal, CGFloat(userSession.theme.spacing))
+        .id(message.id)
     }
     
 }

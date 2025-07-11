@@ -14,6 +14,14 @@ query GetCurrentUser {
     hasChangedDefaultPassword
     avatarImageFile {
       id
+      formats(category: "AVATAR") {
+        name
+        availability {
+          status
+        }
+        url
+        type
+      }
     }
     groups {
       id

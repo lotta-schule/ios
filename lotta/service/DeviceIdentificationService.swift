@@ -8,7 +8,7 @@
 import UIKit
 import DeviceKit
 
-class DeviceIdentificationService {
+@MainActor class DeviceIdentificationService {
     static let shared = DeviceIdentificationService()
     
     let modelName = Device.current.description

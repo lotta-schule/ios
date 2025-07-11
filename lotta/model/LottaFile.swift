@@ -25,26 +25,25 @@ final class LottaFile: Identifiable {
         self.tenant = tenant
     }
     
-    func getUrl(queryItems: [URLQueryItem] = []) -> URL? {
-        self.id.getUrl(for: tenant, queryItems: queryItems)
+    func getUrl(format: String = "original") -> URL? {
+        self.id.getUrl(for: tenant, format: format)
     }
     
     convenience init(in tenant: Tenant, from graphQLResult: GetConversationQuery.Data.Conversation.Message.File) {
-        self.init(tenant: tenant, id: graphQLResult.id!, fileName: graphQLResult.filename, fileType: graphQLResult.fileType?.rawValue)
+        self.init(tenant: tenant, id: graphQLResult.id, fileName: graphQLResult.filename, fileType: graphQLResult.fileType.rawValue)
     }
     
     convenience init(in tenant: Tenant, from graphQLResult: SendMessageMutation.Data.Message.File) {
-        self.init(tenant: tenant, id: graphQLResult.id!, fileName: nil, fileType: nil)
+        self.init(tenant: tenant, id: graphQLResult.id, fileName: nil, fileType: nil)
     }
 }
 
 typealias LottaFileID = String
 
 extension LottaFileID {
-    func getUrl(for tenant: Tenant, queryItems: [URLQueryItem] = []) -> URL? {
-        let urlString = "https://\(tenant.slug).lotta.schule/storage/f/\(self)"
-        return URL(string: urlString)?
-            .appending(queryItems: queryItems)
+    func getUrl(for tenant: Tenant, format: String = "original") -> URL? {
+        let urlString = "https://\(tenant.slug).lotta.schule/storage/data/f/\(self)/\(format)"
+        return URL(string: urlString)
     }
 }
 

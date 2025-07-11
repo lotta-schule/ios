@@ -25,7 +25,7 @@ struct NewConversationView : View {
                 groupId: getGroup()?.id
             ) { message in
                 withAnimation(.bouncy) {
-                    self.routerData.selectedConversationId = message.conversation?.id
+                    self.routerData.selectedConversationId = message.conversation.id
                 }
             }
         }

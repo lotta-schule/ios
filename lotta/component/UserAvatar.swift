@@ -11,6 +11,6 @@ struct UserAvatar: View {
     var user: User
     
     var body: some View {
-        Avatar(url: user.avatarImageFileId?.getUrl(for: user.tenant))
+        Avatar(url: URL(string: user.avatarImageFile!))
     }
 }

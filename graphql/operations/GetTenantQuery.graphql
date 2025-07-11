@@ -7,9 +7,18 @@ query GetTenant {
     configuration {
       backgroundImageFile {
         id
+        formats(category: "PAGEBG") {
+          name
+          url
+          type
+        }
       }
       logoImageFile {
-        id
+        formats(category: "LOGO") {
+          name
+          url
+          type
+        }
       }
       customTheme
       userMaxStorageConfig

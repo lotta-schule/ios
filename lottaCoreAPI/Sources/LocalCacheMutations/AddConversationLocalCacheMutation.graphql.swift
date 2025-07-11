@@ -113,22 +113,22 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", LottaCoreAPI.ID?.self),
-          .field("name", String?.self),
+          .field("id", LottaCoreAPI.ID.self),
+          .field("name", String.self),
         ] }
 
-        public var id: LottaCoreAPI.ID? {
+        public var id: LottaCoreAPI.ID {
           get { __data["id"] }
           set { __data["id"] = newValue }
         }
-        public var name: String? {
+        public var name: String {
           get { __data["name"] }
           set { __data["name"] = newValue }
         }
 
         public init(
-          id: LottaCoreAPI.ID? = nil,
-          name: String? = nil
+          id: LottaCoreAPI.ID,
+          name: String
         ) {
           self.init(_dataDict: DataDict(
             data: [
@@ -153,13 +153,13 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", LottaCoreAPI.ID?.self),
+          .field("id", LottaCoreAPI.ID.self),
           .field("name", String?.self),
           .field("nickname", String?.self),
           .field("avatarImageFile", AvatarImageFile?.self),
         ] }
 
-        public var id: LottaCoreAPI.ID? {
+        public var id: LottaCoreAPI.ID {
           get { __data["id"] }
           set { __data["id"] = newValue }
         }
@@ -177,7 +177,7 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         }
 
         public init(
-          id: LottaCoreAPI.ID? = nil,
+          id: LottaCoreAPI.ID,
           name: String? = nil,
           nickname: String? = nil,
           avatarImageFile: AvatarImageFile? = nil
@@ -206,26 +206,120 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
           public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .field("id", LottaCoreAPI.ID?.self),
+            .field("id", LottaCoreAPI.ID.self),
+            .field("formats", [Format].self, arguments: ["category": "AVATAR"]),
           ] }
 
-          public var id: LottaCoreAPI.ID? {
+          public var id: LottaCoreAPI.ID {
             get { __data["id"] }
             set { __data["id"] = newValue }
           }
+          public var formats: [Format] {
+            get { __data["formats"] }
+            set { __data["formats"] = newValue }
+          }
 
           public init(
-            id: LottaCoreAPI.ID? = nil
+            id: LottaCoreAPI.ID,
+            formats: [Format]
           ) {
             self.init(_dataDict: DataDict(
               data: [
                 "__typename": LottaCoreAPI.Objects.File.typename,
                 "id": id,
+                "formats": formats._fieldData,
               ],
               fulfilledFragments: [
                 ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.self)
               ]
             ))
+          }
+
+          /// Conversation.User.AvatarImageFile.Format
+          ///
+          /// Parent Type: `AvailableFormat`
+          public struct Format: LottaCoreAPI.MutableSelectionSet {
+            public var __data: DataDict
+            public init(_dataDict: DataDict) { __data = _dataDict }
+
+            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __selections: [ApolloAPI.Selection] { [
+              .field("__typename", String.self),
+              .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
+              .field("availability", Availability.self),
+              .field("url", String.self),
+              .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+
+            public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> {
+              get { __data["name"] }
+              set { __data["name"] = newValue }
+            }
+            public var availability: Availability {
+              get { __data["availability"] }
+              set { __data["availability"] = newValue }
+            }
+            public var url: String {
+              get { __data["url"] }
+              set { __data["url"] = newValue }
+            }
+            public var type: GraphQLEnum<LottaCoreAPI.FileType> {
+              get { __data["type"] }
+              set { __data["type"] = newValue }
+            }
+
+            public init(
+              name: GraphQLEnum<LottaCoreAPI.ConversionFormat>,
+              availability: Availability,
+              url: String,
+              type: GraphQLEnum<LottaCoreAPI.FileType>
+            ) {
+              self.init(_dataDict: DataDict(
+                data: [
+                  "__typename": LottaCoreAPI.Objects.AvailableFormat.typename,
+                  "name": name,
+                  "availability": availability._fieldData,
+                  "url": url,
+                  "type": type,
+                ],
+                fulfilledFragments: [
+                  ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.Format.self)
+                ]
+              ))
+            }
+
+            /// Conversation.User.AvatarImageFile.Format.Availability
+            ///
+            /// Parent Type: `FormatAvailability`
+            public struct Availability: LottaCoreAPI.MutableSelectionSet {
+              public var __data: DataDict
+              public init(_dataDict: DataDict) { __data = _dataDict }
+
+              public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
+              public static var __selections: [ApolloAPI.Selection] { [
+                .field("__typename", String.self),
+                .field("status", GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus>.self),
+              ] }
+
+              public var status: GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus> {
+                get { __data["status"] }
+                set { __data["status"] = newValue }
+              }
+
+              public init(
+                status: GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus>
+              ) {
+                self.init(_dataDict: DataDict(
+                  data: [
+                    "__typename": LottaCoreAPI.Objects.FormatAvailability.typename,
+                    "status": status,
+                  ],
+                  fulfilledFragments: [
+                    ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.Format.Availability.self)
+                  ]
+                ))
+              }
+            }
           }
         }
       }
@@ -240,16 +334,16 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", LottaCoreAPI.ID?.self),
+          .field("id", LottaCoreAPI.ID.self),
         ] }
 
-        public var id: LottaCoreAPI.ID? {
+        public var id: LottaCoreAPI.ID {
           get { __data["id"] }
           set { __data["id"] = newValue }
         }
 
         public init(
-          id: LottaCoreAPI.ID? = nil
+          id: LottaCoreAPI.ID
         ) {
           self.init(_dataDict: DataDict(
             data: [

@@ -122,22 +122,22 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", LottaCoreAPI.ID?.self),
-          .field("name", String?.self),
+          .field("id", LottaCoreAPI.ID.self),
+          .field("name", String.self),
         ] }
 
-        public var id: LottaCoreAPI.ID? {
+        public var id: LottaCoreAPI.ID {
           get { __data["id"] }
           set { __data["id"] = newValue }
         }
-        public var name: String? {
+        public var name: String {
           get { __data["name"] }
           set { __data["name"] = newValue }
         }
 
         public init(
-          id: LottaCoreAPI.ID? = nil,
-          name: String? = nil
+          id: LottaCoreAPI.ID,
+          name: String
         ) {
           self.init(_dataDict: DataDict(
             data: [
@@ -162,13 +162,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", LottaCoreAPI.ID?.self),
+          .field("id", LottaCoreAPI.ID.self),
           .field("name", String?.self),
           .field("nickname", String?.self),
           .field("avatarImageFile", AvatarImageFile?.self),
         ] }
 
-        public var id: LottaCoreAPI.ID? {
+        public var id: LottaCoreAPI.ID {
           get { __data["id"] }
           set { __data["id"] = newValue }
         }
@@ -186,7 +186,7 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         }
 
         public init(
-          id: LottaCoreAPI.ID? = nil,
+          id: LottaCoreAPI.ID,
           name: String? = nil,
           nickname: String? = nil,
           avatarImageFile: AvatarImageFile? = nil
@@ -215,16 +215,16 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .field("id", LottaCoreAPI.ID?.self),
+            .field("id", LottaCoreAPI.ID.self),
           ] }
 
-          public var id: LottaCoreAPI.ID? {
+          public var id: LottaCoreAPI.ID {
             get { __data["id"] }
             set { __data["id"] = newValue }
           }
 
           public init(
-            id: LottaCoreAPI.ID? = nil
+            id: LottaCoreAPI.ID
           ) {
             self.init(_dataDict: DataDict(
               data: [
@@ -249,15 +249,15 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .field("id", LottaCoreAPI.ID?.self),
+          .field("id", LottaCoreAPI.ID.self),
           .field("content", String?.self),
-          .field("insertedAt", LottaCoreAPI.DateTime?.self),
-          .field("updatedAt", LottaCoreAPI.DateTime?.self),
-          .field("files", [File?]?.self),
+          .field("insertedAt", LottaCoreAPI.DateTime.self),
+          .field("updatedAt", LottaCoreAPI.DateTime.self),
+          .field("files", [File]?.self),
           .field("user", User?.self),
         ] }
 
-        public var id: LottaCoreAPI.ID? {
+        public var id: LottaCoreAPI.ID {
           get { __data["id"] }
           set { __data["id"] = newValue }
         }
@@ -265,15 +265,15 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           get { __data["content"] }
           set { __data["content"] = newValue }
         }
-        public var insertedAt: LottaCoreAPI.DateTime? {
+        public var insertedAt: LottaCoreAPI.DateTime {
           get { __data["insertedAt"] }
           set { __data["insertedAt"] = newValue }
         }
-        public var updatedAt: LottaCoreAPI.DateTime? {
+        public var updatedAt: LottaCoreAPI.DateTime {
           get { __data["updatedAt"] }
           set { __data["updatedAt"] = newValue }
         }
-        public var files: [File?]? {
+        public var files: [File]? {
           get { __data["files"] }
           set { __data["files"] = newValue }
         }
@@ -283,11 +283,11 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         }
 
         public init(
-          id: LottaCoreAPI.ID? = nil,
+          id: LottaCoreAPI.ID,
           content: String? = nil,
-          insertedAt: LottaCoreAPI.DateTime? = nil,
-          updatedAt: LottaCoreAPI.DateTime? = nil,
-          files: [File?]? = nil,
+          insertedAt: LottaCoreAPI.DateTime,
+          updatedAt: LottaCoreAPI.DateTime,
+          files: [File]? = nil,
           user: User? = nil
         ) {
           self.init(_dataDict: DataDict(
@@ -316,34 +316,34 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .field("id", LottaCoreAPI.ID?.self),
-            .field("filename", String?.self),
-            .field("fileType", GraphQLEnum<LottaCoreAPI.FileType>?.self),
-            .field("filesize", Int?.self),
+            .field("id", LottaCoreAPI.ID.self),
+            .field("filename", String.self),
+            .field("fileType", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            .field("filesize", Int.self),
           ] }
 
-          public var id: LottaCoreAPI.ID? {
+          public var id: LottaCoreAPI.ID {
             get { __data["id"] }
             set { __data["id"] = newValue }
           }
-          public var filename: String? {
+          public var filename: String {
             get { __data["filename"] }
             set { __data["filename"] = newValue }
           }
-          public var fileType: GraphQLEnum<LottaCoreAPI.FileType>? {
+          public var fileType: GraphQLEnum<LottaCoreAPI.FileType> {
             get { __data["fileType"] }
             set { __data["fileType"] = newValue }
           }
-          public var filesize: Int? {
+          public var filesize: Int {
             get { __data["filesize"] }
             set { __data["filesize"] = newValue }
           }
 
           public init(
-            id: LottaCoreAPI.ID? = nil,
-            filename: String? = nil,
-            fileType: GraphQLEnum<LottaCoreAPI.FileType>? = nil,
-            filesize: Int? = nil
+            id: LottaCoreAPI.ID,
+            filename: String,
+            fileType: GraphQLEnum<LottaCoreAPI.FileType>,
+            filesize: Int
           ) {
             self.init(_dataDict: DataDict(
               data: [
@@ -370,13 +370,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
-            .field("id", LottaCoreAPI.ID?.self),
+            .field("id", LottaCoreAPI.ID.self),
             .field("name", String?.self),
             .field("nickname", String?.self),
             .field("avatarImageFile", AvatarImageFile?.self),
           ] }
 
-          public var id: LottaCoreAPI.ID? {
+          public var id: LottaCoreAPI.ID {
             get { __data["id"] }
             set { __data["id"] = newValue }
           }
@@ -394,7 +394,7 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           }
 
           public init(
-            id: LottaCoreAPI.ID? = nil,
+            id: LottaCoreAPI.ID,
             name: String? = nil,
             nickname: String? = nil,
             avatarImageFile: AvatarImageFile? = nil
@@ -423,16 +423,16 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
             public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
-              .field("id", LottaCoreAPI.ID?.self),
+              .field("id", LottaCoreAPI.ID.self),
             ] }
 
-            public var id: LottaCoreAPI.ID? {
+            public var id: LottaCoreAPI.ID {
               get { __data["id"] }
               set { __data["id"] = newValue }
             }
 
             public init(
-              id: LottaCoreAPI.ID? = nil
+              id: LottaCoreAPI.ID
             ) {
               self.init(_dataDict: DataDict(
                 data: [

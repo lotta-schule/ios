@@ -32,15 +32,10 @@ struct SearchUserList: View {
                         onSelect(user)
                     }) {
                         HStack {
-                            if let imageId = user.avatarImageFile?.id {
-                                Avatar(url:
-                                        imageId.getUrl(
-                                            for: userSession.tenant,
-                                            queryItems: [
-                                                .init(name: "width", value: "100"),
-                                                .init(name: "height", value: "100")
-                                            ]
-                                        ))
+                            if let imageUrl = user.avatarImageFile?.formats.first(where: { format in
+                                !format.url.isEmpty
+                            })?.url {
+                                Avatar(url: URL(string: imageUrl))
                             }
                             Text(UserUtil.getVisibleName(for: user))
                         }
@@ -61,7 +56,7 @@ struct SearchUserList: View {
         ) { result in
             switch result {
             case .success(let graphqlResult):
-                self.searchResults = graphqlResult.data?.users?.compactMap { $0 } ?? []
+                self.searchResults = graphqlResult.data?.users.compactMap { $0 } ?? []
             case .failure(let error):
                 // TODO: Better error handling
                 print("error: \(error.localizedDescription)")

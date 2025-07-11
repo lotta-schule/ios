@@ -19,29 +19,29 @@ final class Group {
     
     convenience init(from graphQLResult: GetCurrentUserQuery.Data.CurrentUser.Group) {
         self.init(
-            id: graphQLResult.id!,
-            name: graphQLResult.name!
+            id: graphQLResult.id,
+            name: graphQLResult.name
         )
     }
     
     convenience init(from graphqlGroupResult: GetConversationsQuery.Data.Conversation.Group) {
         self.init(
-            id: graphqlGroupResult.id!,
-            name: graphqlGroupResult.name!
+            id: graphqlGroupResult.id,
+            name: graphqlGroupResult.name
         )
     }
     
     convenience init(from graphqlGroupResult: GetConversationQuery.Data.Conversation.Group) {
         self.init(
-            id: graphqlGroupResult.id!,
-            name: graphqlGroupResult.name!
+            id: graphqlGroupResult.id,
+            name: graphqlGroupResult.name
         )
     }
     
     convenience init(from graphQLResult: ReceiveMessageSubscription.Data.Message.Conversation.Group) {
         self.init(
-            id: graphQLResult.id!,
-            name: graphQLResult.name!
+            id: graphQLResult.id,
+            name: graphQLResult.name
         )
     }
 }

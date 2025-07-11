@@ -13,6 +13,14 @@ query GetConversationQuery($id: ID!, $markAsRead: Boolean) {
       nickname
       avatarImageFile {
         id
+        formats(category: "AVATAR") {
+          name
+          availability {
+            status
+          }
+          url
+          type
+        }
       }
     }
     messages {
@@ -25,6 +33,11 @@ query GetConversationQuery($id: ID!, $markAsRead: Boolean) {
         filename
         fileType
         filesize
+        formats(category: "PREVIEW") {
+          name
+          url
+          type
+        }
       }
       user {
         id
@@ -32,6 +45,14 @@ query GetConversationQuery($id: ID!, $markAsRead: Boolean) {
         nickname
         avatarImageFile {
           id
+          formats(category: "AVATAR") {
+            name
+            availability {
+              status
+            }
+            url
+            type
+          }
         }
       }
     }

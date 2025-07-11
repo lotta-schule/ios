@@ -5,6 +5,7 @@ import ApolloAPI
 
 public enum FileType: String, EnumType {
   case audio = "AUDIO"
+  case binary = "BINARY"
   case image = "IMAGE"
   case misc = "MISC"
   case pdf = "PDF"

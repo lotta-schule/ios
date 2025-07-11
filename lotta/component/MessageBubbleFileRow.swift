@@ -68,14 +68,14 @@ struct MessageBubbleFileRow: View {
     }
     
     func getFileUrl(file: GetConversationQuery.Data.Conversation.Message.File) -> URL? {
-        return file.id?.getUrl(for: userSession.tenant)
+        guard let urlStr = file.formats.first?.url else { return nil }
+        
+        return URL(string: urlStr)
     }
     
     func getPreviewFileUrl(file: GetConversationQuery.Data.Conversation.Message.File) -> URL? {
-        return file.id?
-            .getUrl(for: userSession.tenant, queryItems: [
-                .init(name: "height", value: "150"),
-                .init(name: "resize", value: "contain")
-            ])
+        guard let urlStr = file.formats.first?.url else { return nil }
+        
+        return URL(string: urlStr)
     }
 }

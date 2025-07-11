@@ -8,7 +8,7 @@
 import Foundation
 import LottaCoreAPI
 
-@Observable final class RouterData {
+@MainActor @Observable final class RouterData {
     static let shared = RouterData()
     
     var rootSection: RootSection = .messaging

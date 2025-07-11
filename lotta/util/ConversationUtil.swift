@@ -15,7 +15,7 @@ struct ConversationUtil {
         excludingUserId: ID? = nil
     ) -> String {
         if let group = conversation.groups?.first {
-            return group.name ?? "? Unbekannte Gruppe ?"
+            return group.name
         }
         if let user = conversation.users?.first(where: { $0.id != excludingUserId }) {
             return UserUtil.getVisibleName(for: user)
@@ -29,7 +29,7 @@ struct ConversationUtil {
         excludingUserId: ID? = nil
     ) -> String {
         if let group = conversation.groups?.first {
-            return group.name ?? "? Unbekannte Gruppe ?"
+            return group.name
         }
         if let user = conversation.users?.first(where: { $0.id != excludingUserId }) {
             return UserUtil.getVisibleName(for: user)
@@ -43,10 +43,13 @@ struct ConversationUtil {
         excludingUserId: ID? = nil,
         in tenant: Tenant
     ) -> URL? {
-        return conversation.users?
+        let str = conversation.users?
             .filter { $0.id != excludingUserId }
             .first(where: { $0.id != excludingUserId })?
-            .avatarImageFile?.id?
-            .getUrl(for: tenant)
+            .avatarImageFile?.formats.first?.url
+        
+        guard let str = str else { return nil }
+        
+        return URL(string: str)
     }
 }

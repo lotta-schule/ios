@@ -26,11 +26,13 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Tenant": return LottaCoreAPI.Objects.Tenant
     case "TenantConfiguration": return LottaCoreAPI.Objects.TenantConfiguration
     case "File": return LottaCoreAPI.Objects.File
+    case "AvailableFormat": return LottaCoreAPI.Objects.AvailableFormat
     case "RootSubscriptionType": return LottaCoreAPI.Objects.RootSubscriptionType
     case "Message": return LottaCoreAPI.Objects.Message
     case "User": return LottaCoreAPI.Objects.User
     case "Conversation": return LottaCoreAPI.Objects.Conversation
     case "UserGroup": return LottaCoreAPI.Objects.UserGroup
+    case "FormatAvailability": return LottaCoreAPI.Objects.FormatAvailability
     case "RootMutationType": return LottaCoreAPI.Objects.RootMutationType
     case "Authresult": return LottaCoreAPI.Objects.Authresult
     case "Device": return LottaCoreAPI.Objects.Device

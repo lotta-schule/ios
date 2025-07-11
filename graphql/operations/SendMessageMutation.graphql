@@ -10,6 +10,14 @@ mutation SendMessage($message: MessageInput!) {
       nickname
       avatarImageFile {
         id
+        formats(category: "AVATAR") {
+          name
+          availability {
+            status
+          }
+          url
+          type
+        }
       }
     }
     files {

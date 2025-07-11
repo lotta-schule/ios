@@ -16,8 +16,8 @@ struct TenantRootView: View {
         .background {
             ZStack {
                 userSession.theme.pageBackgroundColor.toColor()
-                if let url = userSession.tenant.backgroundImageFileId?.getUrl(for: userSession.tenant)?.appending(queryItems: [.init(name: "height", value: "800")]) {
-                    LazyImage(url: url)
+                if let url = userSession.tenant.backgroundImageFile {
+                    LazyImage(url: URL(string: url))
                         .scaledToFit()
                         .opacity(0.25)
                         .ignoresSafeArea(.all)

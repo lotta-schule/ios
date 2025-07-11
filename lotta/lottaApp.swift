@@ -42,8 +42,8 @@ struct lottaApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(ModelData.shared)
         }
-        .environment(ModelData.shared)
         // .modelContext(ModelContext(sharedModelContainer))
     }
 }

@@ -11,14 +11,14 @@ public struct SelectUserInput: InputObject {
   }
 
   public init(
-    id: GraphQLNullable<ID> = nil
+    id: ID
   ) {
     __data = InputDict([
       "id": id
     ])
   }
 
-  public var id: GraphQLNullable<ID> {
+  public var id: ID {
     get { __data["id"] }
     set { __data["id"] = newValue }
   }

@@ -13,6 +13,14 @@ query GetConversationsQuery {
       nickname
       avatarImageFile {
         id
+        formats(category: "AVATAR") {
+          name
+          availability {
+            status
+          }
+          url
+          type
+        }
       }
     }
     messages {
@@ -36,6 +44,14 @@ query AddConversationLocalCacheMutation @apollo_client_ios_localCacheMutation {
       nickname
       avatarImageFile {
         id
+        formats(category: "AVATAR") {
+          name
+          availability {
+            status
+          }
+          url
+          type
+        }
       }
     }
     messages {

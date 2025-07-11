@@ -121,58 +121,61 @@ struct MainView : View {
             switch response {
             case .success(let graphqlResult):
                 userSession.api.apollo.store.withinReadWriteTransaction({ transaction in
-                    do {
-                        if let conversationId = graphqlResult.data?.message?.conversation?.id {
-                            // Add conversation
-                            let getConversationsQueryCache = try transaction.read(query: GetConversationsQuery())
-                            let addConversationCacheMutation = AddConversationLocalCacheMutation()
-                            
-                            guard let _conversationFieldData = graphqlResult.data?.message?.conversation?._fieldData else {
-                                return
-                            }
-                            var newConversation = AddConversationLocalCacheMutation.Data.Conversation(
-                                _fieldData: _conversationFieldData
-                            )
-                            newConversation.messages = [
-                                AddConversationLocalCacheMutation.Data.Conversation.Message(id: graphqlResult.data?.message?.id)
-                            ]
-                            
-                            try transaction.update(addConversationCacheMutation) { (data: inout AddConversationLocalCacheMutation.Data) in
-                                if let i = getConversationsQueryCache.conversations?.firstIndex(where: { $0?.id == conversationId }) {
-                                    // when currently looking at the conversation, we do not want to change the counter
-                                    if RouterData.shared.selectedConversationId != graphqlResult.data?.message?.conversation?.id {
-                                        data.conversations?[i]?.unreadMessages = newConversation.unreadMessages
-                                    }
-                                    data.conversations?[i]?.updatedAt = newConversation.updatedAt
-                                    // data.conversations?[i]?.messages = data.conversations?[i]?.messages?.append(contentsOf: newConversation.messages ?? [])
-                                } else {
-                                    data.conversations?.append(newConversation)
-                                }
-                            }
-                            
-                            // Add Message
-                            let addMessageCacheMutation = AddMessageToConversationLocalCacheMutation(id: conversationId)
-                            
-                            guard let _addMessageFieldData = graphqlResult.data?.message?._fieldData else {
-                                return
-                            }
-                            let newMessage = AddMessageToConversationLocalCacheMutation.Data.Conversation.Message(_fieldData: _addMessageFieldData)
-                            
-                            try transaction.update(addMessageCacheMutation) { (data: inout AddMessageToConversationLocalCacheMutation.Data) in
-                                if data.conversation?.messages?.contains(where: { $0.id == newMessage.id }) != true {
-                                    data.conversation?.messages?.append(newMessage)
-                                }
-                            }
-                        }
-                    } catch {
-                        print("Fehler: \(String(describing: error))")
-                        throw error
+                    guard let data = graphqlResult.data else {
+                        return
                     }
-                }) { _result in
-                }
+                    try self.onReceiveMessageTransaction(transaction: transaction, gqlData: data)
+                })
             case .failure(let error):
                 SentrySDK.capture(error: error)
                 print("Error subscribing: \(error)")
+            }
+        }
+    }
+    
+    func onReceiveMessageTransaction(transaction: ApolloStore.ReadWriteTransaction, gqlData: ReceiveMessageSubscription.Data) throws -> Void {
+        guard let conversationId = gqlData.message?.conversation.id else {
+            return
+        }
+        
+        // Add conversation
+        let getConversationsQueryCache = try transaction.read(query: GetConversationsQuery())
+        let addConversationCacheMutation = AddConversationLocalCacheMutation()
+        
+        guard let _conversationFieldData = gqlData.message?.conversation._fieldData else {
+            return
+        }
+        var newConversation = AddConversationLocalCacheMutation.Data.Conversation(
+            _fieldData: _conversationFieldData
+        )
+        newConversation.messages = [
+            AddConversationLocalCacheMutation.Data.Conversation.Message(id: gqlData.message?.id ?? "")
+        ]
+        
+        try transaction.update(addConversationCacheMutation) { (data: inout AddConversationLocalCacheMutation.Data) in
+            if let i = getConversationsQueryCache.conversations?.firstIndex(where: { $0?.id == conversationId }) {
+                // when currently looking at the conversation, we do not want to change the counter
+                if RouterData.shared.selectedConversationId != gqlData.message?.conversation.id {
+                    data.conversations?[i]?.unreadMessages = newConversation.unreadMessages
+                }
+                data.conversations?[i]?.updatedAt = newConversation.updatedAt
+                // data.conversations?[i]?.messages = data.conversations?[i]?.messages?.append(contentsOf: newConversation.messages ?? [])
+            } else {
+                data.conversations?.append(newConversation)
+            }
+        }
+        
+        // Add Message
+        let addMessageCacheMutation = AddMessageToConversationLocalCacheMutation(id: conversationId)
+        
+        guard let _addMessageFieldData = gqlData.message?._fieldData else {
+            return
+        }
+        let newMessage = AddMessageToConversationLocalCacheMutation.Data.Conversation.Message(_fieldData: _addMessageFieldData)
+        
+        try transaction.update(addMessageCacheMutation) { (data: inout AddMessageToConversationLocalCacheMutation.Data) in
+            if data.conversation?.messages?.contains(where: { $0.id == newMessage.id }) != true {
+                data.conversation?.messages?.append(newMessage)
             }
         }
     }

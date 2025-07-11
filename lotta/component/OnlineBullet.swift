@@ -24,7 +24,9 @@ struct OnlineBullet: View {
             .fill(isOnline ? .green : .red)
             .onAppear {
                 timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                    isOnline = userSession.api.isWSConnected()
+                    MainActor.assumeIsolated {
+                        isOnline = userSession.api.isWSConnected()
+                    }
                 }
             }
             .onDisappear {

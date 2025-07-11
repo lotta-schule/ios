@@ -75,6 +75,7 @@ struct ProfileView : View {
                 FeedbackView(name: modelData.currentSession?.user.name ?? "", email: modelData.currentSession?.user.email ?? "") {
                     isShowFeedbackView.toggle()
                 }
+                .environment(modelData)
             }
 
         }

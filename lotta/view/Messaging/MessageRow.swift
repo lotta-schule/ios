@@ -25,11 +25,7 @@ struct MessageRow : View {
                         Avatar(
                             url:
                                 imageId.getUrl(
-                                    for: userSession.tenant,
-                                    queryItems: [
-                                        .init(name: "width", value: "100"),
-                                        .init(name: "height", value: "100")
-                                    ]
+                                    for: userSession.tenant, format: "avatar_250"
                                 ),
                             size: 30
                         )
@@ -72,11 +68,7 @@ struct MessageRow : View {
             ""
         }
         
-        let dateString = if let date = message.insertedAt?.toDate() {
-            formatDate(date)
-        } else {
-            ""
-        }
+        let dateString = formatDate(message.insertedAt.toDate())
         
         return [username, dateString].joined(separator: "")
     }

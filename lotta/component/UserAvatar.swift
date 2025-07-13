@@ -11,6 +11,10 @@ struct UserAvatar: View {
     var user: User
     
     var body: some View {
-        Avatar(url: URL(string: user.avatarImageFile!))
+        if let imageUrl = user.avatarImageFile {
+            Avatar(url: URL(string: imageUrl))
+        } else {
+            Avatar()
+        }
     }
 }

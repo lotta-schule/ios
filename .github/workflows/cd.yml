@@ -33,7 +33,7 @@ jobs:
         id: update_commit
         with:
           commit_message: "Bump version"
-    
+
   build_with_signing:
     name: Build, sign and upload app
     needs:
@@ -97,7 +97,7 @@ jobs:
           ls -l ~/Library/MobileDevice/Provisioning\ Profiles
 
           # Setup export options plist
-          IDENTITY_NAME=$(security find-identity -v -p codesigning | grep "iPhone Distribution" | head -n 1 | cut -d'"' -f2)
+          IDENTITY_NAME=$(security find-identity -v -p codesigning | grep -E "(iPhone|Apple) Distribution" | head -n 1 | cut -d'"' -f2)
           TEAM_ID=$(echo -n $IDENTITY_NAME | cut -d'(' -f2 | cut -d')' -f1)
 
           cat <<- EOF > ~/export-options.plist
@@ -143,7 +143,7 @@ jobs:
         with:
           name: lotta.ipa
           path: ${{ runner.temp }}/export
-          if-no-files-found: 'error'
+          if-no-files-found: "error"
 
       - name: Upload build
         env:

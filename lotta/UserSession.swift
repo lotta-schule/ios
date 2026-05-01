@@ -165,6 +165,40 @@ enum UserSessionError : Error {
         }
     }
     
+    static func createFromAuthInfo(onTenantSlug slug: String, withAuthInfo authInfo: AuthInfo) async throws -> UserSession {
+        let genericApi = CoreApi(withTenantSlug: slug)
+        let tenantGraphqlResponse = try await genericApi.apollo.fetchAsync(query: GetTenantQuery())
+        guard let tenantData = tenantGraphqlResponse.tenant else {
+            throw AuthenticationError.invalidResponse("No tenant found in repsonse \(tenantGraphqlResponse)")
+        }
+        let tenant = Tenant(from: tenantData)
+        
+        let tenantApi = CoreApi(withTenantSlug: tenant.slug, loginSession: authInfo)
+        
+        guard let accessToken = authInfo.accessToken,
+              let refreshToken = authInfo.refreshToken else {
+            throw AuthenticationError.invalidResponse("AuthInfo is not valid!")
+        }
+        
+        guard let userId = accessToken.subject else {
+            throw AuthenticationError.invalidResponse("Auth token is not valid, does not contain a user id")
+        }
+        
+        authInfo.accessToken = accessToken
+        let user = User(tenant: tenant, id: userId)
+        let userSession = UserSession(tenant: tenant, authInfo: authInfo, user: user)
+        
+        _ = try? await authInfo.renewAsync()
+        
+        switch await userSession.refetchUserData() {
+            case .error(let authError):
+                throw authError
+            case .success:
+                try? userSession.writeToDisk()
+                return userSession
+        }
+    }
+
     static func readFromDisk() async -> [UserSession] {
         var results = [UserSession]()
         

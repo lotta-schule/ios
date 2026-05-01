@@ -9,6 +9,9 @@ import Sentry
 import SwiftUI
 import LottaCoreAPI
 import NukeUI
+import AuthenticationServices
+import CryptoKit
+import JWTDecode
 
 struct TenantDescriptor: Codable, Hashable {
     let id: Int
@@ -37,6 +40,8 @@ struct LoginView: View {
     @State private var isLoading = false
     @State private var isAlertViewPresented = false
     @State private var lastErrorMessage = ""
+    @State private var isLoadingEduplaces = false
+    @State private var authSessionProvider: ASWebAuthenticationPresentationContextProvider?
     
     var disablingTenantSlugs: [String] = []
     var defaultLoginMail: String = ""
@@ -97,11 +102,32 @@ struct LoginView: View {
             .scrollContentBackground(.hidden)
             .alert(lastErrorMessage, isPresented: $isAlertViewPresented) {}
             
-            
             if availableTenantDescriptors.count == 0 {
-                LottaButton("weiter", action: fetchPossibleTenants, isLoading: isLoadingTenants)
-                    .disabled(isLoadingTenants || email.isEmpty)
-                    .padding()
+                if !email.isEmpty {
+                    LottaButton("weiter", action: fetchPossibleTenants, isLoading: isLoadingTenants)
+                        .disabled(isLoadingTenants)
+                        .padding()
+                }
+                
+                if email.isEmpty {
+                    if #available(iOS 17.4, *) {
+                        Divider()
+                        
+                        Button(action: loginWithEduplaces) {
+                            Image("EduplacesIcon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 16)
+                            Text("Login mit eduplaces")
+                                .padding(.horizontal)
+                        }
+                        .background(.white)
+                        .foregroundStyle(Color(red: 0.29, green: 0, blue: 0.72))
+                        .disabled(isLoadingEduplaces)
+                        .padding()
+                        .containerRelativeFrame(.horizontal, alignment: .center)
+                    }
+                }
             }
             
             if selectedTenantDescriptor != nil {
@@ -187,6 +213,73 @@ struct LoginView: View {
     func showErrorMessage(_ message: String) -> Void {
         lastErrorMessage = message
         isAlertViewPresented = true
+    }
+    
+    @available(iOS 17.4, *)
+    func loginWithEduplaces() -> Void {
+        isLoadingEduplaces = true
+        
+        // Start authentication session
+        let session = ASWebAuthenticationSession(
+            url: LOTTA_API_HTTP_URL.appending(path: "/auth/oauth/eduplaces/login"),
+            callbackURLScheme: "lotta"
+        ) { callbackURL, error in
+            defer { isLoadingEduplaces = false }
+            
+            if let error = error {
+                // User cancelled or other error
+                if (error as? ASWebAuthenticationSessionError)?.code != .canceledLogin {
+                    SentrySDK.capture(error: error)
+                    showErrorMessage("Authentifizierung fehlgeschlagen: \(error.localizedDescription)")
+                }
+                return
+            }
+            
+            guard let callbackURL = callbackURL else {
+                showErrorMessage("Keine Callback-URL erhalten")
+                return
+            }
+            
+            // Parse the callback URL
+            guard let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false),
+                  let tenantSlug = components.encodedHost,
+                  let token = components.queryItems?.first(where: { $0.name == "token" })?.value,
+                  let refreshToken = components.queryItems?.first(where: { $0.name == "refresh_token" })?.value else {
+                showErrorMessage("Ungültige Server-Antwort!")
+                return
+            }
+            
+            Task {
+                guard let token = try? decode(jwt: token),
+                      let refreshToken = try? decode(jwt: refreshToken),
+                    let userSession = try? await UserSession.createFromAuthInfo(
+                    onTenantSlug: tenantSlug,
+                    withAuthInfo: AuthInfo(accessToken: token, refreshToken: refreshToken),
+                ) else {
+                    showErrorMessage("User Session konnte nicht erstellt werden")
+                    return
+                }
+                onLogin(userSession)
+            }
+        }
+        session.additionalHeaderFields = [
+            "x-lotta-app-version": "ios-\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown")",
+        ]
+        
+        // Create and retain the presentation context provider
+        let provider = ASWebAuthenticationPresentationContextProvider()
+        authSessionProvider = provider
+        
+        session.presentationContextProvider = provider
+        session.prefersEphemeralWebBrowserSession = false
+        session.start()
+    }
+}
+
+// Helper for presentation context
+private class ASWebAuthenticationPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return ASPresentationAnchor()
     }
 }
 

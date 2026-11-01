@@ -33,7 +33,7 @@ struct SearchUserList: View {
                     }) {
                         HStack {
                             if let imageUrl = user.avatarImageFile?.formats.first(where: { format in
-                                !format.url.isEmpty
+                                !(format.url?.isEmpty ?? true)
                             })?.url {
                                 Avatar(url: URL(string: imageUrl))
                             }

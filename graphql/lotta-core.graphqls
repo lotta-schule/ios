@@ -4,11 +4,29 @@ schema {
   subscription: RootSubscriptionType
 }
 
-"""Exposes a URL that specifies the behavior of this scalar."""
-directive @specifiedBy(
-  """The URL that specifies the behavior of this scalar."""
-  url: String!
-) on SCALAR
+"""
+The @oneOf built-in directive is used within the type system definition language to indicate an Input Object is a OneOf Input Object.
+
+A OneOf Input Object is a special variant of Input Object where exactly one field must be set and non-null, all others being omitted.
+This is useful for representing situations where an input may be one of many different options.
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""
+A directive used by the Apollo iOS client to annotate operations or fragments that should be used exclusively for generating local cache mutations instead of as standard operations.
+"""
+directive @apollo_client_ios_localCacheMutation on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
+
+"""
+Directs the executor to defer this fragment when the `if` argument is true or undefined.
+"""
+directive @defer(
+  """Deferred when true or undefined."""
+  if: Boolean
+
+  """Unique name"""
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 enum AnalyticsMetric {
   BOUNCE_RATE
@@ -56,21 +74,21 @@ enum AnalyticsProperty {
 
 type Article {
   category: Category
-  contentModules: [ContentModule]
-  groups: [UserGroup]
-  id: ID
-  insertedAt: DateTime
+  contentModules: [ContentModule!]!
+  groups: [UserGroup!]!
+  id: ID!
+  insertedAt: DateTime!
   isPinnedToTop: Boolean
   isReactionsEnabled: Boolean
   preview: String
   previewImageFile: File
   published: Boolean
-  reactionCounts: [ArticleReactionCount]
+  reactionCounts: [ArticleReactionCount!]
   readyToPublish: Boolean
   tags: [String!]
-  title: String
-  updatedAt: DateTime
-  users: [User]
+  title: String!
+  updatedAt: DateTime!
+  users: [User!]!
 }
 
 """Filtering options for the article list"""
@@ -124,7 +142,7 @@ type AvailableFormat {
   mimeType: String!
   name: ConversionFormat!
   type: FileType!
-  url: String!
+  url: String
 }
 
 type BreakdownMetrics {
@@ -247,7 +265,7 @@ type Conversation {
   groups: [UserGroup!]
   id: ID
   insertedAt: DateTime
-  messages: [Message!]
+  messages(filter: MessageFilter): [Message!]
   unreadMessages: Int
   updatedAt: DateTime
   users: [User!]
@@ -420,6 +438,14 @@ type FileContentModuleUsageLocation {
   usage: String!
 }
 
+input FileFilter {
+  """
+  Keyset cursor: ID of the last file in the previous page (files sorted by filename ASC, id ASC)
+  """
+  afterId: ID
+  first: Int
+}
+
 type FileSystemUsageLocation {
   usage: String!
 }
@@ -461,12 +487,6 @@ human-readable json string.
 """
 scalar Json
 
-type MediaUsage {
-  mediaConversionCurrentPeriod: Float
-  mediaFilesTotal: Int
-  mediaFilesTotalDuration: Float
-}
-
 type Message {
   content: String
   conversation: Conversation!
@@ -475,6 +495,14 @@ type Message {
   insertedAt: DateTime!
   updatedAt: DateTime!
   user: User
+}
+
+input MessageFilter {
+  """Return only messages with an id lower than this (older than)"""
+  before: ID
+
+  """Limit the number of results to return"""
+  first: Int
 }
 
 input MessageInput {
@@ -489,29 +517,13 @@ type MetricResult {
   value: Int!
 }
 
-input RecurrenceInput {
-  daysOfMonth: [Int!]
-  daysOfWeek: [String!]
-  frequency: CalendarEventRecurrenceFrequency!
-  interval: Int!
-  occurrences: Int
-  until: DateTime
-}
-
-input RegisterDeviceInput {
-  customName: String
-  deviceType: String
-  modelName: String
-  operatingSystem: String
-  platformId: String!
-  pushToken: String
-}
-
-input RegisterUserParams {
-  email: String!
-  hideFullName: Boolean
-  name: String!
-  nickname: String
+"""Monthly usage statistics for a specific month, grouped by usage type"""
+type MonthlyUsagePeriod {
+  activeUserCount: UsageTypeData
+  mediaConversionSeconds: UsageTypeData
+  month: Int!
+  totalStorageCount: UsageTypeData
+  year: Int!
 }
 
 type RootMutationType {
@@ -587,10 +599,10 @@ type RootQueryType {
   externalCalendarEvents(days: Int, url: String!): [ExternalCalendarEvent!]!
   feedbacks: [Feedback!]!
   file(id: ID): File
-  files(parentDirectoryId: ID): [File!]!
+  files(filter: FileFilter, parentDirectoryId: ID): [File!]!
   getReactionUsers(id: ID!, type: ArticleReactionType!): [User]
   group(id: ID!): UserGroup
-  ownArticles: [Article]
+  ownArticles(filter: ArticleFilter): [Article]
   realtimeAnalytics: Int!
   relevantFilesInUsage: [File!]
   schedule(date: Date, widgetId: ID!): Json
@@ -602,17 +614,36 @@ type RootQueryType {
   tenant(slug: String): Tenant
   timeseriesAnalytics(date: Date!, metric: AnalyticsMetric!, period: AnalyticsPeriod!): [TimeseriesMetrics!]!
   unpublishedArticles: [Article]
-  usage: [Usage!]!
+  usage: [MonthlyUsagePeriod!]!
   user(id: ID!): User
   userGroups: [UserGroup!]!
   users: [User!]!
   widgets(categoryId: ID): [Widget!]!
 }
 
-type RootSubscriptionType {
-  articleIsUpdated(id: ID!): Article
-  conversionProgress(fileId: ID!): File
-  receiveMessage: Message
+input RecurrenceInput {
+  daysOfMonth: [Int!]
+  daysOfWeek: [String!]
+  frequency: CalendarEventRecurrenceFrequency!
+  interval: Int!
+  occurrences: Int
+  until: DateTime
+}
+
+input RegisterDeviceInput {
+  customName: String
+  deviceType: String
+  modelName: String
+  operatingSystem: String
+  platformId: String!
+  pushToken: String
+}
+
+input RegisterUserParams {
+  email: String!
+  hideFullName: Boolean
+  name: String!
+  nickname: String
 }
 
 input SearchOptions {
@@ -639,34 +670,41 @@ input SelectWidgetInput {
   id: ID!
 }
 
-type StorageUsage {
-  filesTotal: Int
-  usedTotal: Int
+type RootSubscriptionType {
+  articleIsUpdated(id: ID!): Article
+  conversionProgress(fileId: ID!): File
+  receiveMessage: Message
 }
 
 type Tenant {
+  address: String!
   backgroundImageFile: File
   configuration: TenantConfiguration!
   customDomains: [CustomDomain!]!
+  eduplacesId: String
   host: String!
   id: ID!
   identifier: String!
   insertedAt: DateTime!
   logoImageFile: File
   slug: String!
+  state: TenantState!
   stats: TenantStats
   title: String!
+  type: String
 }
 
 type TenantConfiguration {
   backgroundImageFile: File
   customTheme: Json
+  isEmailRegistrationEnabled: Boolean
   logoImageFile: File
   userMaxStorageConfig: String
 }
 
 input TenantConfigurationInput {
   customTheme: Json
+  isEmailRegistrationEnabled: Boolean
   userMaxStorageConfig: String
 }
 
@@ -675,6 +713,17 @@ input TenantInput {
   configuration: TenantConfigurationInput
   logoImageFileId: ID
   title: String
+}
+
+enum TenantState {
+  """Tenant is active and operational"""
+  ACTIVE
+
+  """Tenant is being initialized"""
+  INIT
+
+  """Tenant is in read-only mode"""
+  READONLY
 }
 
 type TenantStats {
@@ -720,11 +769,10 @@ input UpdateUserParams {
 """Represents an uploaded file."""
 scalar Upload
 
-type Usage {
-  media: MediaUsage
-  periodEnd: DateTime
-  periodStart: DateTime
-  storage: StorageUsage
+"""Usage data for a specific usage type with value and timestamp"""
+type UsageTypeData {
+  updatedAt: DateTime!
+  value: Float!
 }
 
 type User {
@@ -744,10 +792,12 @@ type User {
   nickname: String
   unreadMessages: Int
   updatedAt: DateTime!
+  usedStorageSize: Int
 }
 
 type UserGroup {
   canReadFullName: Boolean!
+  eduplacesId: String
   enrollmentTokens: [String!]!
   id: ID!
   insertedAt: DateTime!
@@ -759,7 +809,7 @@ type UserGroup {
 
 input UserGroupInput {
   canReadFullName: Boolean
-  enrollmentTokens: [String!]!
+  enrollmentTokens: [String!]
   isAdminGroup: Boolean
   name: String!
   sortKey: Int
@@ -788,4 +838,3 @@ enum WidgetType {
   SCHEDULE
   TAGCLOUD
 }
-

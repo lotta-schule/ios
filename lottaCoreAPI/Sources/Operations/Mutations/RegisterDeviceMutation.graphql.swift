@@ -22,9 +22,12 @@ public class RegisterDeviceMutation: GraphQLMutation {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootMutationType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootMutationType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("registerDevice", alias: "device", Device?.self, arguments: ["device": .variable("device")]),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      RegisterDeviceMutation.Data.self
     ] }
 
     public var device: Device? { __data["device"] }
@@ -36,10 +39,13 @@ public class RegisterDeviceMutation: GraphQLMutation {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Device }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Device }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID?.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        RegisterDeviceMutation.Data.Device.self
       ] }
 
       public var id: LottaCoreAPI.ID? { __data["id"] }

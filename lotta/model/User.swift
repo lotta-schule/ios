@@ -45,7 +45,7 @@ final class User {
             nickname: graphQLResult.nickname,
             groups: graphQLResult.groups.map { Group(from: $0) },
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -57,7 +57,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -69,7 +69,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -81,7 +81,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -93,7 +93,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -105,7 +105,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -117,7 +117,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }
@@ -129,7 +129,7 @@ final class User {
             name: graphQLResult.name,
             nickname: graphQLResult.nickname,
             avatarImageFile: graphQLResult.avatarImageFile?.formats.first { format in
-                !format.url.isEmpty
+                !(format.url?.isEmpty ?? true)
             }?.url
         )
     }

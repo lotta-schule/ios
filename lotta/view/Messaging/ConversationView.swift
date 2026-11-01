@@ -35,7 +35,7 @@ struct ConversationView : View {
                 .toolbar {
                     if let user = conversation.users?.first(where: { $0.id != userSession.user.id }),
                        let urlStr = user.avatarImageFile?.formats.first(where: { format in
-                           !format.url.isEmpty
+                           !(format.url?.isEmpty ?? true)
                        })?.url {
                         ToolbarItem(placement: .topBarTrailing) {
                             Avatar(url: URL(string: urlStr))

@@ -12,9 +12,12 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
     public var __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("conversations", [Conversation?]?.self),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      AddConversationLocalCacheMutation.Data.self
     ] }
 
     public var conversations: [Conversation?]? {
@@ -25,15 +28,10 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
     public init(
       conversations: [Conversation?]? = nil
     ) {
-      self.init(_dataDict: DataDict(
-        data: [
-          "__typename": LottaCoreAPI.Objects.RootQueryType.typename,
-          "conversations": conversations._fieldData,
-        ],
-        fulfilledFragments: [
-          ObjectIdentifier(AddConversationLocalCacheMutation.Data.self)
-        ]
-      ))
+      self.init(unsafelyWithData: [
+        "__typename": LottaCoreAPI.Objects.RootQueryType.typename,
+        "conversations": conversations._fieldData,
+      ])
     }
 
     /// Conversation
@@ -43,7 +41,7 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
       public var __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID?.self),
@@ -52,6 +50,9 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         .field("groups", [Group]?.self),
         .field("users", [User]?.self),
         .field("messages", [Message]?.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        AddConversationLocalCacheMutation.Data.Conversation.self
       ] }
 
       public var id: LottaCoreAPI.ID? {
@@ -87,20 +88,15 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         users: [User]? = nil,
         messages: [Message]? = nil
       ) {
-        self.init(_dataDict: DataDict(
-          data: [
-            "__typename": LottaCoreAPI.Objects.Conversation.typename,
-            "id": id,
-            "updatedAt": updatedAt,
-            "unreadMessages": unreadMessages,
-            "groups": groups._fieldData,
-            "users": users._fieldData,
-            "messages": messages._fieldData,
-          ],
-          fulfilledFragments: [
-            ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.self)
-          ]
-        ))
+        self.init(unsafelyWithData: [
+          "__typename": LottaCoreAPI.Objects.Conversation.typename,
+          "id": id,
+          "updatedAt": updatedAt,
+          "unreadMessages": unreadMessages,
+          "groups": groups._fieldData,
+          "users": users._fieldData,
+          "messages": messages._fieldData,
+        ])
       }
 
       /// Conversation.Group
@@ -110,11 +106,14 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public var __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          AddConversationLocalCacheMutation.Data.Conversation.Group.self
         ] }
 
         public var id: LottaCoreAPI.ID {
@@ -130,16 +129,11 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
           id: LottaCoreAPI.ID,
           name: String
         ) {
-          self.init(_dataDict: DataDict(
-            data: [
-              "__typename": LottaCoreAPI.Objects.UserGroup.typename,
-              "id": id,
-              "name": name,
-            ],
-            fulfilledFragments: [
-              ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.Group.self)
-            ]
-          ))
+          self.init(unsafelyWithData: [
+            "__typename": LottaCoreAPI.Objects.UserGroup.typename,
+            "id": id,
+            "name": name,
+          ])
         }
       }
 
@@ -150,13 +144,16 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public var __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String?.self),
           .field("nickname", String?.self),
           .field("avatarImageFile", AvatarImageFile?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          AddConversationLocalCacheMutation.Data.Conversation.User.self
         ] }
 
         public var id: LottaCoreAPI.ID {
@@ -182,18 +179,13 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
           nickname: String? = nil,
           avatarImageFile: AvatarImageFile? = nil
         ) {
-          self.init(_dataDict: DataDict(
-            data: [
-              "__typename": LottaCoreAPI.Objects.User.typename,
-              "id": id,
-              "name": name,
-              "nickname": nickname,
-              "avatarImageFile": avatarImageFile._fieldData,
-            ],
-            fulfilledFragments: [
-              ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.self)
-            ]
-          ))
+          self.init(unsafelyWithData: [
+            "__typename": LottaCoreAPI.Objects.User.typename,
+            "id": id,
+            "name": name,
+            "nickname": nickname,
+            "avatarImageFile": avatarImageFile._fieldData,
+          ])
         }
 
         /// Conversation.User.AvatarImageFile
@@ -203,11 +195,14 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
           public var __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("formats", [Format].self, arguments: ["category": "AVATAR"]),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.self
           ] }
 
           public var id: LottaCoreAPI.ID {
@@ -223,16 +218,11 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
             id: LottaCoreAPI.ID,
             formats: [Format]
           ) {
-            self.init(_dataDict: DataDict(
-              data: [
-                "__typename": LottaCoreAPI.Objects.File.typename,
-                "id": id,
-                "formats": formats._fieldData,
-              ],
-              fulfilledFragments: [
-                ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.self)
-              ]
-            ))
+            self.init(unsafelyWithData: [
+              "__typename": LottaCoreAPI.Objects.File.typename,
+              "id": id,
+              "formats": formats._fieldData,
+            ])
           }
 
           /// Conversation.User.AvatarImageFile.Format
@@ -242,13 +232,16 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
             public var __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
               .field("availability", Availability.self),
-              .field("url", String.self),
+              .field("url", String?.self),
               .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.Format.self
             ] }
 
             public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> {
@@ -259,7 +252,7 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
               get { __data["availability"] }
               set { __data["availability"] = newValue }
             }
-            public var url: String {
+            public var url: String? {
               get { __data["url"] }
               set { __data["url"] = newValue }
             }
@@ -271,21 +264,16 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
             public init(
               name: GraphQLEnum<LottaCoreAPI.ConversionFormat>,
               availability: Availability,
-              url: String,
+              url: String? = nil,
               type: GraphQLEnum<LottaCoreAPI.FileType>
             ) {
-              self.init(_dataDict: DataDict(
-                data: [
-                  "__typename": LottaCoreAPI.Objects.AvailableFormat.typename,
-                  "name": name,
-                  "availability": availability._fieldData,
-                  "url": url,
-                  "type": type,
-                ],
-                fulfilledFragments: [
-                  ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.Format.self)
-                ]
-              ))
+              self.init(unsafelyWithData: [
+                "__typename": LottaCoreAPI.Objects.AvailableFormat.typename,
+                "name": name,
+                "availability": availability._fieldData,
+                "url": url,
+                "type": type,
+              ])
             }
 
             /// Conversation.User.AvatarImageFile.Format.Availability
@@ -295,10 +283,13 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
               public var __data: DataDict
               public init(_dataDict: DataDict) { __data = _dataDict }
 
-              public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
+              public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
               public static var __selections: [ApolloAPI.Selection] { [
                 .field("__typename", String.self),
                 .field("status", GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus>.self),
+              ] }
+              public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+                AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.Format.Availability.self
               ] }
 
               public var status: GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus> {
@@ -309,15 +300,10 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
               public init(
                 status: GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus>
               ) {
-                self.init(_dataDict: DataDict(
-                  data: [
-                    "__typename": LottaCoreAPI.Objects.FormatAvailability.typename,
-                    "status": status,
-                  ],
-                  fulfilledFragments: [
-                    ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.Format.Availability.self)
-                  ]
-                ))
+                self.init(unsafelyWithData: [
+                  "__typename": LottaCoreAPI.Objects.FormatAvailability.typename,
+                  "status": status,
+                ])
               }
             }
           }
@@ -331,10 +317,13 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public var __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          AddConversationLocalCacheMutation.Data.Conversation.Message.self
         ] }
 
         public var id: LottaCoreAPI.ID {
@@ -345,15 +334,10 @@ public class AddConversationLocalCacheMutation: LocalCacheMutation {
         public init(
           id: LottaCoreAPI.ID
         ) {
-          self.init(_dataDict: DataDict(
-            data: [
-              "__typename": LottaCoreAPI.Objects.Message.typename,
-              "id": id,
-            ],
-            fulfilledFragments: [
-              ObjectIdentifier(AddConversationLocalCacheMutation.Data.Conversation.Message.self)
-            ]
-          ))
+          self.init(unsafelyWithData: [
+            "__typename": LottaCoreAPI.Objects.Message.typename,
+            "id": id,
+          ])
         }
       }
     }

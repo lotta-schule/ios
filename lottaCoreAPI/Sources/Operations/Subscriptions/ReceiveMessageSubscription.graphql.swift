@@ -16,9 +16,12 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootSubscriptionType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootSubscriptionType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("receiveMessage", alias: "message", Message?.self),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      ReceiveMessageSubscription.Data.self
     ] }
 
     public var message: Message? { __data["message"] }
@@ -30,7 +33,7 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID.self),
@@ -40,6 +43,9 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
         .field("files", [File]?.self),
         .field("user", User?.self),
         .field("conversation", Conversation.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        ReceiveMessageSubscription.Data.Message.self
       ] }
 
       public var id: LottaCoreAPI.ID { __data["id"] }
@@ -57,13 +63,16 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("filename", String.self),
           .field("fileType", GraphQLEnum<LottaCoreAPI.FileType>.self),
           .field("filesize", Int.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          ReceiveMessageSubscription.Data.Message.File.self
         ] }
 
         public var id: LottaCoreAPI.ID { __data["id"] }
@@ -79,13 +88,16 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String?.self),
           .field("nickname", String?.self),
           .field("avatarImageFile", AvatarImageFile?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          ReceiveMessageSubscription.Data.Message.User.self
         ] }
 
         public var id: LottaCoreAPI.ID { __data["id"] }
@@ -100,11 +112,14 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("formats", [Format].self, arguments: ["category": "AVATAR"]),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            ReceiveMessageSubscription.Data.Message.User.AvatarImageFile.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -117,16 +132,19 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
-              .field("url", String.self),
+              .field("url", String?.self),
               .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              ReceiveMessageSubscription.Data.Message.User.AvatarImageFile.Format.self
             ] }
 
             public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
-            public var url: String { __data["url"] }
+            public var url: String? { __data["url"] }
             public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
           }
         }
@@ -139,7 +157,7 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID?.self),
@@ -147,6 +165,9 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
           .field("groups", [Group]?.self),
           .field("users", [User]?.self),
           .field("unreadMessages", Int?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          ReceiveMessageSubscription.Data.Message.Conversation.self
         ] }
 
         public var id: LottaCoreAPI.ID? { __data["id"] }
@@ -162,11 +183,14 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("name", String.self),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            ReceiveMessageSubscription.Data.Message.Conversation.Group.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -180,13 +204,16 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("name", String?.self),
             .field("nickname", String?.self),
             .field("avatarImageFile", AvatarImageFile?.self),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            ReceiveMessageSubscription.Data.Message.Conversation.User.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -201,11 +228,14 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("id", LottaCoreAPI.ID.self),
               .field("formats", [Format].self, arguments: ["category": "AVATAR"]),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              ReceiveMessageSubscription.Data.Message.Conversation.User.AvatarImageFile.self
             ] }
 
             public var id: LottaCoreAPI.ID { __data["id"] }
@@ -218,16 +248,19 @@ public class ReceiveMessageSubscription: GraphQLSubscription {
               public let __data: DataDict
               public init(_dataDict: DataDict) { __data = _dataDict }
 
-              public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+              public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
               public static var __selections: [ApolloAPI.Selection] { [
                 .field("__typename", String.self),
                 .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
-                .field("url", String.self),
+                .field("url", String?.self),
                 .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+              ] }
+              public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+                ReceiveMessageSubscription.Data.Message.Conversation.User.AvatarImageFile.Format.self
               ] }
 
               public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
-              public var url: String { __data["url"] }
+              public var url: String? { __data["url"] }
               public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
             }
           }

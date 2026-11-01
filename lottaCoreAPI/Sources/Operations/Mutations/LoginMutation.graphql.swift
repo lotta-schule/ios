@@ -30,12 +30,15 @@ public class LoginMutation: GraphQLMutation {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootMutationType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootMutationType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("login", Login?.self, arguments: [
         "username": .variable("username"),
         "password": .variable("password")
       ]),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      LoginMutation.Data.self
     ] }
 
     public var login: Login? { __data["login"] }
@@ -47,10 +50,13 @@ public class LoginMutation: GraphQLMutation {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Authresult }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Authresult }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("accessToken", String?.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        LoginMutation.Data.Login.self
       ] }
 
       public var accessToken: String? { __data["accessToken"] }

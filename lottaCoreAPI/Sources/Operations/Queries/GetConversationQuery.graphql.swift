@@ -30,12 +30,15 @@ public class GetConversationQuery: GraphQLQuery {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("conversation", Conversation?.self, arguments: [
         "id": .variable("id"),
         "markAsRead": .variable("markAsRead")
       ]),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      GetConversationQuery.Data.self
     ] }
 
     public var conversation: Conversation? { __data["conversation"] }
@@ -47,7 +50,7 @@ public class GetConversationQuery: GraphQLQuery {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID?.self),
@@ -56,6 +59,9 @@ public class GetConversationQuery: GraphQLQuery {
         .field("groups", [Group]?.self),
         .field("users", [User]?.self),
         .field("messages", [Message]?.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        GetConversationQuery.Data.Conversation.self
       ] }
 
       public var id: LottaCoreAPI.ID? { __data["id"] }
@@ -72,11 +78,14 @@ public class GetConversationQuery: GraphQLQuery {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          GetConversationQuery.Data.Conversation.Group.self
         ] }
 
         public var id: LottaCoreAPI.ID { __data["id"] }
@@ -90,13 +99,16 @@ public class GetConversationQuery: GraphQLQuery {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String?.self),
           .field("nickname", String?.self),
           .field("avatarImageFile", AvatarImageFile?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          GetConversationQuery.Data.Conversation.User.self
         ] }
 
         public var id: LottaCoreAPI.ID { __data["id"] }
@@ -111,11 +123,14 @@ public class GetConversationQuery: GraphQLQuery {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("formats", [Format].self, arguments: ["category": "AVATAR"]),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            GetConversationQuery.Data.Conversation.User.AvatarImageFile.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -128,18 +143,21 @@ public class GetConversationQuery: GraphQLQuery {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
               .field("availability", Availability.self),
-              .field("url", String.self),
+              .field("url", String?.self),
               .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              GetConversationQuery.Data.Conversation.User.AvatarImageFile.Format.self
             ] }
 
             public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
             public var availability: Availability { __data["availability"] }
-            public var url: String { __data["url"] }
+            public var url: String? { __data["url"] }
             public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
 
             /// Conversation.User.AvatarImageFile.Format.Availability
@@ -149,10 +167,13 @@ public class GetConversationQuery: GraphQLQuery {
               public let __data: DataDict
               public init(_dataDict: DataDict) { __data = _dataDict }
 
-              public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
+              public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
               public static var __selections: [ApolloAPI.Selection] { [
                 .field("__typename", String.self),
                 .field("status", GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus>.self),
+              ] }
+              public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+                GetConversationQuery.Data.Conversation.User.AvatarImageFile.Format.Availability.self
               ] }
 
               public var status: GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus> { __data["status"] }
@@ -168,7 +189,7 @@ public class GetConversationQuery: GraphQLQuery {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
@@ -177,6 +198,9 @@ public class GetConversationQuery: GraphQLQuery {
           .field("updatedAt", LottaCoreAPI.DateTime.self),
           .field("files", [File]?.self),
           .field("user", User?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          GetConversationQuery.Data.Conversation.Message.self
         ] }
 
         public var id: LottaCoreAPI.ID { __data["id"] }
@@ -193,7 +217,7 @@ public class GetConversationQuery: GraphQLQuery {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
@@ -201,6 +225,9 @@ public class GetConversationQuery: GraphQLQuery {
             .field("fileType", GraphQLEnum<LottaCoreAPI.FileType>.self),
             .field("filesize", Int.self),
             .field("formats", [Format].self, arguments: ["category": "PREVIEW"]),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            GetConversationQuery.Data.Conversation.Message.File.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -216,16 +243,19 @@ public class GetConversationQuery: GraphQLQuery {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
-              .field("url", String.self),
+              .field("url", String?.self),
               .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              GetConversationQuery.Data.Conversation.Message.File.Format.self
             ] }
 
             public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
-            public var url: String { __data["url"] }
+            public var url: String? { __data["url"] }
             public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
           }
         }
@@ -237,13 +267,16 @@ public class GetConversationQuery: GraphQLQuery {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("name", String?.self),
             .field("nickname", String?.self),
             .field("avatarImageFile", AvatarImageFile?.self),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            GetConversationQuery.Data.Conversation.Message.User.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -258,11 +291,14 @@ public class GetConversationQuery: GraphQLQuery {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("id", LottaCoreAPI.ID.self),
               .field("formats", [Format].self, arguments: ["category": "AVATAR"]),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              GetConversationQuery.Data.Conversation.Message.User.AvatarImageFile.self
             ] }
 
             public var id: LottaCoreAPI.ID { __data["id"] }
@@ -275,18 +311,21 @@ public class GetConversationQuery: GraphQLQuery {
               public let __data: DataDict
               public init(_dataDict: DataDict) { __data = _dataDict }
 
-              public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+              public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
               public static var __selections: [ApolloAPI.Selection] { [
                 .field("__typename", String.self),
                 .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
                 .field("availability", Availability.self),
-                .field("url", String.self),
+                .field("url", String?.self),
                 .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+              ] }
+              public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+                GetConversationQuery.Data.Conversation.Message.User.AvatarImageFile.Format.self
               ] }
 
               public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
               public var availability: Availability { __data["availability"] }
-              public var url: String { __data["url"] }
+              public var url: String? { __data["url"] }
               public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
 
               /// Conversation.Message.User.AvatarImageFile.Format.Availability
@@ -296,10 +335,13 @@ public class GetConversationQuery: GraphQLQuery {
                 public let __data: DataDict
                 public init(_dataDict: DataDict) { __data = _dataDict }
 
-                public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
+                public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.FormatAvailability }
                 public static var __selections: [ApolloAPI.Selection] { [
                   .field("__typename", String.self),
                   .field("status", GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus>.self),
+                ] }
+                public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+                  GetConversationQuery.Data.Conversation.Message.User.AvatarImageFile.Format.Availability.self
                 ] }
 
                 public var status: GraphQLEnum<LottaCoreAPI.FormatAvailabilityStatus> { __data["status"] }

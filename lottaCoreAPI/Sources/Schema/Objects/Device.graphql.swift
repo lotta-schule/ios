@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let Device = ApolloAPI.Object(
     typename: "Device",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

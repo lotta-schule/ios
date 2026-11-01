@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let RootQueryType = ApolloAPI.Object(
     typename: "RootQueryType",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let FormatAvailability = ApolloAPI.Object(
     typename: "FormatAvailability",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

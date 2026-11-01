@@ -18,12 +18,15 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
     public var __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("conversation", Conversation?.self, arguments: [
         "id": .variable("id"),
         "markAsRead": true
       ]),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      AddMessageToConversationLocalCacheMutation.Data.self
     ] }
 
     public var conversation: Conversation? {
@@ -34,15 +37,10 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
     public init(
       conversation: Conversation? = nil
     ) {
-      self.init(_dataDict: DataDict(
-        data: [
-          "__typename": LottaCoreAPI.Objects.RootQueryType.typename,
-          "conversation": conversation._fieldData,
-        ],
-        fulfilledFragments: [
-          ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.self)
-        ]
-      ))
+      self.init(unsafelyWithData: [
+        "__typename": LottaCoreAPI.Objects.RootQueryType.typename,
+        "conversation": conversation._fieldData,
+      ])
     }
 
     /// Conversation
@@ -52,7 +50,7 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
       public var __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Conversation }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID?.self),
@@ -61,6 +59,9 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         .field("groups", [Group]?.self),
         .field("users", [User]?.self),
         .field("messages", [Message]?.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        AddMessageToConversationLocalCacheMutation.Data.Conversation.self
       ] }
 
       public var id: LottaCoreAPI.ID? {
@@ -96,20 +97,15 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         users: [User]? = nil,
         messages: [Message]? = nil
       ) {
-        self.init(_dataDict: DataDict(
-          data: [
-            "__typename": LottaCoreAPI.Objects.Conversation.typename,
-            "id": id,
-            "updatedAt": updatedAt,
-            "unreadMessages": unreadMessages,
-            "groups": groups._fieldData,
-            "users": users._fieldData,
-            "messages": messages._fieldData,
-          ],
-          fulfilledFragments: [
-            ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.self)
-          ]
-        ))
+        self.init(unsafelyWithData: [
+          "__typename": LottaCoreAPI.Objects.Conversation.typename,
+          "id": id,
+          "updatedAt": updatedAt,
+          "unreadMessages": unreadMessages,
+          "groups": groups._fieldData,
+          "users": users._fieldData,
+          "messages": messages._fieldData,
+        ])
       }
 
       /// Conversation.Group
@@ -119,11 +115,14 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         public var __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.UserGroup }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          AddMessageToConversationLocalCacheMutation.Data.Conversation.Group.self
         ] }
 
         public var id: LottaCoreAPI.ID {
@@ -139,16 +138,11 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           id: LottaCoreAPI.ID,
           name: String
         ) {
-          self.init(_dataDict: DataDict(
-            data: [
-              "__typename": LottaCoreAPI.Objects.UserGroup.typename,
-              "id": id,
-              "name": name,
-            ],
-            fulfilledFragments: [
-              ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.Group.self)
-            ]
-          ))
+          self.init(unsafelyWithData: [
+            "__typename": LottaCoreAPI.Objects.UserGroup.typename,
+            "id": id,
+            "name": name,
+          ])
         }
       }
 
@@ -159,13 +153,16 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         public var __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
           .field("name", String?.self),
           .field("nickname", String?.self),
           .field("avatarImageFile", AvatarImageFile?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          AddMessageToConversationLocalCacheMutation.Data.Conversation.User.self
         ] }
 
         public var id: LottaCoreAPI.ID {
@@ -191,18 +188,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           nickname: String? = nil,
           avatarImageFile: AvatarImageFile? = nil
         ) {
-          self.init(_dataDict: DataDict(
-            data: [
-              "__typename": LottaCoreAPI.Objects.User.typename,
-              "id": id,
-              "name": name,
-              "nickname": nickname,
-              "avatarImageFile": avatarImageFile._fieldData,
-            ],
-            fulfilledFragments: [
-              ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.User.self)
-            ]
-          ))
+          self.init(unsafelyWithData: [
+            "__typename": LottaCoreAPI.Objects.User.typename,
+            "id": id,
+            "name": name,
+            "nickname": nickname,
+            "avatarImageFile": avatarImageFile._fieldData,
+          ])
         }
 
         /// Conversation.User.AvatarImageFile
@@ -212,10 +204,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public var __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            AddMessageToConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.self
           ] }
 
           public var id: LottaCoreAPI.ID {
@@ -226,15 +221,10 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public init(
             id: LottaCoreAPI.ID
           ) {
-            self.init(_dataDict: DataDict(
-              data: [
-                "__typename": LottaCoreAPI.Objects.File.typename,
-                "id": id,
-              ],
-              fulfilledFragments: [
-                ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.User.AvatarImageFile.self)
-              ]
-            ))
+            self.init(unsafelyWithData: [
+              "__typename": LottaCoreAPI.Objects.File.typename,
+              "id": id,
+            ])
           }
         }
       }
@@ -246,7 +236,7 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         public var __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Message }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("id", LottaCoreAPI.ID.self),
@@ -255,6 +245,9 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           .field("updatedAt", LottaCoreAPI.DateTime.self),
           .field("files", [File]?.self),
           .field("user", User?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.self
         ] }
 
         public var id: LottaCoreAPI.ID {
@@ -290,20 +283,15 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           files: [File]? = nil,
           user: User? = nil
         ) {
-          self.init(_dataDict: DataDict(
-            data: [
-              "__typename": LottaCoreAPI.Objects.Message.typename,
-              "id": id,
-              "content": content,
-              "insertedAt": insertedAt,
-              "updatedAt": updatedAt,
-              "files": files._fieldData,
-              "user": user._fieldData,
-            ],
-            fulfilledFragments: [
-              ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.self)
-            ]
-          ))
+          self.init(unsafelyWithData: [
+            "__typename": LottaCoreAPI.Objects.Message.typename,
+            "id": id,
+            "content": content,
+            "insertedAt": insertedAt,
+            "updatedAt": updatedAt,
+            "files": files._fieldData,
+            "user": user._fieldData,
+          ])
         }
 
         /// Conversation.Message.File
@@ -313,13 +301,16 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public var __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("filename", String.self),
             .field("fileType", GraphQLEnum<LottaCoreAPI.FileType>.self),
             .field("filesize", Int.self),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.File.self
           ] }
 
           public var id: LottaCoreAPI.ID {
@@ -345,18 +336,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
             fileType: GraphQLEnum<LottaCoreAPI.FileType>,
             filesize: Int
           ) {
-            self.init(_dataDict: DataDict(
-              data: [
-                "__typename": LottaCoreAPI.Objects.File.typename,
-                "id": id,
-                "filename": filename,
-                "fileType": fileType,
-                "filesize": filesize,
-              ],
-              fulfilledFragments: [
-                ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.File.self)
-              ]
-            ))
+            self.init(unsafelyWithData: [
+              "__typename": LottaCoreAPI.Objects.File.typename,
+              "id": id,
+              "filename": filename,
+              "fileType": fileType,
+              "filesize": filesize,
+            ])
           }
         }
 
@@ -367,13 +353,16 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
           public var __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.User }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("name", String?.self),
             .field("nickname", String?.self),
             .field("avatarImageFile", AvatarImageFile?.self),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.User.self
           ] }
 
           public var id: LottaCoreAPI.ID {
@@ -399,18 +388,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
             nickname: String? = nil,
             avatarImageFile: AvatarImageFile? = nil
           ) {
-            self.init(_dataDict: DataDict(
-              data: [
-                "__typename": LottaCoreAPI.Objects.User.typename,
-                "id": id,
-                "name": name,
-                "nickname": nickname,
-                "avatarImageFile": avatarImageFile._fieldData,
-              ],
-              fulfilledFragments: [
-                ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.User.self)
-              ]
-            ))
+            self.init(unsafelyWithData: [
+              "__typename": LottaCoreAPI.Objects.User.typename,
+              "id": id,
+              "name": name,
+              "nickname": nickname,
+              "avatarImageFile": avatarImageFile._fieldData,
+            ])
           }
 
           /// Conversation.Message.User.AvatarImageFile
@@ -420,10 +404,13 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
             public var __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("id", LottaCoreAPI.ID.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.User.AvatarImageFile.self
             ] }
 
             public var id: LottaCoreAPI.ID {
@@ -434,15 +421,10 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
             public init(
               id: LottaCoreAPI.ID
             ) {
-              self.init(_dataDict: DataDict(
-                data: [
-                  "__typename": LottaCoreAPI.Objects.File.typename,
-                  "id": id,
-                ],
-                fulfilledFragments: [
-                  ObjectIdentifier(AddMessageToConversationLocalCacheMutation.Data.Conversation.Message.User.AvatarImageFile.self)
-                ]
-              ))
+              self.init(unsafelyWithData: [
+                "__typename": LottaCoreAPI.Objects.File.typename,
+                "id": id,
+              ])
             }
           }
         }

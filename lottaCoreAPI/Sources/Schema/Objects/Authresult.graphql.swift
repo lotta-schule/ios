@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let Authresult = ApolloAPI.Object(
     typename: "Authresult",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

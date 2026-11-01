@@ -16,9 +16,12 @@ public class GetTenantQuery: GraphQLQuery {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
+    public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.RootQueryType }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("tenant", Tenant?.self),
+    ] }
+    public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      GetTenantQuery.Data.self
     ] }
 
     public var tenant: Tenant? { __data["tenant"] }
@@ -30,7 +33,7 @@ public class GetTenantQuery: GraphQLQuery {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.Tenant }
+      public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.Tenant }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", LottaCoreAPI.ID.self),
@@ -38,6 +41,9 @@ public class GetTenantQuery: GraphQLQuery {
         .field("slug", String.self),
         .field("host", String.self),
         .field("configuration", Configuration.self),
+      ] }
+      public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+        GetTenantQuery.Data.Tenant.self
       ] }
 
       public var id: LottaCoreAPI.ID { __data["id"] }
@@ -53,13 +59,16 @@ public class GetTenantQuery: GraphQLQuery {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
-        public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.TenantConfiguration }
+        public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.TenantConfiguration }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
           .field("backgroundImageFile", BackgroundImageFile?.self),
           .field("logoImageFile", LogoImageFile?.self),
           .field("customTheme", LottaCoreAPI.Json?.self),
           .field("userMaxStorageConfig", String?.self),
+        ] }
+        public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+          GetTenantQuery.Data.Tenant.Configuration.self
         ] }
 
         public var backgroundImageFile: BackgroundImageFile? { __data["backgroundImageFile"] }
@@ -74,11 +83,14 @@ public class GetTenantQuery: GraphQLQuery {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", LottaCoreAPI.ID.self),
             .field("formats", [Format].self, arguments: ["category": "PAGEBG"]),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            GetTenantQuery.Data.Tenant.Configuration.BackgroundImageFile.self
           ] }
 
           public var id: LottaCoreAPI.ID { __data["id"] }
@@ -91,16 +103,19 @@ public class GetTenantQuery: GraphQLQuery {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
-              .field("url", String.self),
+              .field("url", String?.self),
               .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              GetTenantQuery.Data.Tenant.Configuration.BackgroundImageFile.Format.self
             ] }
 
             public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
-            public var url: String { __data["url"] }
+            public var url: String? { __data["url"] }
             public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
           }
         }
@@ -112,10 +127,13 @@ public class GetTenantQuery: GraphQLQuery {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
+          public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.File }
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("formats", [Format].self, arguments: ["category": "LOGO"]),
+          ] }
+          public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+            GetTenantQuery.Data.Tenant.Configuration.LogoImageFile.self
           ] }
 
           public var formats: [Format] { __data["formats"] }
@@ -127,16 +145,19 @@ public class GetTenantQuery: GraphQLQuery {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
-            public static var __parentType: ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
+            public static var __parentType: any ApolloAPI.ParentType { LottaCoreAPI.Objects.AvailableFormat }
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("name", GraphQLEnum<LottaCoreAPI.ConversionFormat>.self),
-              .field("url", String.self),
+              .field("url", String?.self),
               .field("type", GraphQLEnum<LottaCoreAPI.FileType>.self),
+            ] }
+            public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              GetTenantQuery.Data.Tenant.Configuration.LogoImageFile.Format.self
             ] }
 
             public var name: GraphQLEnum<LottaCoreAPI.ConversionFormat> { __data["name"] }
-            public var url: String { __data["url"] }
+            public var url: String? { __data["url"] }
             public var type: GraphQLEnum<LottaCoreAPI.FileType> { __data["type"] }
           }
         }

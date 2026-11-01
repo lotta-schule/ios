@@ -6,6 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let RootMutationType = ApolloAPI.Object(
     typename: "RootMutationType",
-    implementedInterfaces: []
+    implementedInterfaces: [],
+    keyFields: nil
   )
 }

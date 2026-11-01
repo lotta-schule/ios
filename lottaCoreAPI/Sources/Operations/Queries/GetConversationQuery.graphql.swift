@@ -7,7 +7,7 @@ public class GetConversationQuery: GraphQLQuery {
   public static let operationName: String = "GetConversationQuery"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query GetConversationQuery($id: ID!, $markAsRead: Boolean) { conversation(id: $id, markAsRead: $markAsRead) { __typename id updatedAt unreadMessages groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id formats(category: "AVATAR") { __typename name availability { __typename status } url type } } } messages { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize formats(category: "PREVIEW") { __typename name url type } } user { __typename id name nickname avatarImageFile { __typename id formats(category: "AVATAR") { __typename name availability { __typename status } url type } } } } } }"#
+      #"query GetConversationQuery($id: ID!, $markAsRead: Boolean) { conversation(id: $id, markAsRead: $markAsRead) { __typename id updatedAt unreadMessages groups { __typename id name } users { __typename id name nickname avatarImageFile { __typename id formats(category: "AVATAR") { __typename name availability { __typename status } url type } } } messages(filter: { first: 30 }) { __typename id content insertedAt updatedAt files { __typename id filename fileType filesize formats(category: "PREVIEW") { __typename name url type } } user { __typename id name nickname avatarImageFile { __typename id formats(category: "AVATAR") { __typename name availability { __typename status } url type } } } } } }"#
     ))
 
   public var id: ID
@@ -58,7 +58,7 @@ public class GetConversationQuery: GraphQLQuery {
         .field("unreadMessages", Int?.self),
         .field("groups", [Group]?.self),
         .field("users", [User]?.self),
-        .field("messages", [Message]?.self),
+        .field("messages", [Message]?.self, arguments: ["filter": ["first": 30]]),
       ] }
       public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
         GetConversationQuery.Data.Conversation.self

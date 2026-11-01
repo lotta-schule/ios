@@ -58,7 +58,7 @@ public class AddMessageToConversationLocalCacheMutation: LocalCacheMutation {
         .field("unreadMessages", Int?.self),
         .field("groups", [Group]?.self),
         .field("users", [User]?.self),
-        .field("messages", [Message]?.self),
+        .field("messages", [Message]?.self, arguments: ["filter": ["first": 30]]),
       ] }
       public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
         AddMessageToConversationLocalCacheMutation.Data.Conversation.self

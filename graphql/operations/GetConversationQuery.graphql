@@ -23,7 +23,7 @@ query GetConversationQuery($id: ID!, $markAsRead: Boolean) {
         }
       }
     }
-    messages {
+    messages(filter: {first: 30}) {
       id
       content
       insertedAt
@@ -77,7 +77,7 @@ query AddMessageToConversationLocalCacheMutation($id: ID!)
         id
       }
     }
-    messages {
+    messages(filter: {first: 30}) {
       id
       content
       insertedAt

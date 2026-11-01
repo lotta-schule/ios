@@ -1,0 +1,38 @@
+query GetConversationMessagesQuery($id: ID!, $before: ID, $first: Int) {
+  conversation(id: $id, markAsRead: false) {
+    id
+    messages(filter: {before: $before, first: $first}) {
+      id
+      content
+      insertedAt
+      updatedAt
+      files {
+        id
+        filename
+        fileType
+        filesize
+        formats(category: "PREVIEW") {
+          name
+          url
+          type
+        }
+      }
+      user {
+        id
+        name
+        nickname
+        avatarImageFile {
+          id
+          formats(category: "AVATAR") {
+            name
+            availability {
+              status
+            }
+            url
+            type
+          }
+        }
+      }
+    }
+  }
+}

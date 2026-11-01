@@ -14,6 +14,11 @@ struct ConversationView : View {
     
     @State private var cancelConversationQueryWatch: Cancellable?
     @State private var conversation: GetConversationQuery.Data.Conversation?
+    @State private var olderMessages: [GetConversationQuery.Data.Conversation.Message] = []
+    @State private var isLoadingOlder = false
+    @State private var hasMoreOlder = true
+
+    private let pageSize = 30
     
     var conversationId: ID
     
@@ -22,7 +27,10 @@ struct ConversationView : View {
             if let conversation = conversation {
                 VStack {
                     MessageList(
-                        messages: conversation.messages ?? [],
+                        messages: allMessages(of: conversation),
+                        hasMoreOlder: hasMoreOlder && (conversation.messages?.count ?? 0) >= pageSize,
+                        isLoadingOlder: isLoadingOlder,
+                        onLoadOlder: { Task { await loadOlderMessages() } },
                         isGroupChat: conversation.groups?.isEmpty == false
                     )
                     
@@ -45,6 +53,8 @@ struct ConversationView : View {
             }
         }
         .onChange(of: conversationId, initial: true) { _, _ in
+            olderMessages = []
+            hasMoreOlder = true
             Task {
                 let _ = try? await userSession.api.apollo.fetchAsync(query: GetConversationQuery(id: conversationId, markAsRead: true), cachePolicy: .returnCacheDataAndFetch)
                 await PushNotificationService.shared.removeNotificationsFor(conversationId: conversationId)
@@ -56,6 +66,31 @@ struct ConversationView : View {
         }
     }
     
+    private func allMessages(of conversation: GetConversationQuery.Data.Conversation) -> [GetConversationQuery.Data.Conversation.Message] {
+        let live = conversation.messages ?? []
+        let liveIds = Set(live.map { $0.id })
+        return olderMessages.filter { !liveIds.contains($0.id) } + live
+    }
+
+    private func loadOlderMessages() async {
+        guard !isLoadingOlder, hasMoreOlder, let conversation = conversation else { return }
+        let known = allMessages(of: conversation)
+        guard let oldest = known.min(by: { (Int($0.id) ?? 0) < (Int($1.id) ?? 0) }) else { return }
+        isLoadingOlder = true
+        defer { isLoadingOlder = false }
+        do {
+            let result = try await userSession.api.apollo.fetchAsync(
+                query: GetConversationMessagesQuery(id: conversationId, before: .some(oldest.id), first: .some(pageSize)),
+                cachePolicy: .fetchIgnoringCacheData
+            )
+            let fetched = result.conversation?.messages ?? []
+            olderMessages += fetched.map { GetConversationQuery.Data.Conversation.Message(_dataDict: $0.__data) }
+            hasMoreOlder = fetched.count >= pageSize
+        } catch {
+            print("ERROR loading older messages: \(error)")
+        }
+    }
+
     func watchConversationQuery(id: ID) -> Void {
         mayUnwatchConversationQuery()
         cancelConversationQueryWatch = userSession.api.apollo.watch(

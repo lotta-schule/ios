@@ -14,7 +14,11 @@ class NetworkInterceptorProvider: DefaultInterceptorProvider {
     
     init(loginSession: AuthInfo?, store: ApolloStore) {
         self.loginSession = loginSession
-        super.init(shouldInvalidateClientOnDeinit: true, store: store)
+        super.init(
+            client: URLSessionClient(sessionConfiguration: LottaEnvironment.urlSessionConfiguration),
+            shouldInvalidateClientOnDeinit: true,
+            store: store
+        )
     }
     
     override func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation : GraphQLOperation {

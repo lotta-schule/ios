@@ -26,13 +26,9 @@ class RefreshTokenInterceptor: ApolloInterceptor {
         completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
     ) {
         if let loginSession = loginSession,
-           let fields = response?.httpResponse.allHeaderFields as? [String: String],
-           let url = response?.httpResponse.url {
-            let cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: url)
-            if let refreshCookie = cookies.first(where: { $0.name == "SignInRefreshToken" }),
-               let refreshToken = try? decode(jwt: refreshCookie.value) {
-                loginSession.refreshToken = refreshToken
-            }
+           let httpResponse = response?.httpResponse,
+           let refreshToken = AuthInfo.refreshToken(fromCookiesOf: httpResponse) {
+            loginSession.refreshToken = refreshToken
         }
         chain.proceedAsync(
             request: request,

@@ -7,7 +7,7 @@ public class LoginMutation: GraphQLMutation {
   public static let operationName: String = "Login"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation Login($username: String!, $password: String!) { login(username: $username, password: $password) { __typename accessToken } }"#
+      #"mutation Login($username: String!, $password: String!) { login(username: $username, password: $password) { __typename accessToken refreshToken } }"#
     ))
 
   public var username: String
@@ -54,12 +54,14 @@ public class LoginMutation: GraphQLMutation {
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("accessToken", String?.self),
+        .field("refreshToken", String?.self),
       ] }
       public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
         LoginMutation.Data.Login.self
       ] }
 
       public var accessToken: String? { __data["accessToken"] }
+      public var refreshToken: String? { __data["refreshToken"] }
     }
   }
 }

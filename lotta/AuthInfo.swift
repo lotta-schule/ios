@@ -72,10 +72,22 @@ class AuthInfo {
         request.setValue("id:\(tid)", forHTTPHeaderField: "tenant")
         request.httpMethod = "POST"
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        LottaEnvironment.urlSession.dataTask(with: request) { data, response, error in
             if let error = error {
                 SentrySDK.capture(error: error)
                 completion(.failure(.connectionError))
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse, !(200..<300).contains(httpResponse.statusCode) {
+                switch httpResponse.statusCode {
+                case 400, 401, 403:
+                    // The server rejected the refresh token: the user has to log in again
+                    completion(.failure(.invalidToken))
+                default:
+                    // Server-side problem: keep the session, try again later
+                    SentrySDK.capture(message: "AuthInfo#renew: unexpected status code \(httpResponse.statusCode)")
+                    completion(.failure(.connectionError))
+                }
                 return
             }
             guard let data = data, let tokens = try? JSONDecoder().decode(TokenPair.Json.self, from: data) else {
@@ -85,18 +97,25 @@ class AuthInfo {
             }
 
             let tokenPair = tokens.asPair()
-            guard let accessToken = tokenPair.accessToken, let refreshToken = tokenPair.refreshToken else {
+            guard let accessToken = tokenPair.accessToken else {
                 SentrySDK.capture(message: "Invalid token from tokenPair: \(tokenPair)")
                 completion(.failure(.invalidToken))
                 return
             }
 
+            // The refresh token is rotated on every renewal. The server sends it in the body
+            // and/or as a cookie (current backend: cookie only). If neither is present,
+            // the current refresh token stays valid until it expires.
+            let newRefreshToken = tokenPair.refreshToken
+                ?? (response as? HTTPURLResponse).flatMap(AuthInfo.refreshToken(fromCookiesOf:))
+                ?? refreshToken
+
             self.accessToken = accessToken
-            self.refreshToken = refreshToken
+            self.refreshToken = newRefreshToken
 
             self.saveToKeychain()
 
-            completion(.success(tokenPair))
+            completion(.success(TokenPair(accessToken: accessToken, refreshToken: newRefreshToken)))
         }.resume()
     }
 
@@ -134,14 +153,15 @@ class AuthInfo {
             "userId": userId
         ]
 
-        if !keychain.set(refreshToken.string, forKey: "\(tenantId)-\(userId)--refresh-token", withAccess: .accessibleAfterFirstUnlock) {
+        let key = AuthInfo.keychainKey(forUserId: userId, onTenantId: String(tenantId))
+        if !keychain.set(refreshToken.string, forKey: key, withAccess: .accessibleAfterFirstUnlock) {
             let bc = Breadcrumb(level: .fatal, category: "AuthInfo#saveToKeychain")
             bc.message = "Could not save refreshToken to keychain. Returned false with error code \(keychain.lastResultCode)"
             bc.data = [
                 "refreshToken": refreshToken.string,
                 "tenantId": tenantId,
                 "userId": userId,
-                "key": "\(tenantId)-\(userId)--refresh-token",
+                "key": key,
                 "errorCode": keychain.lastResultCode,
             ]
             SentrySDK.addBreadcrumb(bc)
@@ -149,8 +169,27 @@ class AuthInfo {
         }
     }
     
+    static func keychainKey(forUserId userId: ID, onTenantId tenantId: ID) -> String {
+        return "\(tenantId)-\(userId)--refresh-token"
+    }
+
     static func loadFromKeychain(forUserId userId: ID, onTenantId tenantId: ID) -> String? {
-        return keychain.get("\(tenantId)-\(userId)--refresh-token")
+        return keychain.get(keychainKey(forUserId: userId, onTenantId: tenantId))
+    }
+
+    static func deleteFromKeychain(forUserId userId: ID, onTenantId tenantId: ID) -> Void {
+        keychain.delete(keychainKey(forUserId: userId, onTenantId: tenantId))
+    }
+
+    /// Extracts the `SignInRefreshToken` cookie the server sets on login and token refresh.
+    static func refreshToken(fromCookiesOf response: HTTPURLResponse) -> JWT? {
+        guard let fields = response.allHeaderFields as? [String: String],
+              let url = response.url else {
+            return nil
+        }
+        return HTTPCookie.cookies(withResponseHeaderFields: fields, for: url)
+            .first(where: { $0.name == "SignInRefreshToken" })
+            .flatMap { try? decode(jwt: $0.value) }
     }
 
     struct TokenPair {

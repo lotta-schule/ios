@@ -12,6 +12,8 @@
 		2E0268722AB88F4600C18681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0268712AB88F4600C18681 /* Assets.xcassets */; };
 		2E0268752AB88F4600C18681 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0268742AB88F4600C18681 /* Preview Assets.xcassets */; };
 		2E02687F2AB88F4600C18681 /* lottaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02687E2AB88F4600C18681 /* lottaTests.swift */; };
+		2E0268A22AB88F4600C18681 /* AuthPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268A12AB88F4600C18681 /* AuthPersistenceTests.swift */; };
+		2E0268A42AB88F4600C18681 /* MockBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268A32AB88F4600C18681 /* MockBackend.swift */; };
 		2E0268892AB88F4600C18681 /* lottaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0268882AB88F4600C18681 /* lottaUITests.swift */; };
 		2E02688B2AB88F4600C18681 /* lottaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02688A2AB88F4600C18681 /* lottaUITestsLaunchTests.swift */; };
 		2E02689B2AB8936300C18681 /* CoreApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02689A2AB8936300C18681 /* CoreApi.swift */; };
@@ -128,6 +130,8 @@
 		2E0268742AB88F4600C18681 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2E02687A2AB88F4600C18681 /* lottaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lottaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E02687E2AB88F4600C18681 /* lottaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottaTests.swift; sourceTree = "<group>"; };
+		2E0268A12AB88F4600C18681 /* AuthPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPersistenceTests.swift; sourceTree = "<group>"; };
+		2E0268A32AB88F4600C18681 /* MockBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBackend.swift; sourceTree = "<group>"; };
 		2E0268842AB88F4600C18681 /* lottaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lottaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E0268882AB88F4600C18681 /* lottaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottaUITests.swift; sourceTree = "<group>"; };
 		2E02688A2AB88F4600C18681 /* lottaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottaUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -309,6 +313,8 @@
 			isa = PBXGroup;
 			children = (
 				2E02687E2AB88F4600C18681 /* lottaTests.swift */,
+				2E0268A12AB88F4600C18681 /* AuthPersistenceTests.swift */,
+				2E0268A32AB88F4600C18681 /* MockBackend.swift */,
 			);
 			path = lottaTests;
 			sourceTree = "<group>";
@@ -727,6 +733,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E02687F2AB88F4600C18681 /* lottaTests.swift in Sources */,
+				2E0268A22AB88F4600C18681 /* AuthPersistenceTests.swift in Sources */,
+				2E0268A42AB88F4600C18681 /* MockBackend.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

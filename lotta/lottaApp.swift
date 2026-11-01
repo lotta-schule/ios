@@ -17,6 +17,9 @@ struct lottaApp: App {
     var modelData = ModelData.shared
     
     init() {
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            return
+        }
         SentrySDK.start { options in
             options.dsn = "https://5beb3826272f086c5b8cde2d02cc503d@o282982.ingest.sentry.io/4505983794806784"
             options.debug = false
@@ -39,10 +42,20 @@ struct lottaApp: App {
     //    }
     //}()
 
+    /// When hosting unit tests, don't boot the real app (it would load real sessions and hit the network
+    /// concurrently with the tests).
+    private var isRunningUnitTests: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
+
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(ModelData.shared)
+            if isRunningUnitTests {
+                EmptyView()
+            } else {
+                RootView()
+                    .environment(ModelData.shared)
+            }
         }
         // .modelContext(ModelContext(sharedModelContainer))
     }

@@ -149,13 +149,21 @@ enum UserSessionError : Error {
         guard let userId = accessToken.subject else {
             throw AuthenticationError.invalidResponse("Auth token is not valid, does not contain a user id")
         }
-        
+
         authInfo.accessToken = accessToken
+        // Prefer the refresh token from the response body; RefreshTokenInterceptor may already
+        // have picked one up from the Set-Cookie header.
+        if let refreshToken = tokenGraphqlResult.data?.login?.refreshToken.flatMap({ try? decode(jwt: $0) }) {
+            authInfo.refreshToken = refreshToken
+        }
+        // Persist right away, so the session survives an app restart independently of the renewal below
+        authInfo.saveToKeychain()
+
         let user = User(tenant: tenant, id: userId)
         let userSession = UserSession(tenant: tenant, authInfo: authInfo, user: user)
-        
+
         _ = try? await authInfo.renewAsync()
-        
+
         switch await userSession.refetchUserData() {
             case .error(let authError):
                 throw authError
@@ -164,7 +172,7 @@ enum UserSessionError : Error {
                 return userSession
         }
     }
-    
+
     static func createFromAuthInfo(onTenantSlug slug: String, withAuthInfo authInfo: AuthInfo) async throws -> UserSession {
         let genericApi = CoreApi(withTenantSlug: slug)
         let tenantGraphqlResponse = try await genericApi.apollo.fetchAsync(query: GetTenantQuery())
@@ -176,15 +184,17 @@ enum UserSessionError : Error {
         let tenantApi = CoreApi(withTenantSlug: tenant.slug, loginSession: authInfo)
         
         guard let accessToken = authInfo.accessToken,
-              let refreshToken = authInfo.refreshToken else {
+              authInfo.refreshToken != nil else {
             throw AuthenticationError.invalidResponse("AuthInfo is not valid!")
         }
-        
+
         guard let userId = accessToken.subject else {
             throw AuthenticationError.invalidResponse("Auth token is not valid, does not contain a user id")
         }
-        
-        authInfo.accessToken = accessToken
+
+        // Persist right away, so the session survives an app restart independently of the renewal below
+        authInfo.saveToKeychain()
+
         let user = User(tenant: tenant, id: userId)
         let userSession = UserSession(tenant: tenant, authInfo: authInfo, user: user)
         
@@ -208,7 +218,7 @@ enum UserSessionError : Error {
             removeItemCrumb.data = ["fileUrl": session.fileUrl.absoluteString, "tid": session.tid, "uid": session.uid]
             SentrySDK.capture(message: "Deleting stale user session. Something went wrong when reading the user session data.")
             do {
-                keychain.delete("\(session.tid)-\(session.uid)--refresh-token")
+                AuthInfo.deleteFromKeychain(forUserId: session.uid, onTenantId: session.tid)
                 try FileManager.default.removeItem(at: session.fileUrl)
             } catch {
                 SentrySDK.capture(error: error)
@@ -262,7 +272,7 @@ enum UserSessionError : Error {
                         "uid": uid,
                         "userSessionData": userSessionData,
                         "availableKeys": keychain.allKeys.joined(separator: ","),
-                        "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token",
+                        "keychainKey": AuthInfo.keychainKey(forUserId: persistedUserSession.user.id, onTenantId: persistedUserSession.tenant.id),
                     ]
                     SentrySDK.addBreadcrumb(crumb)
                     onSessionInitError(session: (fileUrl, String(tid), String(uid)))
@@ -271,7 +281,7 @@ enum UserSessionError : Error {
                 guard let jwt = try? JWTDecode.decode(jwt: refreshToken) else {
                     let crumb = Breadcrumb(level: .info, category: "UserSession#init")
                     crumb.message = "JWT could not be decoded. Skipping ..."
-                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token", "jwt": refreshToken]
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": AuthInfo.keychainKey(forUserId: persistedUserSession.user.id, onTenantId: persistedUserSession.tenant.id), "jwt": refreshToken]
                     SentrySDK.addBreadcrumb(crumb)
                     onSessionInitError(session: (fileUrl, String(tid), String(uid)))
                     continue
@@ -279,7 +289,7 @@ enum UserSessionError : Error {
                 guard jwt.expired == false else {
                     let crumb = Breadcrumb(level: .info, category: "UserSession#init")
                     crumb.message = "JWT is expired. Skipping ..."
-                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": "\(persistedUserSession.tenant.id)-\(persistedUserSession.user.id)--refresh-token", "jwt": refreshToken]
+                    crumb.data = ["fileUrl": fileUrl.absoluteString, "tid": tid, "uid": uid, "userSessionData": userSessionData, "keychainKey": AuthInfo.keychainKey(forUserId: persistedUserSession.user.id, onTenantId: persistedUserSession.tenant.id), "jwt": refreshToken]
                     SentrySDK.addBreadcrumb(crumb)
                     onSessionInitError(session: (fileUrl, String(tid), String(uid)))
                     continue
@@ -330,7 +340,7 @@ enum UserSessionError : Error {
     }
     
     func removeFromKeychain() -> Void {
-        keychain.delete("usersession-\(tenant.id)-\(user.id).json")
+        AuthInfo.deleteFromKeychain(forUserId: user.id, onTenantId: tenant.id)
     }
     
 }

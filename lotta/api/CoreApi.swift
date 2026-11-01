@@ -22,7 +22,37 @@ let LOTTA_API_HTTP_URL = URL(string: "\(USE_SECURE_CONNECTION ? "https" : "http"
 let LOTTA_API_WEBSOCKET_URL = URL(string: "\(USE_SECURE_CONNECTION ? "wss" : "ws")://\(LOTTA_API_HOST)/api/graphql-socket/websocket")!
 
 let KEYCHAIN_PREFIX = String(LOTTA_API_HOST.prefix(5) + LOTTA_API_HOST.suffix(5))
-let keychain = KeychainSwift(keyPrefix: KEYCHAIN_PREFIX)
+
+/// Overridable runtime configuration. The defaults are what the app uses in production;
+/// tests swap them out to use a mocked backend, a temporary directory and an isolated keychain prefix.
+enum LottaEnvironment {
+    /// Configuration used for every HTTP request to the lotta API (Apollo and token refresh).
+    static var urlSessionConfiguration: URLSessionConfiguration = .default {
+        didSet { urlSession = URLSession(configuration: urlSessionConfiguration) }
+    }
+    private(set) static var urlSession: URLSession = .shared
+
+    static var keychain = KeychainSwift(keyPrefix: KEYCHAIN_PREFIX)
+
+    /// Directory where user sessions and caches are stored.
+    static var baseDirectory: URL = defaultBaseDirectory
+
+    static var connectWebSocketOnInit = true
+
+    static var defaultBaseDirectory: URL {
+        let applicationSupportPath = try! FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        let lottaAppSupportPath = applicationSupportPath.appendingPathComponent("lotta")
+
+        return lottaAppSupportPath.appending(path: LOTTA_API_HOST.replacing(/:\d{4,5}$/, with: ""))
+    }
+}
+
+var keychain: KeychainSwift { LottaEnvironment.keychain }
 
 fileprivate func getHttpTransport(loginSession: AuthInfo? = nil, tenantSlug slug: String? = nil, store: ApolloStore) -> RequestChainNetworkTransport {
     var additionalHeaders: [String:String] = [:]
@@ -45,6 +75,7 @@ fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, st
         ),
         store: store,
         config: WebSocketTransport.Configuration(
+            connectOnInit: LottaEnvironment.connectWebSocketOnInit,
             connectingPayload: [
                 "tid": tid,
                 "token": loginSession.accessToken?.string
@@ -55,17 +86,7 @@ fileprivate func getWSTransport(loginSession: AuthInfo, tenantId tid: String, st
 }
 
 var baseCacheDirURL: URL {
-    get {
-        let applicationSupportPath = try! FileManager.default.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
-        let lottaAppSupportPath = applicationSupportPath.appendingPathComponent("lotta")
-        
-        return lottaAppSupportPath.appending(path: LOTTA_API_HOST.replacing(/:\d{4,5}$/, with: ""))
-    }
+    LottaEnvironment.baseDirectory
 }
 
 class CoreApi {
